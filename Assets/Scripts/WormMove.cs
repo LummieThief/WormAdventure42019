@@ -8,6 +8,10 @@ public class WormMove : MonoBehaviour
 	public float maxAngVel = 4f;
 	public float maxSpeed = 100f;
 	public float jumpForce = 50f;
+	public bool underwater = false;
+	private float underwaterScale = 0.7f;
+	private float underwaterDrag = 2f;
+	private float timeUnderwater = 0f;
 
 	public GameObject generalRope;
 	public GameObject ropeDrop;
@@ -18,9 +22,6 @@ public class WormMove : MonoBehaviour
 	private bool grounded;
 	private bool crouching;
 
-	//private BonkTrigger bonkTrigger;
-	public float bonkThreshold;
-	private Vector3 prevVelocity;
 
 	public float range = 50f;
 	public float minRopeLength = 0.5f;
@@ -47,7 +48,6 @@ public class WormMove : MonoBehaviour
 	void Start()
     {
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
-		//bonkTrigger = GetComponentInChildren<BonkTrigger>();
 		rb = GetComponent<Rigidbody>();
 		initialScale = transform.localScale;
 		grappleHit = Instantiate(grappleHitPrefab, Vector3.zero, Quaternion.identity);
@@ -63,23 +63,33 @@ public class WormMove : MonoBehaviour
 		{
 			canGrapple = true;
 		}
-		rb.maxAngularVelocity = maxAngVel;
-		if (rb.velocity.magnitude > maxSpeed)
+		
+		if (underwater)
 		{
-			rb.velocity = rb.velocity.normalized * maxSpeed;
+			timeUnderwater += Time.deltaTime;
+			if (rb.velocity.magnitude > maxSpeed)// * underwaterScale)
+			{
+				rb.velocity = rb.velocity.normalized * maxSpeed; //* underwaterScale;
+			}
+			if (timeUnderwater > 0.2f)
+			{
+				rb.drag = underwaterDrag;
+			}
+			rb.maxAngularVelocity = maxAngVel * underwaterScale;
+			rb.angularDrag = 1.5f * underwaterDrag;
+		}
+		else
+		{
+			timeUnderwater = 0;
+			if (rb.velocity.magnitude > maxSpeed)
+			{
+				rb.velocity = rb.velocity.normalized * maxSpeed;
+			}
+			rb.drag = 0;
+			rb.maxAngularVelocity = maxAngVel;
+			rb.angularDrag = 1.5f;
 		}
 
-		//Debug.Log(transform.up);
-		Debug.DrawRay(transform.position, transform.up * 10, Color.green);
-		Debug.DrawRay(transform.position, rb.velocity, Color.blue);
-		Debug.DrawRay(transform.position, Vector3.Project(rb.velocity, transform.up), Color.red);
-		//Debug.Log(Vector3.Project(rb.velocity, transform.up).magnitude > bonkThreshold);
-
-		//bool bonking = ;
-		//if (bonking)
-		//{
-			//Debug.Log(rb.velocity.magnitude);
-		//}
 		
 
 		//To make sure the worm stays on the axis.
@@ -101,7 +111,7 @@ public class WormMove : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			transform.localScale = Vector3.Scale(initialScale, new Vector3(1, 0.75f, 1));
-			transform.position = transform.position - transform.up * 0.75f;
+			//transform.position = transform.position - transform.up * 0.75f;
 			crouching = true;
 		}
 		animator.SetBool("Crouching", crouching);
@@ -111,6 +121,21 @@ public class WormMove : MonoBehaviour
 		RaycastHit hit;
 		Vector3 hitPoint = Vector3.zero;
 		Vector3 buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.localScale.y;
+
+		if (!grappling)
+		{
+			//hinge.connectedBody = null;
+			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple)
+			{
+				grappleHit.SetActive(true);
+				grappleHit.transform.position = hit.point;
+				//Debug.DrawRay(buttPosition, transform.TransformDirection(Vector3.down) * range, Color.red);
+			}
+			else
+			{
+				grappleHit.SetActive(false);
+			}
+		}
 
 		if (Input.GetMouseButtonDown(0) && grappleHit.activeSelf && canGrapple)
 		{
@@ -141,42 +166,8 @@ public class WormMove : MonoBehaviour
 			tail.material = tailOff;
 		}
 
-		if (!Input.GetMouseButton(0))
-		{
-			//hinge.connectedBody = null;
-			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple)
-			{
-				grappleHit.SetActive(true);
-				grappleHit.transform.position = hit.point;
-				//Debug.DrawRay(buttPosition, transform.TransformDirection(Vector3.down) * range, Color.red);
-			}
-			else
-			{
-				grappleHit.SetActive(false);
-			}
-		}
+		
 
-		float bonkScale = Vector3.Project(prevVelocity.normalized, transform.up.normalized).magnitude;
-		bonkScale += bonkScale * Mathf.Sign(Vector3.Dot(prevVelocity, transform.up));
-		bonkScale /= 2;
-		bonkScale += 0.01f;
-		//Debug.Log(bonkScale);
-		//bonkScale += Mathf.Sign(Vector3.Dot(rb.velocity, transform.up));
-		//Debug.Log("0." + Mathf.Round(bonkScale * 100));
-		Debug.Log(bonkThreshold / bonkScale);
-		if ((prevVelocity.magnitude - rb.velocity.magnitude) > (bonkThreshold / bonkScale) && !grappling)
-		{
-			prevVelocity = rb.velocity;
-			rb.velocity /= 5;
-			rb.AddForce(-prevVelocity * 2f, ForceMode.Impulse);
-			Debug.Log("bonk");
-			animator.SetBool("Bonking", true);
-		}
-		else
-		{
-			animator.SetBool("Bonking", false);
-		}
-		prevVelocity = rb.velocity;
 
 
 		
@@ -184,8 +175,12 @@ public class WormMove : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		Debug.Log("clear");
+		//Debug.Log("clear");
 		float moveY = Input.GetAxis("Vertical") * Mathf.Abs(Input.GetAxisRaw("Vertical")) * moveSpeed * Time.deltaTime;
+		if (underwater)
+		{
+			moveY *= underwaterScale;
+		}
 
 		//Camera direction change
 		float cameraRot = cameraRig.transform.eulerAngles.y;
@@ -224,16 +219,7 @@ public class WormMove : MonoBehaviour
 
 
 	}
-	/*
-	public void LateUpdate()
-	{
-		if (bonkTrigger.isBonking() && Vector3.Project(rb.velocity, transform.up).magnitude > bonkThreshold)
-		{
-			Debug.Log("bonk");
 
-		}
-	}
-	*/
 
 	private void createRope(float segments, float length, float spacing)
 	{
@@ -243,6 +229,7 @@ public class WormMove : MonoBehaviour
 		float xScale = 0.2f;
 		//the bottom of the rope connected to the swinging object
 		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.localScale.y;
+
 		GameObject prevRope = Instantiate(generalRope, transform.position, transform.rotation);
 		prevRope.transform.localScale = new Vector3(xScale, transform.localScale.y, xScale);
 		prevRope.GetComponent<Rigidbody>().velocity = storedVelocity;
@@ -254,16 +241,20 @@ public class WormMove : MonoBehaviour
 		{
 			rope = Instantiate(generalRope, buttPosition - (i + 0.5f) * (transform.TransformDirection(Vector3.up) * length / segments), transform.rotation);
 			rope.transform.localScale = new Vector3(xScale, yScale, xScale);
-			prevRope.GetComponent<HingeJoint>().connectedBody = rope.GetComponent<Rigidbody>();
+			rope.GetComponent<GrappleFadeIn>().setTimer(i);
 			prevRope.GetComponent<Rigidbody>().velocity = storedVelocity * (segments - i) / segments;
 			prevRope.GetComponent<Rigidbody>().AddTorque(getRandomVector(300f, 0f, 0f));
+			prevRope.GetComponent<HingeJoint>().connectedBody = rope.GetComponent<Rigidbody>();
+			
 
 			GameObject drop = Instantiate(ropeDrop, buttPosition - (i) * (transform.TransformDirection(Vector3.up) * length / segments), transform.rotation);
 			drop.GetComponent<FixedJoint>().connectedBody = prevRope.GetComponent<Rigidbody>();
+			drop.GetComponent<GrappleFadeIn>().setTimer(i);
 			prevRope = rope;
 		}
 		rope.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
 		rope.GetComponent<BoxCollider>().enabled = false;
+		rope.GetComponent<GrappleFadeIn>().setTimer(-1);
 		Destroy(rope.GetComponent<HingeJoint>());
 
 	}

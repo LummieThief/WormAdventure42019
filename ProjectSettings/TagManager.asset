@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Rope
   - Solid
+  - Buoy
   layers:
   - Default
   - TransparentFX

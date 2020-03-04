@@ -801,6 +801,10 @@ MonoBehaviour:
     type: 3}
   cameraRig: {fileID: 0}
   rotFlipOffset: 20
+  tailOn: {fileID: 0}
+  tailOff: {fileID: 0}
+  tail: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!54 &3239566411622742685
 Rigidbody:
   m_ObjectHideFlags: 0
