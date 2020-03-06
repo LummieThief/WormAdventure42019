@@ -2,7 +2,9 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - CameraFollow
+    - GrappleFadeIn
     - JumpTrigger
+    - ModelFollow
     - OuterWilds
     - WormMove
     Unity.RenderPipelines.Core.Runtime.dll:
@@ -46,6 +48,12 @@ ScriptsOnlyBuild:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.ShaderGraph.Editor.dll:
     - UnityEditor.ShaderGraph.Drawing.MaterialGraphEditWindow
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -65,7 +73,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Toggle
     - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
-    Assets/Scenes/SampleScene.unity:
+    Assets/Scenes/Attempt 2.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -92,112 +100,122 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 65
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 89
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11320}
+      Script: {instanceID: 11322}
     - Class: 114
-      Script: {instanceID: 11368}
+      Script: {instanceID: 11370}
     - Class: 114
-      Script: {instanceID: 11424}
+      Script: {instanceID: 11426}
     - Class: 114
-      Script: {instanceID: 11524}
+      Script: {instanceID: 11528}
     - Class: 114
-      Script: {instanceID: 11544}
+      Script: {instanceID: 11548}
     - Class: 114
-      Script: {instanceID: 11580}
-    - Class: 114
-      Script: {instanceID: 11634}
+      Script: {instanceID: 11584}
     - Class: 114
       Script: {instanceID: 11638}
     - Class: 114
       Script: {instanceID: 11642}
     - Class: 114
-      Script: {instanceID: 11716}
+      Script: {instanceID: 11646}
     - Class: 114
-      Script: {instanceID: 11752}
+      Script: {instanceID: 11720}
     - Class: 114
-      Script: {instanceID: 11878}
+      Script: {instanceID: 11756}
     - Class: 114
-      Script: {instanceID: 11908}
+      Script: {instanceID: 11884}
     - Class: 114
-      Script: {instanceID: 12114}
+      Script: {instanceID: 11914}
     - Class: 114
-      Script: {instanceID: 12192}
+      Script: {instanceID: 12120}
     - Class: 114
-      Script: {instanceID: 12234}
+      Script: {instanceID: 12198}
     - Class: 114
-      Script: {instanceID: 12292}
+      Script: {instanceID: 12240}
     - Class: 114
-      Script: {instanceID: 12512}
+      Script: {instanceID: 12298}
     - Class: 114
-      Script: {instanceID: 12636}
+      Script: {instanceID: 12518}
     - Class: 114
-      Script: {instanceID: 12706}
+      Script: {instanceID: 12642}
     - Class: 114
-      Script: {instanceID: 12746}
+      Script: {instanceID: 12702}
     - Class: 114
-      Script: {instanceID: 12802}
+      Script: {instanceID: 12714}
     - Class: 114
-      Script: {instanceID: 12894}
+      Script: {instanceID: 12754}
     - Class: 114
-      Script: {instanceID: 13120}
+      Script: {instanceID: 12810}
     - Class: 114
-      Script: {instanceID: 13146}
+      Script: {instanceID: 12902}
     - Class: 114
-      Script: {instanceID: 13172}
+      Script: {instanceID: 13128}
     - Class: 114
-      Script: {instanceID: 13274}
+      Script: {instanceID: 13154}
     - Class: 114
-      Script: {instanceID: 13286}
+      Script: {instanceID: 13180}
     - Class: 114
-      Script: {instanceID: 13292}
+      Script: {instanceID: 13222}
     - Class: 114
-      Script: {instanceID: 13438}
+      Script: {instanceID: 13284}
     - Class: 114
-      Script: {instanceID: 13498}
+      Script: {instanceID: 13296}
     - Class: 114
-      Script: {instanceID: 13518}
+      Script: {instanceID: 13302}
     - Class: 114
-      Script: {instanceID: 13634}
+      Script: {instanceID: 13448}
     - Class: 114
-      Script: {instanceID: 13662}
+      Script: {instanceID: 13508}
     - Class: 114
-      Script: {instanceID: 13670}
+      Script: {instanceID: 13528}
     - Class: 114
-      Script: {instanceID: 13708}
+      Script: {instanceID: 13644}
     - Class: 114
-      Script: {instanceID: 13956}
+      Script: {instanceID: 13672}
     - Class: 114
-      Script: {instanceID: 13972}
+      Script: {instanceID: 13680}
     - Class: 114
-      Script: {instanceID: 14022}
+      Script: {instanceID: 13718}
     - Class: 114
-      Script: {instanceID: 14242}
+      Script: {instanceID: 13966}
     - Class: 114
-      Script: {instanceID: 14418}
+      Script: {instanceID: 13982}
     - Class: 114
-      Script: {instanceID: 14462}
+      Script: {instanceID: 14032}
     - Class: 114
-      Script: {instanceID: 14652}
+      Script: {instanceID: 14252}
     - Class: 114
-      Script: {instanceID: 14654}
+      Script: {instanceID: 14430}
     - Class: 114
-      Script: {instanceID: 14702}
+      Script: {instanceID: 14474}
     - Class: 114
-      Script: {instanceID: 14704}
+      Script: {instanceID: 14664}
     - Class: 114
-      Script: {instanceID: 14798}
+      Script: {instanceID: 14666}
     - Class: 114
-      Script: {instanceID: 14814}
+      Script: {instanceID: 14714}
     - Class: 114
-      Script: {instanceID: 14820}
+      Script: {instanceID: 14716}
+    - Class: 114
+      Script: {instanceID: 14810}
+    - Class: 114
+      Script: {instanceID: 14826}
+    - Class: 114
+      Script: {instanceID: 14832}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -223,6 +241,8 @@ ScriptsOnlyBuild:
     - Class: 224
       Script: {instanceID: 0}
     - Class: 258
+      Script: {instanceID: 0}
+    - Class: 1773428102
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -261,6 +281,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.RenderPipelines.Core.Runtime.dll
     namespaceName: UnityEngine.Rendering.UI
     className: DebugUIHandlerBitField
+  - hash:
+      serializedVersion: 2
+      Hash: dba16dc09b295b1ec929bc6fbb8cecba
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Buoy
   - hash:
       serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
@@ -311,7 +337,7 @@ ScriptsOnlyBuild:
     className: Renderer2DData
   - hash:
       serializedVersion: 2
-      Hash: 53938d4c1a0ff0961d46dc7749b402ed
+      Hash: bcbd825b51fc1fe6a7389a5989409f56
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WormMove
@@ -393,6 +419,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.RenderPipelines.Universal.Runtime.dll
     namespaceName: UnityEngine.Rendering.Universal
     className: ColorCurves
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Water
   - hash:
       serializedVersion: 2
       Hash: 8aa3d6ccbcb54ee8db6c1229854adaaa
@@ -551,10 +583,16 @@ ScriptsOnlyBuild:
     className: UniversalRenderPipelineAsset
   - hash:
       serializedVersion: 2
-      Hash: cd9dcb835e8cfba503c85f65d79bc852
+      Hash: fecf3ef05981a89cd8e651c187778d7e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraFollow
+  - hash:
+      serializedVersion: 2
+      Hash: 06d4d1504264e4bd704fcf4e66239ed4
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ModelFollow
   - hash:
       serializedVersion: 2
       Hash: 5e1eefcd5106de6c2e85908a3b2d3f04
@@ -657,6 +695,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.RenderPipelines.Universal.Runtime.dll
     namespaceName: UnityEngine.Rendering.Universal
     className: ColorLookup
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GrappleFadeIn
   - hash:
       serializedVersion: 2
       Hash: 1f0602e7bad1e0a9cba31ce292eee8bb
@@ -899,6 +943,12 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
+      Hash: 07627a976051aa05411ca5e056adc832
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BonkTrigger
+  - hash:
+      serializedVersion: 2
       Hash: c5bfd0f6f4664318b8b9f50d88408421
     assemblyName: Unity.RenderPipelines.Universal.Runtime.dll
     namespaceName: UnityEngine.Rendering.Universal
@@ -1085,5 +1135,6 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 5
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/jtcoo/Desktop/Games/My games/Worm Adveture 4 2019.exe
+  - Assets/Scenes/Attempt 2.unity
+  playerPath: C:/Users/jtcoo/Desktop/Games/My games/Worm Adventure 4 2019/Worm Adveture
+    4 2019.exe

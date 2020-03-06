@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\BodyFriction.cs" />
     <Compile Include="Assets\Scripts\BonkTrigger.cs" />
     <Compile Include="Assets\Scripts\Buoy.cs" />
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
+    <Compile Include="Assets\Scripts\RopeClipStopper.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\TimerEnd.cs" />
     <Compile Include="Assets\Scripts\TimerStart.cs" />

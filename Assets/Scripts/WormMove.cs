@@ -21,6 +21,7 @@ public class WormMove : MonoBehaviour
 	private JumpTrigger jumpTrigger;
 	private bool grounded;
 	private bool crouching;
+	private float groundedDrag = 1.5f;
 
 
 	public float range = 50f;
@@ -59,10 +60,21 @@ public class WormMove : MonoBehaviour
 	void Update()
 	{
 		grounded = jumpTrigger.getGrounded();
+		
 		if (grounded)
 		{
 			canGrapple = true;
 		}
+
+		if (GetComponentInChildren<BodyFriction>().getFriction())
+		{
+			rb.drag = groundedDrag;
+		}
+		else
+		{
+			rb.drag = 0;
+		}
+
 		
 		if (underwater)
 		{
@@ -85,7 +97,6 @@ public class WormMove : MonoBehaviour
 			{
 				rb.velocity = rb.velocity.normalized * maxSpeed;
 			}
-			rb.drag = 0;
 			rb.maxAngularVelocity = maxAngVel;
 			rb.angularDrag = 1.5f;
 		}
@@ -137,10 +148,23 @@ public class WormMove : MonoBehaviour
 			}
 		}
 
+		
+		//rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 		if (Input.GetMouseButtonDown(0) && grappleHit.activeSelf && canGrapple)
 		{
+			Debug.Log(rb.velocity.y);
 			canGrapple = false;
 			grappling = true;
+			if (rb.velocity.y > 0)
+			{
+				rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / Mathf.Clamp(Mathf.Pow(1.03f, rb.velocity.y), 1, 3), rb.velocity.z);
+				Debug.Log("Yep");
+			}
+			else
+			{
+				Debug.Log("Nope");
+			}
+
 			if (Vector3.Distance(buttPosition, grappleHit.transform.position) < (minRopeLength + ropeSpacing) * numSegments)
 			{
 				float numRopes = Vector3.Distance(buttPosition, grappleHit.transform.position) / minRopeLength;
@@ -150,6 +174,8 @@ public class WormMove : MonoBehaviour
 			{
 				createRope(numSegments, Vector3.Distance(buttPosition, grappleHit.transform.position), 0.05f);
 			}
+
+			
 		}
 		else if (Input.GetMouseButtonUp(0))
 		{
