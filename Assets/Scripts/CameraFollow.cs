@@ -47,6 +47,7 @@ public class CameraFollow : MonoBehaviour
 
 
 		checkForCollision(transform.position, cam.position);
+		cam.localPosition += Vector3.up * 0.7f;
 	}
 
 	void checkForCollision(Vector3 origin, Vector3 target)
