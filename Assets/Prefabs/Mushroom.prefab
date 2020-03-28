@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5813179202960656376}
   m_Layer: 8
   m_Name: Mushroom Stem
-  m_TagString: Solid
+  m_TagString: Solid Excluded
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

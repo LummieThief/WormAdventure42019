@@ -11,14 +11,14 @@ public class JumpTrigger : MonoBehaviour
 
 	private void OnTriggerStay(Collider other)
 	{
-		if (other.tag == "Solid")
+		if (other.tag == "Solid" || other.tag == "Solid Excluded")
 		{
 			grounded = true;
 		}
 	}
 	private void OnTriggerExit(Collider other)
 	{
-		if (other.tag == "Solid")
+		if (other.tag == "Solid" || other.tag == "Solid Excluded")
 		{
 			grounded = false;
 		}
