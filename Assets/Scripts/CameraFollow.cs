@@ -7,6 +7,7 @@ public class CameraFollow : MonoBehaviour
 {
 	public float mouseSensitivity = 100f;
 	public float camDistance = 6.17f;
+	public float zoomSpeed = 0.5f;
 	private float initialX;
 	private float initialY;
 	private float initialZ;
@@ -14,6 +15,7 @@ public class CameraFollow : MonoBehaviour
 	private float mouseX;
 	private float mouseY;
 	private Transform cam;
+	private float prevDistance;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +34,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-		cam.localPosition = new Vector3(0, 0, -camDistance);
+		cam.localPosition = new Vector3(0, 0, -Mathf.Clamp(prevDistance + zoomSpeed, 0, camDistance));
 		mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
 		mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -42,31 +44,47 @@ public class CameraFollow : MonoBehaviour
 		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);
 		transform.Rotate(Vector3.up, mouseX);
 		transform.eulerAngles = new Vector3(mouseY, transform.eulerAngles.y, transform.eulerAngles.z);
-		//transform.position = Vector3.Lerp(transform.position, new Vector3(initialX + target.position.x, initialY + target.position.y, initialZ + target.position.z), 0.8f);
+		//transform.position = Vector3.Lerp(transform.position, new Vector3(initialX + target.position.x, initialY + target.position.y, initialZ + target.position.z), 0.1f);
 		transform.position = new Vector3(initialX + target.position.x, initialY + target.position.y, initialZ + target.position.z);
 
 
-		checkForCollision(transform.position, cam.position);
-		cam.localPosition += Vector3.up * 0.7f;
+		bool collided = checkForCollision(transform.position, cam.position);
+	    cam.localPosition += Vector3.up * 0.7f;
+
+		prevDistance = Vector3.Distance(cam.position, transform.position);
+
+		
+		if (collided)
+		{
+			prevDistance += zoomSpeed;
+		}
+		
+		
+
+		
+		Debug.Log(prevDistance);
+
 	}
 
-	void checkForCollision(Vector3 origin, Vector3 target)
+	bool checkForCollision(Vector3 origin, Vector3 target)
 	{
-		checkForCollision(origin, target, origin);
+		return checkForCollision(origin, target, origin);
 	}
-	private void checkForCollision(Vector3 origin, Vector3 target, Vector3 initialPosition)
+	private bool checkForCollision(Vector3 origin, Vector3 target, Vector3 initialPosition)
 	{
 		RaycastHit hit;
 		if (Physics.Linecast(origin, target, out hit))
 		{
 			if (hit.collider.gameObject.tag == "Solid")
 			{
-				cam.position = Vector3.MoveTowards(hit.point, transform.position, Vector3.Distance(initialPosition, hit.point) * 0.1f);
+				cam.position = hit.point;
+				return true;
 			}
 			else
 			{
-				checkForCollision(Vector3.MoveTowards(hit.point, target, 0.01f), target, initialPosition);
+				return checkForCollision(Vector3.MoveTowards(hit.point, target, 0.01f), target, initialPosition);
 			}
 		}
+		return false;
 	}
 }
