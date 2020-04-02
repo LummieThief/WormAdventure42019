@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour
 	public float mouseSensitivity = 100f;
 	public float camDistance = 6.17f;
 	public float zoomSpeed = 0.5f;
+	public float baseOffsetUp = 0.84f;
+	public float secondaryOffsetUp = 0.7f;
 	private float initialX;
 	private float initialY;
 	private float initialZ;
@@ -23,7 +25,7 @@ public class CameraFollow : MonoBehaviour
 		cam.localPosition = new Vector3(0, 0, -camDistance);
 		//maintains the same distance from the target
 		initialX = transform.position.x - target.position.x;
-		initialY = transform.position.y - target.position.y;
+		initialY = transform.position.y - target.position.y + baseOffsetUp;
 		initialZ = transform.position.z - target.position.z;
 
 		Cursor.visible = false;
@@ -31,8 +33,25 @@ public class CameraFollow : MonoBehaviour
 
 	}
 
-    // Update is called once per frame
-    void LateUpdate()
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Equals))
+		{
+			mouseSensitivity += 10;
+		}
+		if (Input.GetKeyDown(KeyCode.Minus))
+		{
+			mouseSensitivity -= 10;
+		}
+
+		if ((Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F4))
+		{
+			Application.Quit();
+		}
+	} 
+
+	// Update is called once per frame
+	void LateUpdate()
     {
 		cam.localPosition = new Vector3(0, 0, -Mathf.Clamp(prevDistance + zoomSpeed, 0, camDistance));
 		mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -49,7 +68,7 @@ public class CameraFollow : MonoBehaviour
 
 
 		bool collided = checkForCollision(transform.position, cam.position);
-	    cam.localPosition += Vector3.up * 0.7f;
+	    cam.localPosition += Vector3.up * secondaryOffsetUp;
 
 		prevDistance = Vector3.Distance(cam.position, transform.position);
 

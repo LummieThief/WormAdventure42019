@@ -595,7 +595,7 @@ ScriptsOnlyBuild:
     className: UniversalRenderPipelineAsset
   - hash:
       serializedVersion: 2
-      Hash: fecf3ef05981a89cd8e651c187778d7e
+      Hash: 7e8c86272b8a441e8d2051465050fa6b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraFollow

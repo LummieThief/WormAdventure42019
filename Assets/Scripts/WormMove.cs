@@ -59,6 +59,7 @@ public class WormMove : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+
 		grounded = jumpTrigger.getGrounded();
 		
 		if (grounded)
@@ -269,7 +270,7 @@ public class WormMove : MonoBehaviour
 			rope.transform.localScale = new Vector3(xScale, yScale, xScale);
 			rope.GetComponent<GrappleFadeIn>().setTimer(i);
 			prevRope.GetComponent<Rigidbody>().velocity = storedVelocity * (segments - i) / segments;
-			prevRope.GetComponent<Rigidbody>().AddTorque(getRandomVector(300f, 0f, 0f));
+			prevRope.GetComponent<Rigidbody>().AddTorque(getRandomVector(800f, 0f, 0f));
 			prevRope.GetComponent<HingeJoint>().connectedBody = rope.GetComponent<Rigidbody>();
 			
 
