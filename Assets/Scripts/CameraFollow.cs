@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
 	public float camDistance = 6.17f;
 	public float zoomSpeed = 0.5f;
 	public float baseOffsetUp = 0.84f;
+	public float baseOffsetForward = -0.84f;
 	public float secondaryOffsetUp = 0.7f;
 	private float initialX;
 	private float initialY;
@@ -19,20 +20,19 @@ public class CameraFollow : MonoBehaviour
 	private Transform cam;
 	private float prevDistance;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 		cam = GetComponentInChildren<Camera>().transform;
 		cam.localPosition = new Vector3(0, 0, -camDistance);
 		//maintains the same distance from the target
 		initialX = transform.position.x - target.position.x;
 		initialY = transform.position.y - target.position.y + baseOffsetUp;
-		initialZ = transform.position.z - target.position.z;
+		initialZ = transform.position.z - target.position.z + baseOffsetForward;
 
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 
 	}
-
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Equals))
@@ -44,11 +44,9 @@ public class CameraFollow : MonoBehaviour
 			mouseSensitivity -= 10;
 		}
 
-		if ((Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F4))
-		{
-			Application.Quit();
-		}
-	} 
+		//camDistance -= Input.mouseScrollDelta.y * zoomSpeed;
+	}
+	
 
 	// Update is called once per frame
 	void LateUpdate()
@@ -77,11 +75,6 @@ public class CameraFollow : MonoBehaviour
 		{
 			prevDistance += zoomSpeed;
 		}
-		
-		
-
-		
-		Debug.Log(prevDistance);
 
 	}
 

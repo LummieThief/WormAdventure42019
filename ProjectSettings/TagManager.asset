@@ -8,6 +8,7 @@ TagManager:
   - Solid
   - Buoy
   - Solid Excluded
+  - Package
   layers:
   - Default
   - TransparentFX

@@ -10,7 +10,8 @@ public class OuterWilds : MonoBehaviour
 	private Transform worm;
 	private JumpTrigger jumpTrigger;
 	private bool grounded;
-    // Start is called before the first frame update
+	// Start is called before the first frame update
+
     void Start()
     {
 		worm = GameObject.FindGameObjectWithTag("Player").transform;
@@ -35,6 +36,14 @@ public class OuterWilds : MonoBehaviour
 				rot *= airRotSpeed;
 				transform.RotateAround(worm.position, Vector3.up, -rot);
 			}
+		}
+	}
+	private void LateUpdate()
+	{
+		if (worm == null)
+		{
+			worm = GameObject.FindGameObjectWithTag("Player").transform;
+			jumpTrigger = worm.gameObject.GetComponentInChildren<JumpTrigger>();
 		}
 	}
 }

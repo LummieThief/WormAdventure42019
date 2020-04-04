@@ -33,6 +33,9 @@ public class WormMove : MonoBehaviour
 	private bool canGrapple;
 	private Vector3 buttPosition;
 	private bool grappling;
+	private bool itsGrappleTime = false;
+	private float howLongDoesGrappleTimeLast = 0.2f;
+	private float howMuchLongerIsItGrappleTime;
 
 	public GameObject cameraRig;
 	public float rotFlipOffset = 30;
@@ -46,7 +49,7 @@ public class WormMove : MonoBehaviour
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
     {
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
 		rb = GetComponent<Rigidbody>();
@@ -149,22 +152,42 @@ public class WormMove : MonoBehaviour
 			}
 		}
 
-		
+		if (Input.GetMouseButtonDown(0))
+		{
+			itsGrappleTime = true;
+		}
+		if (itsGrappleTime)
+		{
+			howMuchLongerIsItGrappleTime += Time.deltaTime;
+			if (howMuchLongerIsItGrappleTime > howLongDoesGrappleTimeLast || Input.GetMouseButtonUp(0))
+			{
+				itsGrappleTime = false;
+				howMuchLongerIsItGrappleTime = 0;
+			}
+		}
+		Debug.Log(itsGrappleTime);
 		//rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-		if (Input.GetMouseButtonDown(0) && grappleHit.activeSelf && canGrapple)
+		if (itsGrappleTime && grappleHit.activeSelf && canGrapple)
 		{
 			Debug.Log(rb.velocity.y);
 			canGrapple = false;
+			itsGrappleTime = false;
+			howMuchLongerIsItGrappleTime = 0;
 			grappling = true;
 			if (rb.velocity.y > 0)
 			{
 				rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / Mathf.Clamp(Mathf.Pow(1.03f, rb.velocity.y), 1, 3), rb.velocity.z);
-				Debug.Log("Yep");
+				//Debug.Log("Yep");
 			}
-			else
-			{
-				Debug.Log("Nope");
-			}
+
+
+			//so that grappling to a wall youre moving towards doesnt kill your momentum
+			float pullForce = 20f;
+			Vector3 tailFacing = transform.TransformDirection(Vector3.down);
+			Vector3 forwardVelocity = Vector3.Project(rb.velocity, tailFacing);
+			rb.AddForce(transform.TransformDirection(Vector3.down) * pullForce * forwardVelocity.magnitude, ForceMode.Impulse);
+
+
 
 			if (Vector3.Distance(buttPosition, grappleHit.transform.position) < (minRopeLength + ropeSpacing) * numSegments)
 			{
@@ -175,7 +198,9 @@ public class WormMove : MonoBehaviour
 			{
 				createRope(numSegments, Vector3.Distance(buttPosition, grappleHit.transform.position), 0.05f);
 			}
+			
 
+			
 			
 		}
 		else if (Input.GetMouseButtonUp(0))
@@ -270,7 +295,7 @@ public class WormMove : MonoBehaviour
 			rope.transform.localScale = new Vector3(xScale, yScale, xScale);
 			rope.GetComponent<GrappleFadeIn>().setTimer(i);
 			prevRope.GetComponent<Rigidbody>().velocity = storedVelocity * (segments - i) / segments;
-			prevRope.GetComponent<Rigidbody>().AddTorque(getRandomVector(800f, 0f, 0f));
+			//prevRope.GetComponent<Rigidbody>().AddTorque(getRandomVector(800f, 0f, 0f));
 			prevRope.GetComponent<HingeJoint>().connectedBody = rope.GetComponent<Rigidbody>();
 			
 
