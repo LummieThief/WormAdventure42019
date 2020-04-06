@@ -9,6 +9,7 @@ TagManager:
   - Buoy
   - Solid Excluded
   - Package
+  - GP
   layers:
   - Default
   - TransparentFX

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\DummyWorm.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
+    <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Assets\Scripts\TimerStart.cs" />
     <Compile Include="Assets\Scripts\Water.cs" />
     <Compile Include="Assets\Scripts\WormMove.cs" />
+    <Compile Include="Assets\Scripts\WormMoveBackup.cs" />
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
       <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
     </Reference>
