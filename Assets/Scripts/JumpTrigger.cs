@@ -6,9 +6,14 @@ using UnityEngine;
 public class JumpTrigger : MonoBehaviour
 {
 	private bool grounded;
+	private float baseYScale;
 	private float maxScale = 1.2f;
 	private float minScale = 0.9f;
 
+	private void Start()
+	{
+		baseYScale = transform.localScale.y;
+	}
 	private void OnTriggerStay(Collider other)
 	{
 		if (other.tag == "Solid" || other.tag == "Solid Excluded")
@@ -40,7 +45,7 @@ public class JumpTrigger : MonoBehaviour
 		float distanceFrom360 = Mathf.Abs(rot - 360);
 		float scaleAmount = minScale + (maxScale - minScale) * (distanceFrom360 / 90);
 
-		transform.localScale = new Vector3(scaleAmount, 1, scaleAmount);
+		transform.localScale = new Vector3(scaleAmount, baseYScale, scaleAmount);
 
 		//Debug.Log(scaleAmount);
 	}

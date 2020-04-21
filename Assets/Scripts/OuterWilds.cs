@@ -5,7 +5,7 @@ using UnityEngine;
 //Any objects with this script will rotate around the worm and be effected by Recenter
 public class OuterWilds : MonoBehaviour
 {
-	private float rotSpeed = 120f;
+	private float rotSpeed = 150f;
 	private float airRotSpeed = 40f;
 	private Transform worm;
 	private JumpTrigger jumpTrigger;

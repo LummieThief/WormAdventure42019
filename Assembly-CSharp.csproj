@@ -64,12 +64,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\BodyFriction.cs" />
+    <Compile Include="Assets\ButtPosition.cs" />
+    <Compile Include="Assets\JointPoint.cs" />
+    <Compile Include="Assets\RotateRandom.cs" />
     <Compile Include="Assets\Scripts\BonkTrigger.cs" />
     <Compile Include="Assets\Scripts\Buoy.cs" />
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CreateRope.cs" />
     <Compile Include="Assets\Scripts\DummyWorm.cs" />
+    <Compile Include="Assets\Scripts\EnableFog.cs" />
+    <Compile Include="Assets\Scripts\FPSDisplay.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
@@ -81,7 +86,6 @@
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\TimerEnd.cs" />
     <Compile Include="Assets\Scripts\TimerStart.cs" />
-    <Compile Include="Assets\Scripts\Water.cs" />
     <Compile Include="Assets\Scripts\WormMove.cs" />
     <Compile Include="Assets\Scripts\WormMoveBackup.cs" />
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">

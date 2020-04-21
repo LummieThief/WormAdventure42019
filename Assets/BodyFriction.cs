@@ -5,10 +5,15 @@ using UnityEngine;
 public class BodyFriction : MonoBehaviour
 {
 	private bool hasFriction;
+	private Vector3 initialScale;
 	private float minScale = 0.97f;
 	private float maxScale = 1.06f;
 
-	private void OnTriggerEnter(Collider other)
+	private void Start()
+	{
+		initialScale = transform.localScale;
+	}
+	private void OnTriggerStay(Collider other)
 	{
 		if (other.tag == "Solid")
 		{
@@ -35,9 +40,9 @@ public class BodyFriction : MonoBehaviour
 		float distanceFrom360 = Mathf.Abs(rot - 360);
 		float scaleAmount = minScale + (maxScale - minScale) * (distanceFrom360 / 90);
 
-		transform.localScale = new Vector3(scaleAmount, 1, scaleAmount);
+		transform.localScale = new Vector3(scaleAmount, initialScale.y, scaleAmount);
 
-		//Debug.Log(scaleAmount);
+		Debug.Log(getFriction());
 	}
 
 
