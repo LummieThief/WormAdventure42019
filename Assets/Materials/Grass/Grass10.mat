@@ -21,18 +21,26 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass10
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: a4de03ba7da5c954abe6572a8063c95c,
+    type: 3}
   m_ShaderKeywords: _SPECULAR_SETUP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2050
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_3DB156E5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_BBF5A1C1:
+        m_Texture: {fileID: 2800000, guid: 47566278fe47c12428e9d322869a97a7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 47566278fe47c12428e9d322869a97a7, type: 3}
         m_Scale: {x: 10, y: 10}
@@ -62,6 +70,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_39265A76: 0
+    - Vector1_4262AED5: 0
+    - Vector1_57038896: 0
+    - Vector1_877F4AF0: 10
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -84,6 +96,13 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
+    - Color_2A3ACF4A: {r: 0.037499994, g: 0.1, b: 0.06180555, a: 0}
+    - Color_4F3B6967: {r: 0.21176471, g: 0.5647059, b: 0.34901962, a: 0}
+    - Vector2_8887936F: {r: 0, g: 0, b: 0, a: 0}
+    - Vector4_3D22734C: {r: 0, g: 0, b: 0, a: 9999}
+    - Vector4_AE736A3C: {r: -0.0000076293945, g: 71.63855, b: -558.53143, a: 31}
+    - Vector4_D00EA9EA: {r: 40.80948, g: 88.09475, b: -469.95215, a: 12}
+    - Vector4_E3B67991: {r: 34.688477, g: 26.694, b: -489.2129, a: 16}
     - _BaseColor: {r: 0.21092917, g: 0.5660378, b: 0.34902695, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

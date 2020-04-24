@@ -6,10 +6,10 @@ TagManager:
   tags:
   - Rope
   - Solid
-  - Buoy
   - Solid Excluded
   - Package
   - GP
+  - Light Source
   layers:
   - Default
   - TransparentFX

@@ -42,9 +42,8 @@ public class BodyFriction : MonoBehaviour
 
 		transform.localScale = new Vector3(scaleAmount, initialScale.y, scaleAmount);
 
-		Debug.Log(getFriction());
+		//Debug.Log(getFriction());
 	}
-
 
 	public bool getFriction()
 	{

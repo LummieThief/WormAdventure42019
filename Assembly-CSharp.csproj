@@ -79,6 +79,9 @@
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
+    <Compile Include="Assets\Scripts\LightMatterManager.cs" />
+    <Compile Include="Assets\Scripts\LightMatterMaterialBank.cs" />
+    <Compile Include="Assets\Scripts\LightSource.cs" />
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />

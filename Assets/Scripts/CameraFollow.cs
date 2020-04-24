@@ -19,8 +19,9 @@ public class CameraFollow : MonoBehaviour
 	private float mouseY;
 	private Transform cam;
 	private float prevDistance;
-    // Start is called before the first frame update
-    void Awake()
+
+	// Start is called before the first frame update
+	void Awake()
     {
 		cam = GetComponentInChildren<Camera>().transform;
 		cam.localPosition = new Vector3(0, 0, -camDistance);
