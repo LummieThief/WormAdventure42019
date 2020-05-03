@@ -24,6 +24,7 @@ public class OuterWilds : MonoBehaviour
 		if (Input.GetAxis("Horizontal") != 0)
 		{
 			grounded = jumpTrigger.getGrounded();
+			Quaternion prevRot = transform.rotation;
 
 			var rot = Input.GetAxis("Horizontal") * Time.deltaTime;
 			if (grounded)

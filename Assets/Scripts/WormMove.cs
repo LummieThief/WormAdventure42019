@@ -82,7 +82,7 @@ public class WormMove : MonoBehaviour
 	void Update()
 	{
 		grounded = jumpTrigger.getGrounded();
-		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y;
+		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.8f;
 
 		if (grounded)
 		{
@@ -290,7 +290,7 @@ public class WormMove : MonoBehaviour
 
 			LineRenderer line = currentGrapplePoint.GetComponent<LineRenderer>();
 			line.SetPosition(0, currentGrapplePoint.transform.position);
-			line.SetPosition(1, buttPosition);
+			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
 
 			
 		}

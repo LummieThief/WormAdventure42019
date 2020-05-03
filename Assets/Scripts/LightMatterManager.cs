@@ -6,7 +6,7 @@ public class LightMatterManager : MonoBehaviour
 {
 	private Material[] lightMatterMaterials;
 	private Transform[] activeLights;
-	public int maxActiveLights = 4;
+	public int maxActiveLights;
 	public Transform wormLocation;
 	private float timer = 2;
     // Start is called before the first frame update

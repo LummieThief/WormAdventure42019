@@ -68,10 +68,10 @@ public class GrapplePoint : MonoBehaviour
 		
 		
 	}
-	private void Update()
+	/*private void Update()
 	{
-		readjust();
-	}
+		//readjust();
+	}*/
 
 	public float getTotalDistance()
 	{

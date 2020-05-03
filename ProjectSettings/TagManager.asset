@@ -10,6 +10,7 @@ TagManager:
   - Package
   - GP
   - Light Source
+  - Core
   layers:
   - Default
   - TransparentFX

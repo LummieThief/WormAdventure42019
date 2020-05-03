@@ -72,6 +72,8 @@
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CreateRope.cs" />
+    <Compile Include="Assets\Scripts\DebugTP.cs" />
+    <Compile Include="Assets\Scripts\DrawLineToTransform.cs" />
     <Compile Include="Assets\Scripts\DummyWorm.cs" />
     <Compile Include="Assets\Scripts\EnableFog.cs" />
     <Compile Include="Assets\Scripts\FPSDisplay.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Assets\Scripts\LightSource.cs" />
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
+    <Compile Include="Assets\Scripts\RandomRotation.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
     <Compile Include="Assets\Scripts\RopeClipStopper.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
