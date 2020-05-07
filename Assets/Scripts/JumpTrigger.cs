@@ -14,6 +14,13 @@ public class JumpTrigger : MonoBehaviour
 	{
 		baseYScale = transform.localScale.y;
 	}
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "Solid" || other.tag == "Solid Excluded")
+		{
+			grounded = true;
+		}
+	}
 	private void OnTriggerStay(Collider other)
 	{
 		if (other.tag == "Solid" || other.tag == "Solid Excluded")

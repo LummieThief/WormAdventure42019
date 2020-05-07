@@ -115,6 +115,7 @@ public class WormMove : MonoBehaviour
 
 		//To make sure the worm stays on the axis.
 		rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, 0);
+		rb.velocity = new Vector3(0, rb.velocity.y, rb.velocity.z);
 		if (transform.position.x != 0)
 		{
 			float xDis = transform.position.x;
@@ -146,11 +147,14 @@ public class WormMove : MonoBehaviour
 		//Debug.Log(grappleTimer);
 		if (!grappling)
 		{
-			refreshTimer += Time.deltaTime;
-			if (refreshTimer > refreshDelay)
+			if (grounded)
 			{
-				grappleTimer -= staminaRefresh * Time.deltaTime;
-				grappleTimer = Mathf.Clamp(grappleTimer, 0, stamina);
+				refreshTimer += Time.deltaTime;
+				if (refreshTimer > refreshDelay)
+				{
+					grappleTimer -= staminaRefresh * Time.deltaTime;
+					grappleTimer = Mathf.Clamp(grappleTimer, 0, stamina);
+				}
 			}
 			//hinge.connectedBody = null;
 			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple && grappleTimer < stamina)
@@ -203,6 +207,7 @@ public class WormMove : MonoBehaviour
 		}
 		if (itsGrappleTime && canGrapple) //on click, makes the first point
 		{
+			
 			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range))
 			{
 				GameObject grapplePoint = Instantiate(grapplePointPrefab, hit.point, Quaternion.identity);
@@ -216,6 +221,7 @@ public class WormMove : MonoBehaviour
 				howMuchLongerIsItGrappleTime = 0;
 
 				rb.AddForce(Vector3.down * 4 * rb.velocity.magnitude, ForceMode.Impulse);
+				grappleTimer += 2;
 				//Debug.Log(Vector3.Distance(buttPosition, hit.point));
 			}
 			
@@ -223,6 +229,7 @@ public class WormMove : MonoBehaviour
 
 		if (currentGrapplePoint != null) //if grappling
 		{
+			
 			if (Physics.Linecast(buttPosition, currentGrapplePoint.transform.position, out hit)) //checks whether a line can be drawn to the worm
 			{
 				//Debug.DrawLine(buttPosition, currentGrapplePoint.transform.position);
@@ -350,14 +357,14 @@ public class WormMove : MonoBehaviour
 			transform.localScale = initialScale;
 			if (grounded)
 			{
-				/*if (grappling)
+				if (grappling)
 				{
 					rb.AddRelativeForce(new Vector3(0, jumpForce * 0.7f, 0), ForceMode.Impulse);
 				}
 				else
-				{*/
-				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-				//}
+				{
+					rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+				}
 			}
 			crouching = false;
 		}

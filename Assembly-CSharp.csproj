@@ -67,6 +67,7 @@
     <Compile Include="Assets\ButtPosition.cs" />
     <Compile Include="Assets\JointPoint.cs" />
     <Compile Include="Assets\RotateRandom.cs" />
+    <Compile Include="Assets\Scripts\BaseplateDeactivator.cs" />
     <Compile Include="Assets\Scripts\BonkTrigger.cs" />
     <Compile Include="Assets\Scripts\Buoy.cs" />
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
+    <Compile Include="Assets\Scripts\InitToPosition.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
     <Compile Include="Assets\Scripts\LightMatterManager.cs" />
     <Compile Include="Assets\Scripts\LightMatterMaterialBank.cs" />

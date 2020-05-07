@@ -25,7 +25,7 @@ public class LightMatterManager : MonoBehaviour
 		{
 			LightSource[] lightScripts = GameObject.FindObjectsOfType<LightSource>();
 			GameObject[] lightSources = new GameObject[lightScripts.Length];
-			Debug.Log(lightScripts.Length);
+			//Debug.Log(lightScripts.Length);
 			for (int i = 0; i < lightScripts.Length; i++)
 			{
 				lightSources[i] = lightScripts[i].gameObject;
