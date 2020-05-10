@@ -20,9 +20,15 @@ public class CameraFollow : MonoBehaviour
 	private Transform cam;
 	private float prevDistance;
 
+	private float timer;
+	public float timeBetweenResets = 5f;
+	public Recenter recenter;
+
+	//private Rigidbody rb;
 	// Start is called before the first frame update
 	void Awake()
     {
+		//rb = GetComponent<Rigidbody>()
 		cam = GetComponentInChildren<Camera>().transform;
 		cam.localPosition = new Vector3(0, 0, -camDistance);
 		//maintains the same distance from the target
@@ -33,19 +39,6 @@ public class CameraFollow : MonoBehaviour
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 
-	}
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Equals))
-		{
-			mouseSensitivity += 10;
-		}
-		if (Input.GetKeyDown(KeyCode.Minus))
-		{
-			mouseSensitivity -= 10;
-		}
-
-		//camDistance -= Input.mouseScrollDelta.y * zoomSpeed;
 	}
 	
 
@@ -77,6 +70,14 @@ public class CameraFollow : MonoBehaviour
 			prevDistance += zoomSpeed;
 		}
 
+		/*
+		timer += Time.deltaTime;
+		if (timer > timeBetweenResets)
+		{
+			recenter.recenter();
+			timer = 0;
+		}
+		*/
 	}
 
 	bool checkForCollision(Vector3 origin, Vector3 target)
@@ -99,5 +100,10 @@ public class CameraFollow : MonoBehaviour
 			}
 		}
 		return false;
+	}
+
+	public void sensitivityChange(float newSens)
+	{
+		mouseSensitivity = newSens * 30;
 	}
 }

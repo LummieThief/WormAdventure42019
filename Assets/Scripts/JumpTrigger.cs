@@ -43,6 +43,7 @@ public class JumpTrigger : MonoBehaviour
 
 	private void Update()
 	{
+		//Debug.Log(grounded);
 		float rot = transform.eulerAngles.x;
 
 		if (transform.eulerAngles.x < 180)

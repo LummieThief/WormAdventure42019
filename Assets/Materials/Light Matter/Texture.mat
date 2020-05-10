@@ -20,12 +20,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Grass Hex Tex
+  m_Name: Texture
   m_Shader: {fileID: -6465566751694194690, guid: a4de03ba7da5c954abe6572a8063c95c,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -38,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_BBF5A1C1:
-        m_Texture: {fileID: 2800000, guid: 47566278fe47c12428e9d322869a97a7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 25416a0c89375ec42af70cd6dba20644, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -72,8 +72,12 @@ Material:
     m_Floats:
     - Vector1_39265A76: 0
     - Vector1_4262AED5: 0
+    - Vector1_430FDA74: 0
     - Vector1_57038896: 0
     - Vector1_877F4AF0: 0.7
+    - Vector1_B7B60209: 0.3
+    - Vector1_C2262893: 0
+    - Vector1_D482C505: 30
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -96,17 +100,20 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_2A3ACF4A: {r: 0, g: 0, b: 0, a: 0}
-    - Color_4F3B6967: {r: 0.5222842, g: 0.30709326, b: 0.6320754, a: 0}
+    - Color_2A3ACF4A: {r: 0.26826924, g: 0.26826924, b: 0.31, a: 0}
+    - Color_4F3B6967: {r: 0.5293254, g: 0.5293254, b: 0.6132076, a: 0}
+    - Color_A250A324: {r: 0, g: 0, b: 0, a: 0}
+    - Color_D51C0097: {r: 0.39116523, g: 0.3780705, b: 0.4528302, a: 0}
     - Vector2_8887936F: {r: 0, g: 1, b: 0, a: 1}
+    - Vector3_B1224848: {r: 0, g: 199.2696, b: -277.4103, a: 0}
     - Vector4_3D22734C: {r: 0, g: 0, b: 0, a: 9999}
-    - Vector4_93AC7763: {r: -66.39801, g: 111.68382, b: -439.0988, a: 12}
-    - Vector4_A621E22C: {r: -42.746197, g: 87.76001, b: -462.8788, a: 12}
-    - Vector4_AE736A3C: {r: 82.962524, g: 116.24, b: -385.98724, a: 15}
-    - Vector4_B49F5E92: {r: 0, g: 18.583946, b: -416.95187, a: 31}
-    - Vector4_D00EA9EA: {r: -17.944118, g: 26.694004, b: -458.26532, a: 16}
-    - Vector4_D87BEEE4: {r: -53.472942, g: 31.891087, b: -443.6095, a: 16}
-    - Vector4_E3B67991: {r: 55.540863, g: 121.94, b: -374.27814, a: 15}
+    - Vector4_93AC7763: {r: 23.414917, g: 124.64, b: -895.13025, a: 15}
+    - Vector4_A621E22C: {r: 127.12767, g: 87.76001, b: -1011.28296, a: 12}
+    - Vector4_AE736A3C: {r: 58.851303, g: 116.24, b: -880.6936, a: 15}
+    - Vector4_B49F5E92: {r: 0, g: 116.68536, b: -964.4948, a: 31}
+    - Vector4_D00EA9EA: {r: 101.81482, g: 111.68382, b: -1033.2832, a: 12}
+    - Vector4_D87BEEE4: {r: 34.37848, g: 132.10236, b: -887.71326, a: 30}
+    - Vector4_E3B67991: {r: 67.69629, g: 339.7, b: -931.2357, a: 200}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

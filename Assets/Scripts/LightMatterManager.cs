@@ -5,15 +5,21 @@ using UnityEngine;
 public class LightMatterManager : MonoBehaviour
 {
 	private Material[] lightMatterMaterials;
+	private Material[] singleLightMaterials;
+	private Transform singleLightSource;
 	private Transform[] activeLights;
 	public int maxActiveLights;
+	public float globallyLoadedBrightness;
 	public Transform wormLocation;
+	public float gamma;
 	private float timer = 2;
     // Start is called before the first frame update
     void Start()
     {
 		lightMatterMaterials = gameObject.GetComponent<LightMatterMaterialBank>().getLightMatterMats();
+		singleLightMaterials = gameObject.GetComponent<LightMatterMaterialBank>().getSingleLightMats();
 		activeLights = new Transform[maxActiveLights];
+		singleLightSource = wormLocation;
     }
 
 
@@ -39,6 +45,7 @@ public class LightMatterManager : MonoBehaviour
 		foreach (Material m in lightMatterMaterials)
 		{
 			Shader shader = m.shader;
+			m.SetFloat(shader.GetPropertyNameId(maxActiveLights), gamma);
 			for (int i = 0; i < maxActiveLights; i++)
 			{
 				if (activeLights[i] != null)
@@ -51,6 +58,14 @@ public class LightMatterManager : MonoBehaviour
 					m.SetVector(shader.GetPropertyNameId(i), Vector4.zero);
 				}
 			}
+		}
+		foreach (Material m in singleLightMaterials)
+		{
+			Shader shader = m.shader;
+			m.SetFloat(shader.GetPropertyNameId(1), gamma);
+			m.SetVector(shader.GetPropertyNameId(0), new Vector4(singleLightSource.position.x,
+																singleLightSource.position.y,
+																singleLightSource.position.z, singleLightSource.GetComponent<LightSource>().getBrightness()));
 		}
 	}
 
@@ -67,17 +82,33 @@ public class LightMatterManager : MonoBehaviour
 			//if (g == null)
 			//	break;
 			Transform light = g.transform;
+			float brightness = light.GetComponent<LightSource>().getBrightness();
 			if (fillCounter < maxActiveLights)
 			{
 				activeLights[fillCounter] = light;
-				lightDistances[fillCounter] = Vector3.Distance(light.position, wormLocation.position);
+				if (brightness > globallyLoadedBrightness)
+				{
+					lightDistances[fillCounter] = 0;
+				}
+				else
+				{
+					lightDistances[fillCounter] = Vector3.Distance(light.position, wormLocation.position);
+				}
 				//Debug.Log(activeLights[fillCounter]);
 				fillCounter++;
 				
 			}
 			else
 			{
-				float thisDistance = Vector3.Distance(light.position, wormLocation.position);
+				float thisDistance = 0;
+				if (brightness > globallyLoadedBrightness)
+				{
+					thisDistance = 0;
+				}
+				else
+				{
+					thisDistance = Vector3.Distance(light.position, wormLocation.position);
+				}
 
 				float max = -1;
 				int maxIndex = -1;
@@ -96,5 +127,10 @@ public class LightMatterManager : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	public void gammaChange(float newGamma)
+	{
+		gamma = newGamma / 10f;
 	}
 }

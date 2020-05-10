@@ -32,6 +32,7 @@ public class WormMove : MonoBehaviour
 	public float stamina = 10f;
 	public float staminaRefresh = 1f;
 	public float refreshDelay = 1f;
+	public float staminaOnClick = 1f;
 	private float refreshTimer;
 	public GameObject grappleHitPrefab;
 	private GameObject grappleHit;
@@ -62,6 +63,13 @@ public class WormMove : MonoBehaviour
 	public MeshRenderer tail;
 
 	public Animator animator;
+
+	public ParticleSystem dust;
+	public TrailRenderer trail;
+	private Vector3 prevVelocity;
+	public float smokeSpeed;
+	public ParticleSystem speedLines;
+	public ParticleSystem jump;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -81,6 +89,10 @@ public class WormMove : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (PauseMenu.isPaused)
+		{
+			return;
+		}
 		grounded = jumpTrigger.getGrounded();
 		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.8f;
 
@@ -221,7 +233,10 @@ public class WormMove : MonoBehaviour
 				howMuchLongerIsItGrappleTime = 0;
 
 				rb.AddForce(Vector3.down * 4 * rb.velocity.magnitude, ForceMode.Impulse);
-				grappleTimer += 2;
+				if (grappleTimer + staminaOnClick < stamina)
+				{
+					grappleTimer += staminaOnClick;
+				}
 				//Debug.Log(Vector3.Distance(buttPosition, hit.point));
 			}
 			
@@ -324,6 +339,10 @@ public class WormMove : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (PauseMenu.isPaused)
+		{
+			return;
+		}
 		//Debug.Log("clear");
 		float moveY = Input.GetAxis("Vertical") * Mathf.Abs(Input.GetAxisRaw("Vertical")) * moveSpeed * Time.deltaTime;
 
@@ -365,9 +384,35 @@ public class WormMove : MonoBehaviour
 				{
 					rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
 				}
+				playJump();
 			}
 			crouching = false;
 		}
+
+		if (rb.velocity.magnitude > smokeSpeed)
+		{
+			
+			if (grounded)
+			{
+				playDust();
+				trail.enabled = false;
+			}
+			else
+			{
+				playSpeedLines();
+				trail.enabled = true;
+			}
+		}
+		else
+		{
+			trail.enabled = false;
+		}
+		/*
+		if (grounded && rb.velocity.magnitude + 1f < prevVelocity.magnitude)
+		{
+			playDust();
+		}
+		prevVelocity = rb.velocity;*/
 
 
 	}
@@ -400,6 +445,20 @@ public class WormMove : MonoBehaviour
 		}
 		//return willReturn;
 		return false;
+	}
+
+	private void playDust()
+	{
+		dust.Play();
+	}
+	private void playJump()
+	{
+		jump.Play();
+	}
+
+	private void playSpeedLines()
+	{
+		speedLines.Play();
 	}
 
 

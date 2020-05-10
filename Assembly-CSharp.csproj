@@ -66,6 +66,7 @@
     <Compile Include="Assets\BodyFriction.cs" />
     <Compile Include="Assets\ButtPosition.cs" />
     <Compile Include="Assets\JointPoint.cs" />
+    <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\RotateRandom.cs" />
     <Compile Include="Assets\Scripts\BaseplateDeactivator.cs" />
     <Compile Include="Assets\Scripts\BonkTrigger.cs" />
