@@ -13,6 +13,10 @@ public class BaseplateDeactivator : MonoBehaviour
 		{
 			r.enabled = false;
 		}
+		foreach (ParticleSystem p in GetComponentsInChildren<ParticleSystem>())
+		{
+			p.Pause();
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -45,6 +49,13 @@ public class BaseplateDeactivator : MonoBehaviour
 			{
 				r.enabled = false;
 			}
+			foreach (ParticleSystem p in GetComponentsInChildren<ParticleSystem>())
+			{
+				if (p.isPlaying)
+				{
+					p.Pause();
+				}
+			}
 			//transform.position = new Vector3(transform.position.x, transform.position.y - 10000, transform.position.z);
 		}
 		else if (!deactivated && prevState)
@@ -52,6 +63,13 @@ public class BaseplateDeactivator : MonoBehaviour
 			foreach (MeshRenderer r in GetComponentsInChildren<MeshRenderer>())
 			{
 				r.enabled = true;
+			}
+			foreach (ParticleSystem p in GetComponentsInChildren<ParticleSystem>())
+			{
+				if (p.isPaused)
+				{
+					p.Play();
+				}
 			}
 			//transform.position = new Vector3(transform.position.x, transform.position.y + 10000, transform.position.z);
 		}

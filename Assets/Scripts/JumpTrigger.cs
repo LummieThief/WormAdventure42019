@@ -6,6 +6,7 @@ using UnityEngine;
 public class JumpTrigger : MonoBehaviour
 {
 	private bool grounded;
+	private bool solidGround;
 	private float baseYScale;
 	private float maxScale = 1.2f;
 	private float minScale = 0.9f;
@@ -19,6 +20,11 @@ public class JumpTrigger : MonoBehaviour
 		if (other.tag == "Solid" || other.tag == "Solid Excluded")
 		{
 			grounded = true;
+			if (collisionAlongTransform(10))
+			{
+				solidGround = true;
+			}
+			//Vector3 collisionPoint = other.ClosestPoint(transform.position)
 		}
 	}
 	private void OnTriggerStay(Collider other)
@@ -26,6 +32,10 @@ public class JumpTrigger : MonoBehaviour
 		if (other.tag == "Solid" || other.tag == "Solid Excluded")
 		{
 			grounded = true;
+			if (collisionAlongTransform(10))
+			{
+				solidGround = true;
+			}
 		}
 	}
 	private void OnTriggerExit(Collider other)
@@ -33,6 +43,7 @@ public class JumpTrigger : MonoBehaviour
 		if (other.tag == "Solid" || other.tag == "Solid Excluded")
 		{
 			grounded = false;
+			solidGround = false;
 		}
 	}
 
@@ -41,9 +52,14 @@ public class JumpTrigger : MonoBehaviour
 		return grounded;
 	}
 
+	public bool getSolidGround()
+	{
+		return solidGround;
+	}
+
 	private void Update()
 	{
-		//Debug.Log(grounded);
+		Debug.Log(grounded);
 		float rot = transform.eulerAngles.x;
 
 		if (transform.eulerAngles.x < 180)
@@ -55,6 +71,25 @@ public class JumpTrigger : MonoBehaviour
 
 		transform.localScale = new Vector3(scaleAmount, baseYScale, scaleAmount);
 
+		
 		//Debug.Log(scaleAmount);
+	}
+
+	private bool collisionAlongTransform(int iterations)
+	{
+		RaycastHit hit;
+		for (int i = 0; i <= iterations; i++)
+		{
+			Vector3 point = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * (-1 + 2 * ((i * 1.0f) / iterations));
+			if (Physics.Raycast(point, Vector3.down, out hit, 1))
+			{
+				//Debug.Log("solid ground");
+				return true;
+			}
+			Debug.DrawRay(point, Vector3.down, Color.red);
+		}
+		//Debug.Log("Not solid ground");
+
+		return false;
 	}
 }
