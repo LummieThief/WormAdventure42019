@@ -78,6 +78,7 @@ public class WormMove : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
+		transform.eulerAngles = new Vector3(transform.eulerAngles.x + 90, transform.eulerAngles.y, transform.eulerAngles.z);
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
 		rb = GetComponent<Rigidbody>();
 		initialScale = transform.localScale;
@@ -96,6 +97,17 @@ public class WormMove : MonoBehaviour
 		{
 			return;
 		}
+		if (grappling)
+		{
+			LineRenderer line = currentGrapplePoint.GetComponent<LineRenderer>();
+			line.SetPosition(0, currentGrapplePoint.transform.position);
+			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
+		}
+		if (DetectWin.hasWon)
+		{
+			return;
+		}
+
 		grounded = jumpTrigger.getGrounded();
 		solidGround = jumpTrigger.getSolidGround();
 		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.8f;
@@ -348,7 +360,7 @@ public class WormMove : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (PauseMenu.isPaused)
+		if (PauseMenu.isPaused || DetectWin.hasWon)
 		{
 			return;
 		}

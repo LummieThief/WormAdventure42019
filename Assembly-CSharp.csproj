@@ -63,18 +63,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\BodyFriction.cs" />
-    <Compile Include="Assets\ButtPosition.cs" />
-    <Compile Include="Assets\JointPoint.cs" />
-    <Compile Include="Assets\PauseMenu.cs" />
-    <Compile Include="Assets\RotateRandom.cs" />
     <Compile Include="Assets\Scripts\BaseplateDeactivator.cs" />
+    <Compile Include="Assets\Scripts\BodyFriction.cs" />
     <Compile Include="Assets\Scripts\BonkTrigger.cs" />
     <Compile Include="Assets\Scripts\Buoy.cs" />
+    <Compile Include="Assets\Scripts\ButtPosition.cs" />
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CreateRope.cs" />
     <Compile Include="Assets\Scripts\DebugTP.cs" />
+    <Compile Include="Assets\Scripts\DetectWin.cs" />
     <Compile Include="Assets\Scripts\DrawLineToTransform.cs" />
     <Compile Include="Assets\Scripts\DummyWorm.cs" />
     <Compile Include="Assets\Scripts\EnableFog.cs" />
@@ -83,15 +81,19 @@
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\InitToPosition.cs" />
+    <Compile Include="Assets\Scripts\JointPoint.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
     <Compile Include="Assets\Scripts\LightMatterManager.cs" />
     <Compile Include="Assets\Scripts\LightMatterMaterialBank.cs" />
     <Compile Include="Assets\Scripts\LightSource.cs" />
+    <Compile Include="Assets\Scripts\Line.cs" />
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
+    <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\RandomRotation.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
     <Compile Include="Assets\Scripts\RopeClipStopper.cs" />
+    <Compile Include="Assets\Scripts\RotateRandom.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\TimerEnd.cs" />
     <Compile Include="Assets\Scripts\TimerStart.cs" />

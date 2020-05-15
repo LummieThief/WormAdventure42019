@@ -21,6 +21,10 @@ public class OuterWilds : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+		if (DetectWin.hasWon)
+		{
+			return;
+		}
 		if (Input.GetAxis("Horizontal") != 0)
 		{
 			grounded = jumpTrigger.getGrounded();
