@@ -73,6 +73,10 @@ public class WormMove : MonoBehaviour
 	public float smokeSpeed;
 	public ParticleSystem speedLines;
 	public ParticleSystem jump;
+
+	public float heldItemDistance;
+	private bool holdingObject;
+	private GameObject heldObject;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -187,7 +191,7 @@ public class WormMove : MonoBehaviour
 				grappleTimer = Mathf.Clamp(grappleTimer, 0, stamina);
 			}
 			//hinge.connectedBody = null;
-			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple && grappleTimer < stamina)
+			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple && grappleTimer < stamina && !holdingObject)
 			{
 				grappleHit.SetActive(true);
 				grappleHit.transform.position = hit.point;
@@ -204,7 +208,7 @@ public class WormMove : MonoBehaviour
 			refreshTimer = 0;
 		}
 
-		if (grappleHit.activeSelf)
+		if (grappleHit.activeSelf || holdingObject)
 		{
 			tail.material.Lerp(tailOn, tailOnExerted, (grappleTimer / stamina) * 2 - 1);
 		}
@@ -224,8 +228,48 @@ public class WormMove : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(0))
 		{
-			itsGrappleTime = true;
+			if (holdingObject)
+			{
+				holdingObject = false;
+				heldObject.GetComponent<LineRenderer>().enabled = false;
+				EggBreak eggBreak = heldObject.GetComponent<EggBreak>();
+				if (eggBreak != null)
+				{
+					eggBreak.prime();
+				}
+				heldObject = null;
+				spring.maxDistance = Mathf.Infinity;
+			}
+			else
+			{
+				itsGrappleTime = true;
+
+				if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range)) //grabbing object
+				{
+					if (hit.collider.gameObject.tag == "Egg")
+					{
+						itsGrappleTime = false;
+						GameObject egg = hit.collider.gameObject;
+						Rigidbody eggRB = egg.GetComponent<Rigidbody>();
+						spring.connectedBody = eggRB;
+						eggRB.isKinematic = false;
+						spring.maxDistance = heldItemDistance;
+						holdingObject = true;
+						//grappling = true;
+						heldObject = egg;
+					}
+				}
+			}
+			
 		}
+		if (holdingObject)
+		{
+			LineRenderer line = heldObject.GetComponent<LineRenderer>();
+			line.enabled = true;
+			line.SetPosition(0, heldObject.transform.position);
+			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
+		}
+
 		if (itsGrappleTime)
 		{
 			howMuchLongerIsItGrappleTime += Time.deltaTime;
@@ -338,7 +382,7 @@ public class WormMove : MonoBehaviour
 			
 		}
 		//*
-		if (!Input.GetMouseButton(0) || grappleTimer >= stamina) //If left click is released
+		if ((!Input.GetMouseButton(0) || grappleTimer >= stamina) && !holdingObject) //If left click is released
 		{
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;

@@ -46,6 +46,7 @@ public class LightMatterManager : MonoBehaviour
 		{
 			Shader shader = m.shader;
 			m.SetFloat(shader.GetPropertyNameId(maxActiveLights), gamma);
+			//m.SetColor("UnlitColor", RenderSettings.fogColor);
 			for (int i = 0; i < maxActiveLights; i++)
 			{
 				if (activeLights[i] != null)

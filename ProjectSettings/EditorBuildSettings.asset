@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Attempt 2.unity
     guid: f0ece38d29c10af48835e7cc8f2465cd
+  - enabled: 1
+    path: Assets/Scenes/Intermediate.unity
+    guid: 11772e69d632b4b48922cdab988f250e
   m_configObjects: {}

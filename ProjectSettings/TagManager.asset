@@ -11,6 +11,7 @@ TagManager:
   - GP
   - Light Source
   - Core
+  - Egg
   layers:
   - Default
   - TransparentFX
