@@ -77,12 +77,14 @@ public class WormMove : MonoBehaviour
 	public float heldItemDistance;
 	private bool holdingObject;
 	private GameObject heldObject;
+
+	public Vector3 initRot;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
 	void Start()
     {
-		transform.eulerAngles = new Vector3(transform.eulerAngles.x + 90, transform.eulerAngles.y, transform.eulerAngles.z);
+		transform.eulerAngles = new Vector3(transform.eulerAngles.x + initRot.x, transform.eulerAngles.y + initRot.y, transform.eulerAngles.z + initRot.z);
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
 		rb = GetComponent<Rigidbody>();
 		initialScale = transform.localScale;

@@ -20,7 +20,11 @@ public class GravityBox : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			goToScene();
+			if (other.GetComponent<Rigidbody>() != null && other.GetComponent<Rigidbody>().velocity.y > 0)
+			{
+				goToScene();
+			}
+			
 		}
 	}
 

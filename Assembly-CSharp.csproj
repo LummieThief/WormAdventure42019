@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CombineChildren.cs" />
     <Compile Include="Assets\Scripts\CreateRope.cs" />
+    <Compile Include="Assets\Scripts\Deathbox.cs" />
     <Compile Include="Assets\Scripts\DebugTP.cs" />
     <Compile Include="Assets\Scripts\DetectWin.cs" />
     <Compile Include="Assets\Scripts\DrawLineToTransform.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\GravityBox.cs" />
     <Compile Include="Assets\Scripts\InitToPosition.cs" />
+    <Compile Include="Assets\Scripts\InterInitializer.cs" />
     <Compile Include="Assets\Scripts\JointPoint.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
     <Compile Include="Assets\Scripts\LightMatterManager.cs" />
@@ -94,6 +96,9 @@
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\Quantum.cs" />
+    <Compile Include="Assets\Scripts\QuantumBox.cs" />
+    <Compile Include="Assets\Scripts\QuantumParent.cs" />
     <Compile Include="Assets\Scripts\RandomRotation.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
     <Compile Include="Assets\Scripts\RopeClipStopper.cs" />

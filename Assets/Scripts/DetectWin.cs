@@ -18,4 +18,9 @@ public class DetectWin : MonoBehaviour
 	{
 		hasWon = true;
 	}
+
+	public void toggleWin()
+	{
+		hasWon = !hasWon;
+	}
 }
