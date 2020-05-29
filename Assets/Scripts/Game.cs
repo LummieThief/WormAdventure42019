@@ -1,98 +1,108 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
-	private string ryan = "";
-	private float typingTimer = 0f;
-	private float timeLimit = 2f;
-	//public GameObject currentWorm;
-	public string skin = "base";
-    // Start is called before the first frame update
-    void Start()
+	public static bool fallFromRoof = true;
+	public static bool gravBoxEnabled = false;
+	private float timer = 0;
+	private float gravBoxDelay = 7;
+	private Transform worm;
+	private Vector3 wormVel;
+	private Quaternion wormRot;
+	private Vector3 wormAngVel;
+
+	private Transform rig;
+	private Vector3 rigAngle;
+
+	public Vector3 wormRespawnLocation;
+	private Color fogColor;
+	private float fogDensity;
+
+	private string currentScene = "Attempt 2";
+
+	// Start is called before the first frame update
+	void Start()
     {
-		GameObject.DontDestroyOnLoad(this);
-		UnityEngine.SceneManagement.SceneManager.LoadScene("Attempt 2");
+		if (worm == null)
+		{
+			worm = GameObject.FindGameObjectWithTag("Player").transform;
+		}
+		if (rig == null)
+		{
+			rig = GameObject.FindGameObjectWithTag("MainCamera").transform;
+		}
 	}
 
 	private void Update()
 	{
-		if (typingTimer > 0)
+		//Debug.Log(timer);
+		timer += Time.deltaTime;
+		if (timer > gravBoxDelay)
 		{
-			typingTimer += Time.deltaTime;
-		}
-		if (typingTimer >= timeLimit)
-		{
-			typingTimer = 0;
-			ryan = "";
-		}
-		if ((Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F4))
-		{
-			Application.Quit();
+			gravBoxEnabled = true;
 		}
 
-		if (Input.GetKeyDown(KeyCode.R))
+		if (worm == null)
 		{
-			typingTimer += 0.01f;
-			if (ryan.Equals(""))
-			{
-				ryan = "R";
-			}
-			else
-			{
-				ryan = "";
-			}
+			worm = GameObject.FindGameObjectWithTag("Player").transform;
+			worm.GetComponent<Rigidbody>().velocity = new Vector3(0, wormVel.y, 0);
+			worm.rotation = wormRot;
+			worm.GetComponent<Rigidbody>().angularVelocity = wormAngVel;
 		}
-		if (Input.GetKeyDown(KeyCode.Y))
+		else
 		{
-			if (ryan.Equals("R"))
-			{
-				ryan += "Y";
-			}
-			else
-			{
-				ryan = "";
-			}
+			wormVel = worm.GetComponent<Rigidbody>().velocity;
+			wormRot = worm.rotation;
+			wormAngVel = worm.GetComponent<Rigidbody>().angularVelocity;
 		}
-		if (Input.GetKeyDown(KeyCode.A))
+
+		if (rig == null)
 		{
-			if (ryan.Equals("RY"))
+			rig = GameObject.FindGameObjectWithTag("MainCamera").transform;
+			var mouseY = rigAngle.x;
+			if (mouseY > 180)
 			{
-				ryan += "A";
+				mouseY -= 360;
 			}
-			else
-			{
-				ryan = "";
-			}
+
+			rig.GetComponent<CameraFollow>().setY(mouseY);
+			rig.eulerAngles = rigAngle;
+			Debug.Log(rigAngle);
 		}
-		if (Input.GetKeyDown(KeyCode.N))
+		else
 		{
-			if (ryan.Equals("RYA"))
-			{
-				if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-				{
-					skin = "rainbow";
-				}
-				else if (!skin.Equals("black"))
-				{
-					skin = "black";
-				}
-				else if(!skin.Equals("base"))
-				{
-					skin = "base";
-				}
-				UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-			}
-			else
-			{
-				ryan = "";
-			}
+			rigAngle = rig.eulerAngles;
 		}
+
+
+		if (currentScene != SceneManager.GetActiveScene().name)
+		{
+			newScene();
+		}
+		else
+		{
+			fogColor = RenderSettings.fogColor;
+			fogDensity = RenderSettings.fogDensity;
+		}
+
 	}
 
-	public string getSkin()
+	public void newScene()
 	{
-		return skin;
+		
+		timer = 0;
+		gravBoxEnabled = false;
+		currentScene = SceneManager.GetActiveScene().name;
+		if (currentScene == "Attempt 2" && fallFromRoof)
+		{
+			worm.position = wormRespawnLocation;
+		}
+		fallFromRoof = true;
+		RenderSettings.fogColor = fogColor;
+		RenderSettings.fogDensity = fogDensity;
 	}
+
 }

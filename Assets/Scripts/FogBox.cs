@@ -6,7 +6,8 @@ public class FogBox : MonoBehaviour
 {
 	public float intensity = 0.013f;
 	public Color color;
-	private float transitionSpeed = 2;
+	public float transitionSpeed = 2;
+	
     // Start is called before the first frame update
     void Start()
     {

@@ -31,7 +31,7 @@ public class DebugTP : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.LeftShift))
 			{
-				worm.transform.position = moreTeleporters[current].position;
+				worm.transform.position = moreTeleporters[current2].position;
 				current2++;
 				if (current2 >= moreTeleporters.Length)
 				{

@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
 	public float mouseSensitivity = 100f;
-	public float camDistance = 6.17f;
+	public float camDistance = 10f;
 	public float zoomSpeed = 0.5f;
 	public float baseOffsetUp = 0.84f;
 	public float baseOffsetForward = -0.84f;
@@ -31,6 +31,7 @@ public class CameraFollow : MonoBehaviour
 		//rb = GetComponent<Rigidbody>()
 		cam = GetComponentInChildren<Camera>().transform;
 		cam.localPosition = new Vector3(0, 0, -camDistance);
+		prevDistance = camDistance;
 		//maintains the same distance from the target
 		initialX = transform.position.x - target.position.x;
 		initialY = transform.position.y - target.position.y + baseOffsetUp;
@@ -38,6 +39,7 @@ public class CameraFollow : MonoBehaviour
 
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
+
 
 	}
 	
@@ -105,5 +107,10 @@ public class CameraFollow : MonoBehaviour
 	public void sensitivityChange(float newSens)
 	{
 		mouseSensitivity = newSens * 30;
+	}
+
+	public void setY(float val)
+	{
+		mouseY = val;
 	}
 }

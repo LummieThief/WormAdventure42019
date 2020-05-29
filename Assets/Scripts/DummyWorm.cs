@@ -10,6 +10,7 @@ public class DummyWorm : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+		/*
 		Game game = GameObject.FindObjectOfType<Game>();
 		if (game == null)
 		{
@@ -31,6 +32,7 @@ public class DummyWorm : MonoBehaviour
 			}
 		}
 		GameObject.Destroy(this.gameObject);
+		*/
     }
 
     // Update is called once per frame

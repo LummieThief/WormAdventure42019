@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\EggBreak.cs" />
     <Compile Include="Assets\Scripts\EnableFog.cs" />
     <Compile Include="Assets\Scripts\FPSDisplay.cs" />
+    <Compile Include="Assets\Scripts\FadeToScene.cs" />
     <Compile Include="Assets\Scripts\FogBox.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Assets\Scripts\ModelFollow.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\Persistant.cs" />
     <Compile Include="Assets\Scripts\Quantum.cs" />
     <Compile Include="Assets\Scripts\QuantumBox.cs" />
     <Compile Include="Assets\Scripts\QuantumParent.cs" />

@@ -12,7 +12,7 @@ public class EnableFog : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		RenderSettings.fog = true;
+		//RenderSettings.fog = true;
 	}
 
 }

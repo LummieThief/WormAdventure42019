@@ -109,16 +109,16 @@ public class WormMove : MonoBehaviour
 			line.SetPosition(0, currentGrapplePoint.transform.position);
 			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
 		}
-		if (DetectWin.hasWon)
+		if (DetectWin.hasWon || GravityBox.freezeWorm)
 		{
 			return;
 		}
 
 		grounded = jumpTrigger.getGrounded();
 		solidGround = jumpTrigger.getSolidGround();
-		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.8f;
+		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.7f;
 
-		if (solidGround)
+		if (solidGround && !grappling)
 		{
 			canGrapple = true;
 		}
@@ -364,7 +364,7 @@ public class WormMove : MonoBehaviour
 			if (Vector3.Distance(currentGrapplePoint.transform.position, buttPosition) + currentRopeLength > (ropeLength + stretchLeway))
 			{
 				//Debug.Log(Vector3.Distance(currentGrapplePoint.transform.position, buttPosition) + currentRopeLength - (ropeLength + stretchLeway) > 1);
-				grappleTimer += Time.deltaTime * Mathf.Pow((Vector3.Distance(currentGrapplePoint.transform.position, buttPosition) + currentRopeLength - (ropeLength + stretchLeway)), 3);
+				//grappleTimer += Time.deltaTime * Mathf.Pow((Vector3.Distance(currentGrapplePoint.transform.position, buttPosition) + currentRopeLength - (ropeLength + stretchLeway)), 3);
 			}
 			else
 			{

@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Intermediate.unity
     guid: dd7c3bed5484cf645a26ed8d9e5f0b48
+  - enabled: 1
+    path: Assets/Scenes/Attempt 3.unity
+    guid: 05ed05dda143bb7439545104b994a078
+  - enabled: 1
+    path: Assets/Scenes/Winners.unity
+    guid: 3e2f6635f0898c642946b16fd85aab31
   m_configObjects: {}
