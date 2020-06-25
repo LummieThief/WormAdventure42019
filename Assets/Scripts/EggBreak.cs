@@ -17,10 +17,17 @@ public class EggBreak : MonoBehaviour
 	{
 		if (primed && other.gameObject.tag == "Solid")
 		{
-			GetComponent<Rigidbody>().isKinematic = true;
-			transform.position = home.position;
-			transform.rotation = Quaternion.identity;
-			primed = false;
+			if (home == null)
+			{
+				Destroy(gameObject);
+			}
+			else
+			{
+				GetComponent<Rigidbody>().isKinematic = true;
+				transform.position = home.position;
+				transform.rotation = Quaternion.identity;
+				primed = false;
+			}
 		}
 	}
 

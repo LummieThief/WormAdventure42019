@@ -12,6 +12,7 @@ TagManager:
   - Light Source
   - Core
   - Egg
+  - Head
   layers:
   - Default
   - TransparentFX

@@ -21,10 +21,12 @@ public class OuterWilds : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		if (DetectWin.hasWon)
+		if (worm.GetComponent<WormMove>().twod || DetectWin.hasWon)
 		{
 			return;
 		}
+
+		
 		if (Input.GetAxis("Horizontal") != 0)
 		{
 			grounded = jumpTrigger.getGrounded();
@@ -34,13 +36,15 @@ public class OuterWilds : MonoBehaviour
 			if (grounded)
 			{
 				rot *= rotSpeed;
-				transform.RotateAround(worm.position, Vector3.up, -rot);
+				rotate(-rot);
 			}
 			else
 			{
+				
 				rot *= airRotSpeed;
-				transform.RotateAround(worm.position, Vector3.up, -rot);
+				rotate(-rot);
 			}
+
 		}
 	}
 	private void LateUpdate()
@@ -51,4 +55,14 @@ public class OuterWilds : MonoBehaviour
 			jumpTrigger = worm.gameObject.GetComponentInChildren<JumpTrigger>();
 		}
 	}
+
+	public void rotate(float degrees)
+	{
+		if (worm == null)
+		{
+			worm = GameObject.FindGameObjectWithTag("Player").transform;
+		}
+		transform.RotateAround(worm.position, Vector3.up, degrees);
+	}
+
 }

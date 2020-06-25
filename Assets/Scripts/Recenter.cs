@@ -12,10 +12,11 @@ public class Recenter : MonoBehaviour
 	public float timeBetweenResets = 60f;
 	private float xDis, yDis, zDis;
 	private int count;
+	private bool canRecenter = true;
     // Start is called before the first frame update
     void Start()
     {
-        
+		recenter();
     }
 
     // Update is called once per frame
@@ -25,14 +26,18 @@ public class Recenter : MonoBehaviour
 		xDis = worm.transform.position.x;
 		yDis = worm.transform.position.y;
 		zDis = worm.transform.position.z;
-		//sends the worm back to the origin
-		wormPackage.transform.position = new Vector3(wormPackage.transform.position.x - xDis, wormPackage.transform.position.y - yDis, wormPackage.transform.position.z - zDis);
-		//cam.position = new Vector3(cam.position.x - xDis, cam.position.y - yDis, cam.position.z - zDis);
+
 		foreach (OuterWilds n in FindObjectsOfType<OuterWilds>())
 		{
 			GameObject obj = n.gameObject;
-			obj.transform.position = new Vector3(obj.transform.position.x - xDis, obj.transform.position.y - yDis, obj.transform.position.z - zDis);
+			obj.transform.position -= worm.transform.position;
+			//obj.transform.position = new Vector3(obj.transform.position.x - xDis, obj.transform.position.y - yDis, obj.transform.position.z - zDis);
 		}
+
+		//sends the worm back to the origin
+		wormPackage.transform.position -= worm.transform.position;
+		//cam.position = new Vector3(cam.position.x - xDis, cam.position.y - yDis, cam.position.z - zDis);
+		
 		Debug.Log(count);
 		cam.enabled = false;
     }
@@ -62,4 +67,5 @@ public class Recenter : MonoBehaviour
 			
 		}*/
 	}
+
 }

@@ -647,7 +647,11 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    UNet: 1
+    Build: 0
+    Collab: 0
+    ErrorHub: 0
+    Hub: 0
+    UNet: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -660,10 +664,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 9ca4beae-57b3-4609-bf2c-09698ce3e65c
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Worm Adveture 4 2019
+  organizationId: rodgermccallister
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

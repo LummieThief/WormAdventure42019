@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GravityBox : MonoBehaviour
 {
 	public float force = 100f;
-	public static bool freezeWorm;
+	//public static bool freezeWorm;
 	public string scene;
 	//public Camera backupCam;
 	private Rigidbody wormRB;
@@ -33,10 +33,10 @@ public class GravityBox : MonoBehaviour
 		{
 			if ((!fallOut && wormRB.velocity.y < 0) || (fallOut && wormRB.velocity.y > 0))
 			{
-				freezeWorm = false;
+				//freezeWorm = false;
 				Game.gravBoxEnabled = false;
 				goToScene(scene);
-				Debug.Log("fading");
+				//Debug.Log("fading");
 				
 			}
 

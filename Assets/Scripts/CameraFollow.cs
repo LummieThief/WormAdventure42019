@@ -20,9 +20,14 @@ public class CameraFollow : MonoBehaviour
 	private Transform cam;
 	private float prevDistance;
 
+	private bool mouseFrozen;
+
 	private float timer;
 	public float timeBetweenResets = 5f;
 	public Recenter recenter;
+
+	private bool obscured;
+	private bool twod;
 
 	//private Rigidbody rb;
 	// Start is called before the first frame update
@@ -48,11 +53,14 @@ public class CameraFollow : MonoBehaviour
 	void LateUpdate()
     {
 		cam.localPosition = new Vector3(0, 0, -Mathf.Clamp(prevDistance + zoomSpeed, 0, camDistance));
-		mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-		mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+		if (!mouseFrozen)
+		{
+			mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+			mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+		}
 
 		//mouseX = Mathf.Clamp(mouseX, -160, 160);
-		mouseY = Mathf.Clamp(mouseY, -60, 60);
+		mouseY = Mathf.Clamp(mouseY, -75, 75);
 
 		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);
 		transform.Rotate(Vector3.up, mouseX);
@@ -66,10 +74,15 @@ public class CameraFollow : MonoBehaviour
 
 		prevDistance = Vector3.Distance(cam.position, transform.position);
 
-		
+
 		if (collided)
 		{
 			prevDistance += zoomSpeed;
+			obscured = true;
+		}
+		else
+		{
+			obscured = false;
 		}
 
 		/*
@@ -112,5 +125,15 @@ public class CameraFollow : MonoBehaviour
 	public void setY(float val)
 	{
 		mouseY = val;
+	}
+
+	public void freezeMouseControl(bool value)
+	{
+		mouseFrozen = value;
+	}
+
+	public float getDistance()
+	{
+		return cam.localPosition.z;
 	}
 }
