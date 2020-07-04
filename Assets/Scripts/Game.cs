@@ -30,6 +30,8 @@ public class Game : MonoBehaviour
 
 	private float worldRotation;
 
+	private bool loaded = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -109,8 +111,13 @@ public class Game : MonoBehaviour
 			fogDensity = RenderSettings.fogDensity;
 		}
 		//Debug.Log(fogDensity);
-
+		if (startingGrapple)
+		{
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
 		worldRotation = transform.eulerAngles.y;
+		//Debug.Log(loaded);
 	}
 
 	public void newScene()
@@ -133,7 +140,7 @@ public class Game : MonoBehaviour
 	}
 	public bool setStartingGrapple(bool value)
 	{
-		Debug.Log("set grapple");
+		//Debug.Log("set grapple");
 		startingGrapple = value;
 		return value;
 	}
@@ -141,5 +148,34 @@ public class Game : MonoBehaviour
 	public float getWorldRotation()
 	{
 		return worldRotation;
+	}
+
+	public void setLoaded(bool val)
+	{
+		loaded = val;
+	}
+
+	public bool getLoaded()
+	{
+		return loaded;
+	}
+
+	public bool getHoldingObject()
+	{
+		return holdingObject;
+	}
+
+	public void resetGameData()
+	{
+		worm = GameObject.FindGameObjectWithTag("Player").transform;
+		rig = GameObject.FindGameObjectWithTag("MainCamera").transform;
+		currentScene = "Attempt 2";
+		startingGrapple = true;
+		loaded = false;
+		timer = 0;
+		wormVel = Vector3.zero;
+		wormRot = Quaternion.identity;
+		wormAngVel = Vector3.zero;
+		rigAngle = Vector3.zero;
 	}
 }

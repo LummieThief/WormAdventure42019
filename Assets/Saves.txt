@@ -1,0 +1,33 @@
+
+
+
+MODIFYING THIS DOCUMENT WILL ERASE YOUR SAVE DATA!
+
+
+
+PositionX,1.525879E-05
+PositionY,-47.36951
+PositionZ,-159.4636
+RotationX,0.7071067
+RotationY,0
+RotationZ,0
+RotationW,0.7071069
+VelocityX,4.287713E-08
+VelocityY,-0.0007020235
+VelocityZ,1.154148E-05
+WorldPositionX,195.1919
+WorldPositionY,0
+WorldPositionZ,-129.4711
+WorldRotationX,0
+WorldRotationY,0.5754235
+WorldRotationZ,0
+WorldRotationW,0.8178556
+FogR,0.137255
+FogG,0.09411771
+FogB,0.2705885
+FogA,0
+FogD,1.855748E-05
+Egg,False
+Scene,Attempt 3
+Time1,20200703
+Time2,115114.621

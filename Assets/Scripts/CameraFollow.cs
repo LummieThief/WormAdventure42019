@@ -55,8 +55,8 @@ public class CameraFollow : MonoBehaviour
 		cam.localPosition = new Vector3(0, 0, -Mathf.Clamp(prevDistance + zoomSpeed, 0, camDistance));
 		if (!mouseFrozen)
 		{
-			mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-			mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+			mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.timeScale;
+			mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.timeScale;
 		}
 
 		//mouseX = Mathf.Clamp(mouseX, -160, 160);
@@ -119,7 +119,7 @@ public class CameraFollow : MonoBehaviour
 
 	public void sensitivityChange(float newSens)
 	{
-		mouseSensitivity = newSens * 30;
+		mouseSensitivity = newSens / 2;
 	}
 
 	public void setY(float val)

@@ -9,11 +9,13 @@ public class OuterWilds : MonoBehaviour
 	private float airRotSpeed = 40f;
 	private Transform worm;
 	private JumpTrigger jumpTrigger;
+	private Game game;
 	private bool grounded;
 	// Start is called before the first frame update
 
     void Start()
     {
+		game = FindObjectOfType<Game>();
 		worm = GameObject.FindGameObjectWithTag("Player").transform;
 		jumpTrigger = worm.gameObject.GetComponentInChildren<JumpTrigger>();
     }
@@ -21,7 +23,7 @@ public class OuterWilds : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		if (worm.GetComponent<WormMove>().twod || DetectWin.hasWon)
+		if (worm.GetComponent<WormMove>().twod || DetectWin.hasWon || game.getStartingGrapple())
 		{
 			return;
 		}

@@ -117,7 +117,6 @@ public class WormMove : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Debug.Log(transform.position);
 		if (PauseMenu.isPaused || SaveLoad.initializing || DetectWin.hasWon)
 		{
 			return;
@@ -236,7 +235,7 @@ public class WormMove : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(0) || (startingGrapple && frame == 2))
 		{
-			if (holdingObject)
+			if (holdingObject && !startingGrapple)
 			{
 				grabObject(null);
 			}
@@ -249,7 +248,7 @@ public class WormMove : MonoBehaviour
 					if (hit.collider.gameObject.tag == "Egg")
 					{
 						grabObject(hit.collider.gameObject);
-						
+
 					}
 				}
 			}
@@ -363,22 +362,32 @@ public class WormMove : MonoBehaviour
 		//*
 		if (startingGrapple)
 		{
-			if (Input.GetMouseButton(0))
+			if (!StartMenu.isOpen)
 			{
-				startingGrapple = false;
-				game.setStartingGrapple(false);
-				itsGrappleTime = false;
-				animator.SetBool("Asleep", false);
-				howMuchLongerIsItGrappleTime = 0;
-				grappling = false;
-				if (currentGrapplePoint != null)
+				if (Input.GetMouseButton(0) || Input.GetMouseButtonUp(0)) //worm drops
 				{
-					currentGrapplePoint.GetComponent<GrapplePoint>().destroySelf(); //destroys all the grapplePoints
-																					//currentGrapplePoint = null;
+					Debug.Log("drop");
+					Cursor.visible = false;
+					Cursor.lockState = CursorLockMode.Locked;
+
+					startingGrapple = false;
+					game.setStartingGrapple(false);
+					itsGrappleTime = false;
+					animator.SetBool("Asleep", false);
+					howMuchLongerIsItGrappleTime = 0;
+					grappling = false;
+					if (currentGrapplePoint != null)
+					{
+						currentGrapplePoint.GetComponent<GrapplePoint>().destroySelf(); //destroys all the grapplePoints
+																						//currentGrapplePoint = null;
+					}
+					if (!holdingObject)
+					{
+						spring.maxDistance = Mathf.Infinity;
+					}
+					float startingJoltForce = 3000f;
+					rb.AddForce(Vector3.up * startingJoltForce);
 				}
-				spring.maxDistance = Mathf.Infinity;
-				float startingJoltForce = 3000f;
-				rb.AddForce(Vector3.up * startingJoltForce);
 			}
 			
 		}
@@ -511,6 +520,7 @@ public class WormMove : MonoBehaviour
 	{
 		if (obj != null) //grabbing a new object
 		{
+			obj.AddComponent<OuterWilds>();
 			itsGrappleTime = false;
 			Rigidbody objRB = obj.GetComponent<Rigidbody>();
 			spring.connectedBody = objRB;
@@ -591,7 +601,7 @@ public class WormMove : MonoBehaviour
 		jumpHeld = Input.GetKey(KeyCode.Space);
 	}
 
-	public void load(Vector3 pos, Quaternion rot, Vector3 vel)
+	public void load(Vector3 pos, Quaternion rot, Vector3 vel, bool hasEgg)
 	{
 		initRot = Vector3.zero;
 		transform.position = pos;
@@ -605,6 +615,13 @@ public class WormMove : MonoBehaviour
 		rb.velocity = vel;
 		canGrapple = false;
 		lockGrapple = true;
+
+		if (hasEgg)
+		{
+			var eg = Instantiate(game.egg, transform.position, new Quaternion(0f, 0f, -0.1f, 0.5f));
+			grabObject(eg);
+			
+		}
 	}
 
 }

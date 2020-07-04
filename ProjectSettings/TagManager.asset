@@ -13,6 +13,7 @@ TagManager:
   - Core
   - Egg
   - Head
+  - OuterWildsWorld
   layers:
   - Default
   - TransparentFX

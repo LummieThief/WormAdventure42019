@@ -73,7 +73,6 @@
     <Compile Include="Assets\Scripts\Depricated\BaseplateDeactivator.cs" />
     <Compile Include="Assets\Scripts\Depricated\BonkTrigger.cs" />
     <Compile Include="Assets\Scripts\Depricated\Buoy.cs" />
-    <Compile Include="Assets\Scripts\Depricated\CombineChildren.cs" />
     <Compile Include="Assets\Scripts\Depricated\CreateRope.cs" />
     <Compile Include="Assets\Scripts\Depricated\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Depricated\DummyWorm.cs" />
@@ -98,8 +97,10 @@
     <Compile Include="Assets\Scripts\EggBreak.cs" />
     <Compile Include="Assets\Scripts\EnableFog.cs" />
     <Compile Include="Assets\Scripts\FPSDisplay.cs" />
+    <Compile Include="Assets\Scripts\FadeController.cs" />
     <Compile Include="Assets\Scripts\FogBox.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
+    <Compile Include="Assets\Scripts\GooseController.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\GravityBox.cs" />
@@ -108,19 +109,25 @@
     <Compile Include="Assets\Scripts\LightMatterMaterialBank.cs" />
     <Compile Include="Assets\Scripts\LightSource.cs" />
     <Compile Include="Assets\Scripts\Line.cs" />
+    <Compile Include="Assets\Scripts\Menu\OptionsMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\StartMenu.cs" />
     <Compile Include="Assets\Scripts\MenuCameraPan.cs" />
+    <Compile Include="Assets\Scripts\MeshCombiner.cs" />
     <Compile Include="Assets\Scripts\OuterWilds.cs" />
-    <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Persistant.cs" />
+    <Compile Include="Assets\Scripts\PersistantProtection.cs" />
     <Compile Include="Assets\Scripts\Quantum.cs" />
     <Compile Include="Assets\Scripts\QuantumBox.cs" />
     <Compile Include="Assets\Scripts\QuantumParent.cs" />
     <Compile Include="Assets\Scripts\RandomAnimationStart.cs" />
     <Compile Include="Assets\Scripts\RandomRotation.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
+    <Compile Include="Assets\Scripts\ResetSave.cs" />
     <Compile Include="Assets\Scripts\SaveLoad.cs" />
     <Compile Include="Assets\Scripts\TwoDWormMove.cs" />
     <Compile Include="Assets\Scripts\WormMove.cs" />
+    <None Include="Assets\Saves.txt" />
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
       <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
     </Reference>

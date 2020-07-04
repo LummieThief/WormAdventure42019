@@ -20,7 +20,7 @@ public class MenuCameraPan : MonoBehaviour
     {
 		var degrees = rotSpeed;
 		//degrees *= (11 - Mathf.Abs(follow.getDistance()));
-		Debug.Log(follow.getDistance());
+		//Debug.Log(follow.getDistance());
 		transform.Rotate(Vector3.up, degrees * Time.deltaTime);
 		if (!game.getStartingGrapple())
 		{

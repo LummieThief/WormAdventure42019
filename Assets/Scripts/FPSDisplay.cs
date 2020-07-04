@@ -4,7 +4,12 @@ using System.Collections;
 public class FPSDisplay : MonoBehaviour
 {
 	float deltaTime = 0.0f;
+	public int targetFrameRate;
 
+	private void Start()
+	{
+		Application.targetFrameRate = targetFrameRate;
+	}
 	void Update()
 	{
 		deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
