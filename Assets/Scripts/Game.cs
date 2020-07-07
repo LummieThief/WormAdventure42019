@@ -10,7 +10,7 @@ public class Game : MonoBehaviour
 	private float timer = 0;
 	private float gravBoxDelay = 7;
 	private Transform worm;
-	private Vector3 wormVel;
+	//private Vector3 wormVel;
 	private Quaternion wormRot;
 	private Vector3 wormAngVel;
 
@@ -58,7 +58,7 @@ public class Game : MonoBehaviour
 		if (worm == null)
 		{
 			worm = GameObject.FindGameObjectWithTag("Player").transform;
-			worm.GetComponent<Rigidbody>().velocity = new Vector3(0, wormVel.y, 0);
+			//worm.GetComponent<Rigidbody>().velocity = new Vector3(0, wormVel.y, 0);
 			worm.rotation = wormRot;
 			worm.GetComponent<Rigidbody>().angularVelocity = wormAngVel;
 
@@ -76,7 +76,7 @@ public class Game : MonoBehaviour
 		}
 		else
 		{
-			wormVel = worm.GetComponent<Rigidbody>().velocity;
+			//wormVel = worm.GetComponent<Rigidbody>().velocity;
 			wormRot = worm.rotation;
 			wormAngVel = worm.GetComponent<Rigidbody>().angularVelocity;
 			holdingObject = worm.GetComponent<WormMove>().getHolding();
@@ -173,7 +173,7 @@ public class Game : MonoBehaviour
 		startingGrapple = true;
 		loaded = false;
 		timer = 0;
-		wormVel = Vector3.zero;
+		//wormVel = Vector3.zero;
 		wormRot = Quaternion.identity;
 		wormAngVel = Vector3.zero;
 		rigAngle = Vector3.zero;

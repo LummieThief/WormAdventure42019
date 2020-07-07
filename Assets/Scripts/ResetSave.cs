@@ -30,39 +30,8 @@ public class ResetSave : MonoBehaviour
 
 	public static void resetSave()
 	{
-		/*
-		PlayerPrefs.DeleteKey("PositionX");
-		PlayerPrefs.DeleteKey("PositionY");
-		PlayerPrefs.DeleteKey("PositionZ");
-
-		PlayerPrefs.DeleteKey("RotationX");
-		PlayerPrefs.DeleteKey("RotationY");
-		PlayerPrefs.DeleteKey("RotationZ");
-		PlayerPrefs.DeleteKey("RotationW");
-
-		PlayerPrefs.DeleteKey("VelocityX");
-		PlayerPrefs.DeleteKey("VelocityY");
-		PlayerPrefs.DeleteKey("VelocityZ");
-
-
-		PlayerPrefs.DeleteKey("WorldPositionX");
-		PlayerPrefs.DeleteKey("WorldPositionY");
-		PlayerPrefs.DeleteKey("WorldPositionZ");
-
-		PlayerPrefs.DeleteKey("WorldRotationX");
-		PlayerPrefs.DeleteKey("WorldRotationY");
-		PlayerPrefs.DeleteKey("WorldRotationZ");
-		PlayerPrefs.DeleteKey("WorldRotationW");
-
-		PlayerPrefs.DeleteKey("FogR");
-		PlayerPrefs.DeleteKey("FogG");
-		PlayerPrefs.DeleteKey("FogB");
-		PlayerPrefs.DeleteKey("FogA");
-		PlayerPrefs.DeleteKey("FogD");
-
-		PlayerPrefs.DeleteKey("Scene");
-		*/
 		System.IO.File.Delete(SaveLoad.path);
+		PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 49999) * 2 + 1);
 
 		Debug.Log("Reset");
 	}

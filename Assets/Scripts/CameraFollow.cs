@@ -52,6 +52,7 @@ public class CameraFollow : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate()
     {
+		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
 		cam.localPosition = new Vector3(0, 0, -Mathf.Clamp(prevDistance + zoomSpeed, 0, camDistance));
 		if (!mouseFrozen)
 		{

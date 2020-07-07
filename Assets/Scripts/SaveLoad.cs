@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Text;
 
 public class SaveLoad : MonoBehaviour
 {
@@ -23,11 +24,10 @@ public class SaveLoad : MonoBehaviour
 	private bool gamePaused;
 
 	public static string path;
-	private int marginOfError = 5;
 	// Start is called before the first frame update
 	void Awake()
     {
-		path = Application.dataPath + "/Saves.txt";
+		path = Application.dataPath + "/saves.txt";
 		game = FindObjectOfType<Game>();
 		wm = worm.GetComponent<WormMove>();
 
@@ -135,7 +135,7 @@ public class SaveLoad : MonoBehaviour
 	{
 		Rigidbody rb = worm.GetComponent<Rigidbody>();
 
-		File.WriteAllText(path, "\n\n\nMODIFYING THIS DOCUMENT WILL ERASE YOUR SAVE DATA!\n\n\n");
+		File.WriteAllText(path, "Saves");
 		
 
 		List<string> contents = new List<string>();
@@ -172,73 +172,26 @@ public class SaveLoad : MonoBehaviour
 
 		contents.Add("\n" + "Egg" + "," + game.getHoldingObject());
 		contents.Add("\n" + "Scene" + "," + SceneManager.GetActiveScene().name);
-		contents.Add("\n" + "Time1" + "," + System.DateTime.Now.ToString("yyyyMMdd"));
+		contents.Add("\n" + "Time" + "," + toSeconds(System.DateTime.Now));
 
 		foreach (string s in contents)
 		{
 			File.AppendAllText(path, s);
 		}
-
-		var margin = marginOfError + 1;
-		var l = 0;
-		while (margin > marginOfError && l < 3)
-		{
-			File.AppendAllText(path, "\n" + "Time2" + "," + System.DateTime.Now.ToString("hhmmss.fff"));
-
-			double time1 = double.Parse(getValueOf(path, "Time2"));
-			double time2 = double.Parse(File.GetLastWriteTime(path).ToString("hhmmss.fff"));
-			margin = (int)Mathf.Round(1000 * Mathf.Abs((float)(time1 - time2)));
-			l++;
-		}
-
 		numSaves++;
 
 		Debug.Log("Saved: save number " + numSaves);
-		Debug.Log(margin);
-		//Debug.Log("Margin of " + margin + ". " + time1 + " " + time2);
 	}
 	void load()
 	{
 		#region babycatcher
-		float t1 = float.Parse(getValueOf(path, "Time2"));
-		float t2 = float.Parse(File.GetLastWriteTime(path).ToString("hhmmss.fff"));
-		int mar = (int)Mathf.Round(Mathf.Abs((1000 * (t1 - t2))));
-		Debug.Log(mar);
-		if (mar > marginOfError) //they might be cheating
+		int lastWrite = toSeconds(File.GetLastWriteTime(path));
+		int lastLog = int.Parse(getValueOf(path, "Time"));
+		int elapsed = lastWrite - lastLog;
+
+		if (!(elapsed == 0 || elapsed == 1 || elapsed == -83999))
 		{
-			//we have to check to make sure their computer isnt boonk
-			var margin = marginOfError + 1;
-			var l = 0;
-			string newPath = Application.dataPath + "Tester.txt";
-			while (margin > marginOfError && l < 10)
-			{
-				File.WriteAllText(newPath, "\n" + "Time2" + "," + System.DateTime.Now.ToString("hhmmss.fff"));
-
-				float time1 = float.Parse(getValueOf(newPath, "Time2"));
-				float time2 = float.Parse(File.GetLastWriteTime(newPath).ToString("hhmmss.fff"));
-				margin = (int)Mathf.Round(Mathf.Abs((1000 * (time1 - time2))));
-				Debug.Log(margin);
-				l++;
-			}
-			File.Delete(newPath);
-			if (l >= 5) //their computer is boonk
-			{
-				Debug.Log("computer is boonk");
-			}
-			else //their computer isnt boonk
-			{
-
-				Debug.Log("CAUGHT ONE!");
-				ResetSave.resetSave();
-				GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
-				foreach (Persistant p in FindObjectsOfType<Persistant>())
-				{
-					GameObject g = p.gameObject;
-					Destroy(g);
-				}
-				SceneManager.LoadScene("Attempt 2");
-				return;
-			}
+			PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 49999) * 2);
 		}
 		#endregion
 		string scene = getValueOf(path, "Scene");
@@ -294,19 +247,6 @@ public class SaveLoad : MonoBehaviour
 		Debug.Log("Loaded");
 
 	}
-
-	void SetBool(string key, bool value)
-	{
-		if (value)
-		{
-			PlayerPrefs.SetInt(key, 1);
-		}
-		else
-		{
-			PlayerPrefs.SetInt(key, 0);
-		}
-	}
-
 	string getValueOf(string path, string key)
 	{
 		string source = File.ReadAllText(path);
@@ -338,5 +278,12 @@ public class SaveLoad : MonoBehaviour
 		//Debug.Log("Key: " + key + " Data: {" + data + "}");
 
 		return data;
+	}
+	private int toSeconds(System.DateTime date)
+	{
+		int secInMinute = 60;
+		int secInHour = secInMinute * 60;
+
+		return date.Hour * secInHour + date.Minute * secInMinute + date.Second;
 	}
 }

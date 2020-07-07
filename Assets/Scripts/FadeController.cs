@@ -15,11 +15,14 @@ public class FadeController : MonoBehaviour
 
 	public void startFadeIn(float fadePerSecond)
 	{
+		StopCoroutine("fadeIn");
 		StopCoroutine("fadeOut");
 		StartCoroutine(fadeIn(fadePerSecond));
 	}
 	public void startFadeIn(float fadePerSecond, bool resetAlpha)
 	{
+		StopCoroutine("fadeIn");
+		StopCoroutine("fadeOut");
 		if (resetAlpha)
 		{
 			fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 1);
@@ -30,10 +33,13 @@ public class FadeController : MonoBehaviour
 	public void startFadeOut(float fadePerSecond)
 	{
 		StopCoroutine("fadeIn");
+		StopCoroutine("fadeOut");
 		StartCoroutine(fadeOut(fadePerSecond));
 	}
 	public void startFadeOut(float fadePerSecond, bool resetAlpha)
 	{
+		StopCoroutine("fadeIn");
+		StopCoroutine("fadeOut");
 		if (resetAlpha)
 		{
 			fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);

@@ -91,6 +91,7 @@ public class WormMove : MonoBehaviour
 
 	public Vector3 initRot;
 	private Game game;
+	private SoundManager snd;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -112,12 +113,13 @@ public class WormMove : MonoBehaviour
 				canGrapple = true;
 			}
 		}
+		snd = game.GetComponent<SoundManager>();
     }
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (PauseMenu.isPaused || SaveLoad.initializing || DetectWin.hasWon)
+		if (PauseMenu.isPaused || SaveLoad.initializing)
 		{
 			return;
 		}
@@ -195,6 +197,8 @@ public class WormMove : MonoBehaviour
 			transform.localScale = Vector3.Scale(initialScale, new Vector3(1, 0.75f, 1));
 			//transform.position = transform.position - transform.up * 0.75f;
 			crouching = true;
+			snd.stopDescrunch();
+			snd.playScrunch();
 		}
 		animator.SetBool("Crouching", crouching);
 
@@ -307,7 +311,22 @@ public class WormMove : MonoBehaviour
 					if (Physics.Linecast(buttPosition, currentGrapplePoint.transform.position, out hit))
 					{
 						//Debug.DrawLine(buttPosition, currentGrapplePoint.transform.position, Color.red);
-						GameObject grapplePoint = Instantiate(grapplePointPrefab, hit.point, Quaternion.identity);
+						Vector3 pointOffset = Vector3.zero;
+						
+						if (rb.velocity.y < -terminalVelocity / 2f)
+						{
+							Debug.Log("Slow down!");
+							pointOffset += Vector3.up * 0.3f;
+						}
+						
+						else if(rb.velocity.y > terminalVelocity / 2f)
+						{
+							Debug.Log("Slow down!");
+							pointOffset += Vector3.down * 0.3f;
+						}
+						
+						
+						GameObject grapplePoint = Instantiate(grapplePointPrefab, hit.point + pointOffset, Quaternion.identity);
 						grapplePoint.GetComponent<GrapplePoint>().setLastPoint(currentGrapplePoint);
 						currentGrapplePoint.GetComponent<GrapplePoint>().setNextPoint(grapplePoint);
 						grapplePoint.transform.position = Vector3.MoveTowards(grapplePoint.transform.position, buttPosition, 0);
@@ -437,7 +456,7 @@ public class WormMove : MonoBehaviour
 		}
 
 		//Camera direction change
-		if (!twod && Mathf.Abs(Input.GetAxis("Vertical")) < 0.2f)
+		if (!twod && Mathf.Abs(Input.GetAxis("Vertical")) < 1f)
 		{
 			float cameraRot = cameraRig.transform.eulerAngles.y;
 			if (cameraRot > 180)
@@ -462,12 +481,39 @@ public class WormMove : MonoBehaviour
 			rb.AddRelativeTorque(new Vector3(-moveY, 0, 0), ForceMode.Impulse);
 		}
 
-		if (crouching && !jumpHeld)
+		if (crouching && !jumpHeld) //jump
 		{
+			snd.playDescrunch();
+			snd.stopScrunch();
 			transform.localScale = initialScale;
 			if (grounded)
 			{
 				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+				
+
+				//gets the material under the worm;
+				RaycastHit hit;
+				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 1) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 2) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 2))
+				{
+					Material mat = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
+					Debug.Log(mat);
+					if (mat == null)
+					{
+					}
+					else if (mat.name == "Texture" || mat.name == "TextureUnlit")
+					{
+						snd.playJump((int)Random.Range(0, 5));
+					}
+					else if (mat.name == "Grass Hex Tex" || mat.name == "Grass10" || mat.name == "GrassCombined"
+						|| mat.name == "Grass0.5Unlit")
+					{
+						snd.playGrass();
+					}
+				}
+
+
 				playJump();
 			}
 			crouching = false;
@@ -497,8 +543,8 @@ public class WormMove : MonoBehaviour
 
 	private bool sweepArea(Vector3 origin, Vector3 start, Vector3 end, int iterations) //returns whether there is a collider in the triangle formed by the three vectors.
 	{
-		start = Vector3.MoveTowards(start, origin, 0.5f);
-		end = Vector3.MoveTowards(end, origin, 0.5f);
+		start = Vector3.MoveTowards(start, origin, 1f);
+		end = Vector3.MoveTowards(end, origin, 1f);
 		Vector3 raycastLocation = start;
 		float itrDelta = Vector3.Distance(start, end) / iterations;
 

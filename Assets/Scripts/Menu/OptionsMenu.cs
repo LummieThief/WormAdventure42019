@@ -13,6 +13,7 @@ public class OptionsMenu : MonoBehaviour
 	private bool inFullscreen = true;
 	private Vector2[] resolutions;
 	public Dropdown resolutionDropdown;
+	private FPSDisplay fps;
 
 	void Start()
 	{
@@ -120,6 +121,22 @@ public class OptionsMenu : MonoBehaviour
 				var emission = ps.emission;
 				emission.enabled = false;
 			}
+		}
+	}
+
+	public void ShowFrameRate(bool value)
+	{
+		if (fps == null)
+		{
+			fps = FindObjectOfType<FPSDisplay>();
+		}
+		if (value)
+		{
+			fps.enabled = true;
+		}
+		else
+		{
+			fps.enabled = false;
 		}
 	}
 }

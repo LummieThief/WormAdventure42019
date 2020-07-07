@@ -11,6 +11,10 @@ public class MeshCombiner : MonoBehaviour
 	public bool runAdvanced;
 	public bool restore;
 
+	private void Start()
+	{
+		gameObject.layer = 2;
+	}
 	private void Update()
 	{
 		if (run)

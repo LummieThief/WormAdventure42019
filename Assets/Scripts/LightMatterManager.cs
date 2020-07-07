@@ -60,13 +60,15 @@ public class LightMatterManager : MonoBehaviour
 				}
 			}
 		}
+		singleLightSource = wormLocation;
 		foreach (Material m in singleLightMaterials)
 		{
 			Shader shader = m.shader;
 			m.SetFloat(shader.GetPropertyNameId(1), gamma);
 			m.SetVector(shader.GetPropertyNameId(0), new Vector4(singleLightSource.position.x,
 																singleLightSource.position.y,
-																singleLightSource.position.z, singleLightSource.GetComponent<LightSource>().getBrightness()));
+																singleLightSource.position.z, 
+																singleLightSource.GetComponent<LightSource>().getBrightness()));
 		}
 	}
 
