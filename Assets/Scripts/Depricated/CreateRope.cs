@@ -61,4 +61,6 @@ public class CreateRope : MonoBehaviour
 	{
 		return new Vector3(Random.Range(-xRange, xRange), Random.Range(-yRange, yRange), Random.Range(-zRange, zRange));
 	}
+
+	
 }

@@ -90,6 +90,7 @@ public class WormMoveBackup : MonoBehaviour
 			canGrapple = true;
 		}
 
+		/*
 		if (GetComponentInChildren<BodyFriction>().getFriction())
 		{
 			rb.drag = groundedDrag;
@@ -98,6 +99,7 @@ public class WormMoveBackup : MonoBehaviour
 		{
 			rb.drag = 0;
 		}
+		*/
 
 
 		if (rb.velocity.magnitude > maxSpeed)

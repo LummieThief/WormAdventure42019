@@ -22,7 +22,7 @@ public class PauseMenu : MonoBehaviour
 		{
 			return;
 		}
-		if (Input.GetKeyDown(KeyCode.Escape) && !game.getStartingGrapple())
+		if (Input.GetKeyDown(KeyCode.Escape) && !(game != null && game.getStartingGrapple()) && !GooseChooserMenu.isActive)
 		{
 			if (optionsMenuUI.activeSelf)
 			{

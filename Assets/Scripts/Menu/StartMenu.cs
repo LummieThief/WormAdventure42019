@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(CanvasGroup))]
 public class StartMenu : MonoBehaviour
 {
-	public FadeController fade;
+	private FadeController fade;
 	public GameObject startMenuUI;
 	public static bool isOpen = true;
 	public GameObject playButton;
@@ -22,9 +22,13 @@ public class StartMenu : MonoBehaviour
 	private bool fadingToScene;
 	private float fadeTimer;
 	private float timeToFade = 1;
+
+	private float timeBeforeFirstFade = 1;
+	private float timeBeforeFirstFadeTimer = 0;
 	// Start is called before the first frame update
 	void Start()
 	{
+		isOpen = true;
 		fade = FindObjectOfType<FadeController>();
 		cg = GetComponent<CanvasGroup>();
 		playText = playButton.GetComponentInChildren<Text>();
@@ -41,11 +45,32 @@ public class StartMenu : MonoBehaviour
 			newGameButton.SetActive(false);
 		}
 
-		fade.startFadeIn(1f, true);
+		
+
 	}
 
 	private void Update()
 	{
+		if (timeBeforeFirstFadeTimer > timeBeforeFirstFade && timeBeforeFirstFade > 0)
+		{
+			if (PlayerPrefs.GetInt("FromWhite") == 1)
+			{
+				fade.startFadeIn(1f, true, Color.white);
+				Debug.Log("starting from white");
+				PlayerPrefs.SetInt("FromWhite", 0);
+			}
+			else
+			{
+				fade.startFadeIn(1f, true);
+			}
+			timeBeforeFirstFade = -1;
+			//Debug.Log("trying to fade");
+		}
+		else
+		{
+			timeBeforeFirstFadeTimer += Time.deltaTime;
+		}
+
 		if (fadingToScene)
 		{
 			fadeTimer += Time.deltaTime;

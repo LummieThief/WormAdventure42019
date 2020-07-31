@@ -8,10 +8,11 @@ using System.Text;
 public class SaveLoad : MonoBehaviour
 {
 	public static bool initializing;
-	public GameObject worm;
+	private GameObject worm;
 	public Transform ow;
 	private Game game;
 	private WormMove wm;
+	private Timer playTimer;
 
 	private float timeBetweenSaves = 60;
 	private float timer;
@@ -27,30 +28,33 @@ public class SaveLoad : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
     {
+		worm = FindObjectOfType<WormMove>().gameObject;
+		playTimer = FindObjectOfType<Timer>();
 		path = Application.dataPath + "/saves.txt";
 		game = FindObjectOfType<Game>();
 		wm = worm.GetComponent<WormMove>();
 
-		if (resetOnPlay)
+		if (game != null)
 		{
-			game.setLoaded(true);
-			return;
-		}
-
-		if (!game.getLoaded())
-		{
-			startInitialization();
-
-			if (File.Exists(path))
+			if (resetOnPlay)
 			{
-				loadNextFrame = true;
-			}
-			else
-			{
-				endInitialization();
+				game.setLoaded(true);
+				return;
 			}
 
-			
+			if (!game.getLoaded())
+			{
+				startInitialization();
+
+				if (File.Exists(path))
+				{
+					loadNextFrame = true;
+				}
+				else
+				{
+					endInitialization();
+				}
+			}
 		}
     }
 
@@ -133,6 +137,7 @@ public class SaveLoad : MonoBehaviour
 
 	void save()
 	{
+		
 		Rigidbody rb = worm.GetComponent<Rigidbody>();
 
 		File.WriteAllText(path, "Saves");
@@ -170,7 +175,14 @@ public class SaveLoad : MonoBehaviour
 		contents.Add("\n" + "FogA" + "," + RenderSettings.fogColor.a);
 		contents.Add("\n" + "FogD" + "," + RenderSettings.fogDensity);
 
-		contents.Add("\n" + "Egg" + "," + game.getHoldingObject());
+		if (game == null)
+		{
+			contents.Add("\n" + "Egg" + "," + "False");
+		}
+		else
+		{
+			contents.Add("\n" + "Egg" + "," + game.getHoldingObject());
+		}
 		contents.Add("\n" + "Scene" + "," + SceneManager.GetActiveScene().name);
 		contents.Add("\n" + "Time" + "," + toSeconds(System.DateTime.Now));
 
@@ -180,7 +192,10 @@ public class SaveLoad : MonoBehaviour
 		}
 		numSaves++;
 
+		PlayerPrefs.SetFloat("PlayTime", playTimer.getTime());
+
 		Debug.Log("Saved: save number " + numSaves);
+		
 	}
 	void load()
 	{
@@ -191,7 +206,7 @@ public class SaveLoad : MonoBehaviour
 
 		if (!(elapsed == 0 || elapsed == 1 || elapsed == -83999))
 		{
-			PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 49999) * 2);
+			PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 499999) * 2);
 		}
 		#endregion
 		string scene = getValueOf(path, "Scene");
@@ -242,6 +257,8 @@ public class SaveLoad : MonoBehaviour
 		ow.rotation = worldRot;
 
 		game.setLoaded(true);
+
+		playTimer.setTime(PlayerPrefs.GetFloat("PlayTime"));
 		endInitialization();
 
 		Debug.Log("Loaded");

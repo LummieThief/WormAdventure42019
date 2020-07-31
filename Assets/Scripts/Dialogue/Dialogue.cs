@@ -25,11 +25,16 @@ public class Dialogue : MonoBehaviour
 	public Color readColor;
 	public Material readSprite;
 
+	private bool goOn;
 	private bool hasFreshText;
 	
     // Start is called before the first frame update
     void Start()
     {
+		if (bg == null)
+		{
+			bg = GameObject.FindGameObjectWithTag("Text BG").GetComponent<Image>();
+		}
 		bubble = bg.GetComponentsInChildren<Text>()[0];
 		nametag = bg.GetComponentsInChildren<Text>()[1];
 		//bg = bubble.GetComponentInParent<Image>();
@@ -49,8 +54,18 @@ public class Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (on)
+		if (PauseMenu.isPaused)
 		{
+			bg.enabled = false;
+			nametag.enabled = false;
+			prompt.enabled = false;
+			bubble.enabled = false;
+		}
+		else if (on)
+		{
+			prompt.enabled = true;
+			bubble.enabled = true;
+
 			if (annoying && page == -1)
 			{
 				nextPage();
@@ -58,6 +73,10 @@ public class Dialogue : MonoBehaviour
 
 			if (page >= 0)
 			{
+				bg.enabled = true;
+				nametag.enabled = true;
+				
+
 				timer += Time.deltaTime;
 				if (timer > delay)
 				{
@@ -75,6 +94,10 @@ public class Dialogue : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.E))
 			{
 				nextPage();
+				if (page != -1)
+				{
+					prompt.enabled = true;
+				}
 				
 			}
 		}
@@ -84,8 +107,23 @@ public class Dialogue : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.tag == "Head")
+		if (StartMenu.isOpen)
 		{
+			Debug.Log("start menu is open still");
+			goOn = true;
+		}
+		else if (other.gameObject.tag == "Head")
+		{
+			Debug.Log("worm in");
+			switchOn(true);
+		}
+	}
+
+	private void OnTriggerStay(Collider other)
+	{
+		if (goOn && !StartMenu.isOpen && other.gameObject.tag == "Head")
+		{
+			goOn = false;
 			switchOn(true);
 		}
 	}

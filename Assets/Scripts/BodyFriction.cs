@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BodyFriction : MonoBehaviour
 {
+
 	private bool hasFriction;
 	private Vector3 initialScale;
 	private float minScale = 0.97f;

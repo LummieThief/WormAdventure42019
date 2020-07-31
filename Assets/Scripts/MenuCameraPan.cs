@@ -12,20 +12,25 @@ public class MenuCameraPan : MonoBehaviour
     {
 		follow = FindObjectOfType<CameraFollow>();
 		game = FindObjectOfType<Game>();
-		follow.freezeMouseControl(true);
+		if (game != null)
+		{
+			follow.freezeMouseControl(true);
+		}
     }
 
     // Update is called once per frame
     void Update()
     {
-		var degrees = rotSpeed;
-		//degrees *= (11 - Mathf.Abs(follow.getDistance()));
-		//Debug.Log(follow.getDistance());
-		transform.Rotate(Vector3.up, degrees * Time.deltaTime);
-		if (!game.getStartingGrapple())
+		if (game != null)
 		{
-			this.enabled = false;
-			follow.freezeMouseControl(false);
+			var degrees = rotSpeed;
+
+			transform.Rotate(Vector3.up, degrees * Time.deltaTime);
+			if (!game.getStartingGrapple())
+			{
+				this.enabled = false;
+				follow.freezeMouseControl(false);
+			}
 		}
     }
 }

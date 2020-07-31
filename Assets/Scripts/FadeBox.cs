@@ -6,6 +6,7 @@ public class FadeBox : MonoBehaviour
 {
 	public bool fadeIn = true;
 	public bool directional;
+	public Color color = Color.black;
 
 	public float fadeSpeed;
 
@@ -28,22 +29,22 @@ public class FadeBox : MonoBehaviour
 			{
 				if (other.GetComponent<Rigidbody>().velocity.y < 0)
 				{
-					fade.startFadeIn(fadeSpeed);
+					fade.startFadeIn(fadeSpeed, color);
 				}
 				else
 				{
-					fade.startFadeOut(fadeSpeed);
+					fade.startFadeOut(fadeSpeed, color);
 				}
 			}
 			else
 			{
 				if (fadeIn)
 				{
-					fade.startFadeIn(fadeSpeed);
+					fade.startFadeIn(fadeSpeed, color);
 				}
 				else
 				{
-					fade.startFadeOut(fadeSpeed);
+					fade.startFadeOut(fadeSpeed, color);
 				}
 			}
 		}

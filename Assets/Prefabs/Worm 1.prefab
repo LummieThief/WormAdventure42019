@@ -785,26 +785,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345e50a191c3ea04f9d463034d371901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  twod: 0
   moveSpeed: 1000
   maxAngVel: 3.5
+  angDragGrounded: 6
+  angDragAirborn: 4
   maxSpeed: 70
   jumpForce: 300
-  generalRope: {fileID: 2536327266126832839, guid: 3de03c8734e70b74c9049065ae1fc8b6,
-    type: 3}
-  ropeDrop: {fileID: 3603890253600613722, guid: d7bc9a80af571bb43a82f0c817170be2,
-    type: 3}
+  terminalVelocity: 45
+  groundedDrag: 1.5
   range: 32
-  minRopeLength: 1
-  numSegments: 15
-  ropeSpacing: 0.05
   grappleHitPrefab: {fileID: 582302420434176605, guid: 749b2a652d265a040ad27d432b9ad26f,
     type: 3}
+  ropeStart: {fileID: 0}
   cameraRig: {fileID: 0}
   rotFlipOffset: 20
   tailOn: {fileID: 0}
+  tailOnExerted: {fileID: 0}
   tailOff: {fileID: 0}
+  tailOffExerted: {fileID: 0}
   tail: {fileID: 0}
   animator: {fileID: 0}
+  dust: {fileID: 0}
+  trail: {fileID: 0}
+  smokeSpeed: 0
+  speedLines: {fileID: 0}
+  jump: {fileID: 0}
+  heldItemDistance: 0
+  initRot: {x: 0, y: 0, z: 0}
 --- !u!54 &3239566411622742685
 Rigidbody:
   m_ObjectHideFlags: 0

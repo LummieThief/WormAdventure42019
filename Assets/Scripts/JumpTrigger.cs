@@ -81,7 +81,8 @@ public class JumpTrigger : MonoBehaviour
 		for (int i = 0; i <= iterations; i++)
 		{
 			Vector3 point = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * (-1 + 2 * ((i * 1.0f) / iterations));
-			if (Physics.Raycast(point, Vector3.down, out hit, 1))
+			LayerMask mask = 1 << 8; //blocks
+			if (Physics.Raycast(point, Vector3.down, out hit, 1, mask))
 			{
 				//Debug.Log("solid ground");
 				return true;

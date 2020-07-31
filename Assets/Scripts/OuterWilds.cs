@@ -10,7 +10,9 @@ public class OuterWilds : MonoBehaviour
 	private Transform worm;
 	private JumpTrigger jumpTrigger;
 	private Game game;
+	private CameraFollow cameraFollow;
 	private bool grounded;
+
 	// Start is called before the first frame update
 
     void Start()
@@ -18,12 +20,19 @@ public class OuterWilds : MonoBehaviour
 		game = FindObjectOfType<Game>();
 		worm = GameObject.FindGameObjectWithTag("Player").transform;
 		jumpTrigger = worm.gameObject.GetComponentInChildren<JumpTrigger>();
-    }
+		cameraFollow = FindObjectOfType<CameraFollow>();
 
+		if (gameObject.tag == "OuterWildsWorld")
+		{
+			StartCoroutine(resetSkybox());
+		}
+	}
+	//*
     // Update is called once per frame
     void FixedUpdate()
     {
-		if (worm.GetComponent<WormMove>().twod || DetectWin.hasWon || game.getStartingGrapple())
+		if (worm.GetComponent<WormMove>().twod || (game != null && game.getStartingGrapple()) || PauseMenu.isPaused
+			|| cameraFollow.getState() != 0 || cameraFollow.getMouseFrozen())
 		{
 			return;
 		}
@@ -65,6 +74,21 @@ public class OuterWilds : MonoBehaviour
 			worm = GameObject.FindGameObjectWithTag("Player").transform;
 		}
 		transform.RotateAround(worm.position, Vector3.up, degrees);
+		if (gameObject.tag == "OuterWildsWorld")
+		{
+			RenderSettings.skybox.SetFloat("_Rotation", -transform.eulerAngles.y);
+		}
+	}
+	//*/
+
+	private IEnumerator resetSkybox()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			RenderSettings.skybox.SetFloat("_Rotation", -transform.eulerAngles.y);
+			yield return new WaitForEndOfFrame();
+		}
+		yield return new WaitForEndOfFrame();
 	}
 
 }

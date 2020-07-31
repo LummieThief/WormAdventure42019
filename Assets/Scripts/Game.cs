@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
+		//Debug.LogError("Started running");
 		if (worm == null)
 		{
 			worm = GameObject.FindGameObjectWithTag("Player").transform;
@@ -70,6 +71,7 @@ public class Game : MonoBehaviour
 			if (holdingObject)
 			{
 				var eg = Instantiate(egg, worm.position, Quaternion.identity);
+				eg.AddComponent<OuterWilds>();
 				worm.GetComponent<WormMove>().grabObject(eg);
 				//worm.
 			}

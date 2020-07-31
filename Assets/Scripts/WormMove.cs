@@ -20,9 +20,6 @@ public class WormMove : MonoBehaviour
 	//private float underwaterScale = 0.7f;
 	//private float underwaterDrag = 2f;
 	//private float timeUnderwater = 0f;
-
-	public GameObject generalRope;
-	public GameObject ropeDrop;
 	
 	private Vector3 initialScale;
 	private Rigidbody rb;
@@ -38,16 +35,13 @@ public class WormMove : MonoBehaviour
 
 
 	public float range = 50f;
-	//public float minRopeLength = 0.5f;
-	//public int numSegments = 10;
-	//public float ropeSpacing = 0.05f;
-	public float stamina = 10f;
-	public float staminaRefresh = 1f;
-	public float refreshDelay = 1f;
-	public float staminaOnClick = 1f;
-	private float refreshTimer;
+
 	public GameObject grappleHitPrefab;
 	private GameObject grappleHit;
+
+	public GameObject ropeStart;
+	private RopeSegmentController rsc;
+
 	private bool canGrapple;
 	private Vector3 buttPosition;
 	private bool grappling;
@@ -55,18 +49,18 @@ public class WormMove : MonoBehaviour
 	private float howLongDoesGrappleTimeLast = 0.2f;
 	private float howMuchLongerIsItGrappleTime;
 	private float grappleTimer = 0;
+	private float maxGrappleTime = 5f;
+
 	private bool startingGrapple;
 	private bool lockGrapple;
+	private float currentRopeLength = -1;
 	
 
-	private GameObject currentGrapplePoint;
-	public GameObject grapplePointPrefab;
-	//private ConfigurableJoint joint;
-	//public GameObject jointPoint;
 	private SpringJoint spring;
 	private float ropeLength;
 
 	public GameObject cameraRig;
+	private CameraFollow cameraFollow;
 	public float rotFlipOffset = 30;
 	private bool walkForward = true;
 
@@ -74,16 +68,22 @@ public class WormMove : MonoBehaviour
 	public Material tailOnExerted;
 	public Material tailOff;
 	public Material tailOffExerted;
+	private Material tailMat;
+
 	public MeshRenderer tail;
 
 	public Animator animator;
+	private bool dead = false;
 
 	public ParticleSystem dust;
 	public TrailRenderer trail;
 	private Vector3 prevVelocity;
+	private Vector3 prevAngVel;
 	public float smokeSpeed;
 	public ParticleSystem speedLines;
 	public ParticleSystem jump;
+	public ParticleSystem explosion;
+	private BodyFriction friction;
 
 	public float heldItemDistance;
 	private bool holdingObject;
@@ -92,19 +92,32 @@ public class WormMove : MonoBehaviour
 	public Vector3 initRot;
 	private Game game;
 	private SoundManager snd;
+	private float lastVolume;
+
+	public List<Material> grassMaterials;
+	public List<Material> stoneMaterials;
+	public List<Material> woodMaterials;
+
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
 	void Start()
     {
+		cameraFollow = cameraRig.GetComponent<CameraFollow>();
+		tailMat = tailOn;
 		transform.eulerAngles = new Vector3(transform.eulerAngles.x + initRot.x, transform.eulerAngles.y + initRot.y, transform.eulerAngles.z + initRot.z);
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
+		friction = GetComponentInChildren<BodyFriction>();
 		rb = GetComponent<Rigidbody>();
 		initialScale = transform.localScale;
 		grappleHit = Instantiate(grappleHitPrefab, Vector3.zero, Quaternion.identity);
 		spring = GetComponent<SpringJoint>();
 		game = FindObjectOfType<Game>();
-		if (game.getStartingGrapple())
+		if (game == null)
+		{
+			startingGrapple = false;
+		}
+		else if (game.getStartingGrapple())
 		{
 			animator.SetBool("Asleep", true);
 			startingGrapple = true;
@@ -113,36 +126,59 @@ public class WormMove : MonoBehaviour
 				canGrapple = true;
 			}
 		}
-		snd = game.GetComponent<SoundManager>();
+		snd = FindObjectOfType<SoundManager>();
+		rsc = ropeStart.GetComponent<RopeSegmentController>();
     }
 
 	// Update is called once per frame
 	void Update()
 	{
+		Debug.Log(grounded);
+		if (rsc == null)
+		{
+			rsc = ropeStart.GetComponent<RopeSegmentController>();
+		}
+		if (snd == null)
+		{
+			snd = FindObjectOfType<SoundManager>();
+		}
+
+
+		
+		float vol = Mathf.Clamp(((rb.velocity.magnitude - smokeSpeed * 0.9f) / smokeSpeed), 0f, 1f);
+		vol = Mathf.Lerp(lastVolume, vol, 1.5f * Time.deltaTime) * Time.timeScale;
+
+		//Debug.Log(vol);
+		if (snd != null)
+		{
+			snd.playSpeedWind(vol);
+		}
+		lastVolume = vol;
+		
+		
+
 		if (PauseMenu.isPaused || SaveLoad.initializing)
 		{
 			return;
 		}
-		if (grappling)
+		else if (cameraFollow.getMouseFrozen() && !startingGrapple)
 		{
-			LineRenderer line = currentGrapplePoint.GetComponent<LineRenderer>();
-			line.SetPosition(0, currentGrapplePoint.transform.position);
-			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
+			tail.sharedMaterial.Lerp(tailOff, tailOff, 1);
+			return;
 		}
-
-		
 
 
 		grounded = jumpTrigger.getGrounded();
 		solidGround = jumpTrigger.getSolidGround();
-		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.7f;
+		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.9f;
 
-		if (solidGround && !grappling && !startingGrapple)
+		if (solidGround && !grappling && !startingGrapple) //resets your grapple when you touch the ground
 		{
+			grappleTimer = 0;
 			canGrapple = true;
 		}
 
-		if (grounded)
+		if (grounded) //chooses your airborn strafe speed vs grounded turn speed
 		{
 			rb.angularDrag = angDragGrounded;
 		}
@@ -150,8 +186,10 @@ public class WormMove : MonoBehaviour
 		{
 			rb.angularDrag = angDragAirborn;
 		}
+		
 
-		if (GetComponentInChildren<BodyFriction>().getFriction())
+		
+		if (friction.getFriction()) //if grounded adds drag to the worm to emulate friction.
 		{
 			rb.drag = groundedDrag;
 		}
@@ -159,7 +197,10 @@ public class WormMove : MonoBehaviour
 		{
 			rb.drag = 0;
 		}
-
+		
+		
+		
+		//caps the worms speed
 		Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 		if (horizontalVelocity.magnitude > maxSpeed)
 		{
@@ -168,10 +209,12 @@ public class WormMove : MonoBehaviour
 		rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -terminalVelocity * 1.5f, terminalVelocity), rb.velocity.z);
 		
 		rb.maxAngularVelocity = maxAngVel;
-
 		
 
+		
+		
 		//To make sure the worm stays on the axis.
+		
 		rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, 0);
 		if (twod)
 		{
@@ -192,26 +235,35 @@ public class WormMove : MonoBehaviour
 											Mathf.Round(transform.eulerAngles.y / 180) * 180,
 											Mathf.Round(transform.eulerAngles.z / 180) * 180);
 
-		if (jumpDown)
+
+		if (cameraFollow.getState() == 1)
+		{
+			grappleHit.SetActive(false);
+			return;
+		}
+
+
+		if (jumpDown) //if jump is held down
 		{
 			transform.localScale = Vector3.Scale(initialScale, new Vector3(1, 0.75f, 1));
-			//transform.position = transform.position - transform.up * 0.75f;
 			crouching = true;
 			snd.stopDescrunch();
 			snd.playScrunch();
 		}
 		animator.SetBool("Crouching", crouching);
+		
 
-
+		//*
 		RaycastHit hit;
 		Vector3 hitPoint = Vector3.zero;
 
-		if (!grappling)
+		if (!grappling && !dead) //shows the grapple indicator
 		{
-			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range) && canGrapple && grappleTimer < stamina && !holdingObject)
+			LayerMask mask = 1001 << 8;
+			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range, mask) && canGrapple && !holdingObject)
 			{
 				grappleHit.SetActive(true);
-				grappleHit.transform.position = hit.point;
+				grappleHit.transform.position = new Vector3(0, hit.point.y, hit.point.z);
 			}
 			else
 			{
@@ -219,25 +271,24 @@ public class WormMove : MonoBehaviour
 			}
 		}
 
-		if (grappleHit.activeSelf || holdingObject)
+		if (startingGrapple)
 		{
-			tail.material.Lerp(tailOn, tailOnExerted, (grappleTimer / stamina) * 2 - 1);
+			tail.sharedMaterial.Lerp(tailOn, tailOn, 1);
+		}
+		else if (grappleHit.activeSelf || holdingObject) //changes the color of the worms tail based on if it can grapple
+		{
+			tail.sharedMaterial.Lerp(tailOn, tailOnExerted, (grappleTimer / maxGrappleTime) * 1.1f);
 		}
 		else
 		{
-			tail.material.Lerp(tailOff, tailOffExerted, (grappleTimer / stamina) * 2 - 1);
-		}
-		grappleHit.GetComponent<MeshRenderer>().material = tail.material;
-		foreach(LineRenderer rend in FindObjectsOfType<LineRenderer>())
-		{
-			if (rend.gameObject.tag == "GP")
-			{
-				rend.material = tail.material;
-			}
+			tail.sharedMaterial.Lerp(tailOff, tailOffExerted, (grappleTimer / maxGrappleTime) * 1.1f);
 		}
 
+		grappleHit.GetComponent<MeshRenderer>().sharedMaterial = tail.sharedMaterial; //makes the indicator the same color as the tail
+		
 
-		if (Input.GetMouseButtonDown(0) || (startingGrapple && frame == 2))
+		
+		if (!grappling && (Input.GetMouseButtonDown(0) || (startingGrapple && frame == 2))) //starts the grapple (or at least grapple time)
 		{
 			if (holdingObject && !startingGrapple)
 			{
@@ -246,8 +297,8 @@ public class WormMove : MonoBehaviour
 			else
 			{
 				itsGrappleTime = true;
-
-				if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range)) //grabbing object
+				LayerMask mask = 1001 << 8;
+				if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range, mask)) //grabbing object
 				{
 					if (hit.collider.gameObject.tag == "Egg")
 					{
@@ -258,16 +309,10 @@ public class WormMove : MonoBehaviour
 			}
 			
 		}
+		//*/
 
-		if (holdingObject)
-		{
-			LineRenderer line = heldObject.GetComponent<LineRenderer>();
-			line.enabled = true;
-			line.SetPosition(0, heldObject.transform.position);
-			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
-		}
 
-		if (itsGrappleTime)
+		if (itsGrappleTime) //adds some buffer to the grapple
 		{
 			howMuchLongerIsItGrappleTime += Time.deltaTime;
 			if (howMuchLongerIsItGrappleTime > howLongDoesGrappleTimeLast || Input.GetMouseButtonUp(0))
@@ -276,109 +321,55 @@ public class WormMove : MonoBehaviour
 				howMuchLongerIsItGrappleTime = 0;
 			}
 		}
-		if (itsGrappleTime && canGrapple) //on click, makes the first point
+		if (itsGrappleTime && canGrapple && grappleHit.activeSelf) //this is run on the first frame of the grapple. Sets everything up
 		{
-			
-			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range))
-			{
-				GameObject grapplePoint = Instantiate(grapplePointPrefab, hit.point, Quaternion.identity);
-				grapplePoint.transform.position = Vector3.MoveTowards(grapplePoint.transform.position, buttPosition, 0);
-				currentGrapplePoint = grapplePoint;
-				ropeLength = Vector3.Distance(currentGrapplePoint.transform.position, buttPosition);
+			grappling = true;
+			itsGrappleTime = false;
+			howMuchLongerIsItGrappleTime = 0;
 
-				grappling = true;
-				canGrapple = false;
-				itsGrappleTime = false;
-				howMuchLongerIsItGrappleTime = 0;
+			rsc.activate(Vector3.MoveTowards(grappleHit.transform.position, buttPosition, 0.1f)) ;
+			rsc.setTime(grappleTimer);
+			ropeLength = Vector3.Distance(buttPosition, grappleHit.transform.position);
 
-				if (rb.velocity.y < 0)
-				{
-					rb.AddForce(Vector3.down * 4 * rb.velocity.magnitude, ForceMode.Impulse);
-				}
-			}
-			
-		}
-
-		if (currentGrapplePoint != null) //if grappling
-		{
-			
-			if (Physics.Linecast(buttPosition, currentGrapplePoint.transform.position, out hit)) //checks whether a line can be drawn to the worm
-			{
-
-				if (hit.collider.gameObject.tag != "GP") //if the line hit something other than the player
-				{                                           //creates a new point and sets that to the currentGrapplePoint
-															//RaycastHit hit2;
-					if (Physics.Linecast(buttPosition, currentGrapplePoint.transform.position, out hit))
-					{
-						//Debug.DrawLine(buttPosition, currentGrapplePoint.transform.position, Color.red);
-						Vector3 pointOffset = Vector3.zero;
-						
-						if (rb.velocity.y < -terminalVelocity / 2f)
-						{
-							Debug.Log("Slow down!");
-							pointOffset += Vector3.up * 0.3f;
-						}
-						
-						else if(rb.velocity.y > terminalVelocity / 2f)
-						{
-							Debug.Log("Slow down!");
-							pointOffset += Vector3.down * 0.3f;
-						}
-						
-						
-						GameObject grapplePoint = Instantiate(grapplePointPrefab, hit.point + pointOffset, Quaternion.identity);
-						grapplePoint.GetComponent<GrapplePoint>().setLastPoint(currentGrapplePoint);
-						currentGrapplePoint.GetComponent<GrapplePoint>().setNextPoint(grapplePoint);
-						grapplePoint.transform.position = Vector3.MoveTowards(grapplePoint.transform.position, buttPosition, 0);
-
-						currentGrapplePoint = grapplePoint;
-						currentGrapplePoint.GetComponent<GrapplePoint>().setCurrent(true);
-						//Debug.Log("made a new point");
-					}
-				}
-
-			}
-
-			GameObject lastPoint = currentGrapplePoint.GetComponent<GrapplePoint>().getLastPoint();
-			hit = new RaycastHit();
-			if (lastPoint != null && Physics.Linecast(buttPosition, lastPoint.transform.position, out hit))//If the last point can draw a line to the worm
-			{                                                                                               //changes the current point to the last point.
-				
-				if (hit.collider.gameObject.tag == "GP" && !hit.collider.gameObject.GetComponent<GrapplePoint>().getCurrent())
-				{
-					
-					int disTemp = (int)Vector3.Distance(currentGrapplePoint.transform.position, buttPosition);
-					//Debug.Log(disTemp);
-					if (!sweepArea(buttPosition, currentGrapplePoint.transform.position, lastPoint.transform.position, 100))
-					{
-						GameObject temp = currentGrapplePoint;
-						currentGrapplePoint = currentGrapplePoint.GetComponent<GrapplePoint>().getLastPoint();
-						currentGrapplePoint.GetComponent<GrapplePoint>().setCurrent(true);
-						GameObject.Destroy(temp);
-						//Debug.Log("destroyed a point");
-						
-					}
-				}
-			}
-
-
-			float stretchLeway = range / 13;
-			float currentRopeLength = currentGrapplePoint.GetComponent<GrapplePoint>().getTotalDistance();
-
-			spring.connectedBody = currentGrapplePoint.GetComponent<Rigidbody>();
-			spring.maxDistance = ropeLength - currentRopeLength;
+			spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
+			spring.maxDistance = ropeLength;
 			spring.connectedAnchor = Vector3.zero;
-			
-			
-			
 
-			LineRenderer line = currentGrapplePoint.GetComponent<LineRenderer>();
-			line.SetPosition(0, currentGrapplePoint.transform.position);
-			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
-
-			
+			float maxPitch = 2;
+			float minPitch = 0.4f;
+			float distanceScaled = maxPitch - (maxPitch - minPitch) * Vector3.Distance(buttPosition, grappleHit.transform.position) / range;
+			snd.playGrapple(distanceScaled);
 		}
-		//*
+
+
+		
+
+		if (grappling) //The code for the grapple that gets run every frame to update the rope position.
+		{
+			grappleTimer = rsc.getTime();
+			if (currentRopeLength != rsc.getLength())
+			{
+				currentRopeLength = rsc.getLength();
+
+				if (rsc.getCurrentPoint().GetComponent<Rigidbody>() != null)
+				{
+					spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
+					spring.maxDistance = ropeLength - currentRopeLength;
+					spring.connectedAnchor = Vector3.zero;
+				}
+			}
+		}
+		
+
+		
+		if (holdingObject) //draws a line to the object
+		{
+			LineRenderer line = heldObject.GetComponent<LineRenderer>();
+			line.enabled = true;
+			line.SetPosition(0, heldObject.transform.position);
+			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
+		}
+
 		if (startingGrapple)
 		{
 			if (!StartMenu.isOpen)
@@ -392,17 +383,21 @@ public class WormMove : MonoBehaviour
 					startingGrapple = false;
 					game.setStartingGrapple(false);
 					itsGrappleTime = false;
-					animator.SetBool("Asleep", false);
 					howMuchLongerIsItGrappleTime = 0;
 					grappling = false;
-					if (currentGrapplePoint != null)
-					{
-						currentGrapplePoint.GetComponent<GrapplePoint>().destroySelf(); //destroys all the grapplePoints
-																						//currentGrapplePoint = null;
-					}
+					canGrapple = false;
+					rsc.deactivate();
 					if (!holdingObject)
 					{
 						spring.maxDistance = Mathf.Infinity;
+					}
+
+					animator.SetBool("Asleep", false);
+
+					if (!holdingObject)
+					{
+						spring.maxDistance = Mathf.Infinity;
+						
 					}
 					float startingJoltForce = 3000f;
 					rb.AddForce(Vector3.up * startingJoltForce);
@@ -410,27 +405,34 @@ public class WormMove : MonoBehaviour
 			}
 			
 		}
-		else if (!Input.GetMouseButton(0) && !holdingObject) //If left click is released
+		else if (grappling && !holdingObject && (!Input.GetMouseButton(0) || rsc.getTime() > 5f)) //If left click is released
 		{
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;
 			grappling = false;
-			if (currentGrapplePoint != null)
+			grappleTimer = rsc.getTime();
+			if (grappleTimer > maxGrappleTime)
 			{
-				currentGrapplePoint.GetComponent<GrapplePoint>().destroySelf(); //destroys all the grapplePoints
+				canGrapple = false;
 			}
+			rsc.deactivate();
 			spring.maxDistance = Mathf.Infinity;
+			currentRopeLength = -1;
+		
 		}
-		//*/
 
 		setJumpInput(twod);
 		frame++;
+		
 	}
 
 
 
 	private void FixedUpdate()
 	{
+
+		
+
 		if (startingGrapple)
 		{
 			return;
@@ -440,6 +442,21 @@ public class WormMove : MonoBehaviour
 		{
 			return;
 		}
+
+		if (cameraFollow.getState() == 1 || dead || cameraFollow.getMouseFrozen())
+		{
+			rsc.deactivate();
+			grappleHit.SetActive(false);
+			return;
+		}
+
+		/*float hitThreshold = 20f;
+		if (Mathf.Abs(rb.velocity.magnitude - prevVelocity.magnitude) > hitThreshold)
+		{
+			Debug.Log(prevVelocity.magnitude / 30f);
+			snd.playHitRock(prevVelocity.magnitude / 30f);
+			//Debug.Log("Hit" + Time.time);
+		}*/
 
 		float moveY = 0;
 		if (twod)
@@ -481,6 +498,14 @@ public class WormMove : MonoBehaviour
 			rb.AddRelativeTorque(new Vector3(-moveY, 0, 0), ForceMode.Impulse);
 		}
 
+		/*if (Input.GetKey(KeyCode.G))
+		{
+			//rb.MovePosition(transform.position + transform.TransformDirection(Vector3.up) * 10 * Time.deltaTime);
+			//transform.Translate(transform.TransformDirection(Vector3.up) * 10 * Time.deltaTime);
+			
+			Debug.DrawRay(transform.position,Vector3.up * 1 + transform.TransformDirection(Vector3.up) * 10, Color.white, Time.deltaTime);
+		}*/
+
 		if (crouching && !jumpHeld) //jump
 		{
 			snd.playDescrunch();
@@ -488,28 +513,34 @@ public class WormMove : MonoBehaviour
 			transform.localScale = initialScale;
 			if (grounded)
 			{
+
+				transform.Translate(Vector3.up * 0.5f, Space.Self);
 				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-				
+				Debug.Log("Jump!");
+
 
 				//gets the material under the worm;
 				RaycastHit hit;
-				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 1) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 2) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 2))
+				LayerMask mask = 101 << 8;
+				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 2, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 2, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 2, mask))
 				{
-					Material mat = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
-					Debug.Log(mat);
-					if (mat == null)
+					if (hit.collider.GetComponent<MeshRenderer>() != null)
 					{
-					}
-					else if (mat.name == "Texture" || mat.name == "TextureUnlit")
-					{
-						snd.playJump((int)Random.Range(0, 5));
-					}
-					else if (mat.name == "Grass Hex Tex" || mat.name == "Grass10" || mat.name == "GrassCombined"
-						|| mat.name == "Grass0.5Unlit")
-					{
-						snd.playGrass();
+						Material mat = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
+						//Debug.Log(mat);
+						if (mat == null)
+						{
+						}
+						else if (stoneMaterials.Contains(mat))
+						{
+							snd.playJump(Random.Range(0, 5));
+						}
+						else if (grassMaterials.Contains(mat))
+						{
+							snd.playGrass();
+						}
 					}
 				}
 
@@ -518,6 +549,9 @@ public class WormMove : MonoBehaviour
 			}
 			crouching = false;
 		}
+
+
+		
 
 		if (rb.velocity.magnitude > smokeSpeed)
 		{
@@ -532,41 +566,26 @@ public class WormMove : MonoBehaviour
 				playSpeedLines();
 				trail.enabled = true;
 			}
+			
+			//Debug.Log(rb.velocity.magnitude / 10);
+			
 		}
 		else
 		{
 			trail.enabled = false;
+			//snd.playSpeedWind(0);
 		}
 
+		prevAngVel = rb.angularVelocity;
+		prevVelocity = rb.velocity;
+		
 
-	}
-
-	private bool sweepArea(Vector3 origin, Vector3 start, Vector3 end, int iterations) //returns whether there is a collider in the triangle formed by the three vectors.
-	{
-		start = Vector3.MoveTowards(start, origin, 1f);
-		end = Vector3.MoveTowards(end, origin, 1f);
-		Vector3 raycastLocation = start;
-		float itrDelta = Vector3.Distance(start, end) / iterations;
-
-		RaycastHit hitt;
-		for (int i = 0; i < iterations; i++)
-		{
-			raycastLocation = Vector3.MoveTowards(raycastLocation, end, itrDelta);
-			int layerMask = 1 << 8;
-			if (Physics.Linecast(origin, raycastLocation, out hitt, layerMask))
-			{
-				return true;
-			}
-			
-		}
-		return false;
 	}
 
 	public void grabObject(GameObject obj)
 	{
 		if (obj != null) //grabbing a new object
 		{
-			obj.AddComponent<OuterWilds>();
 			itsGrappleTime = false;
 			Rigidbody objRB = obj.GetComponent<Rigidbody>();
 			spring.connectedBody = objRB;
@@ -601,6 +620,11 @@ public class WormMove : MonoBehaviour
 	private void playJump()
 	{
 		jump.Play();
+	}
+
+	public void playExplosion()
+	{
+		explosion.Play();
 	}
 
 	private void playSpeedLines()
@@ -647,6 +671,14 @@ public class WormMove : MonoBehaviour
 		jumpHeld = Input.GetKey(KeyCode.Space);
 	}
 
+	public void setJumpDown()
+	{
+		if (Input.GetKey(KeyCode.Space))
+		{
+			jumpDown = true;
+		}
+	}
+
 	public void load(Vector3 pos, Quaternion rot, Vector3 vel, bool hasEgg)
 	{
 		initRot = Vector3.zero;
@@ -665,9 +697,22 @@ public class WormMove : MonoBehaviour
 		if (hasEgg)
 		{
 			var eg = Instantiate(game.egg, transform.position, new Quaternion(0f, 0f, -0.1f, 0.5f));
+			eg.AddComponent<OuterWilds>();
 			grabObject(eg);
 			
 		}
 	}
+
+	public void setDead(bool value)
+	{
+		dead = value;
+		animator.SetBool("Dead", value);
+		Debug.Log("dying");
+	}
+	public bool getDead()
+	{
+		return dead;
+	}
+
 
 }
