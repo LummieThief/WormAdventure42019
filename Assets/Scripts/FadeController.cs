@@ -15,6 +15,7 @@ public class FadeController : MonoBehaviour
 			fadeImage.color = Color.white;
 		}
 		fadeImage.enabled = true;
+		Debug.Log("awake");
     }
 
 	public void startFadeIn(float fadePerSecond)

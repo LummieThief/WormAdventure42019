@@ -11,16 +11,19 @@ public class FinishBox : MonoBehaviour
 	private int state = 0;
 	private float timer = 0;
 
+	private float playSound = 0.3f;
 	private float state1Transition = 0.5f;
 	private float state2Transition = 1.5f;
 	private Rigidbody wormRB;
 	private float upForce = 10000;
-	private GameObject mg;
+	private MiniGame mg;
+	private bool playedSound = false;
+
 	private void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.tag == "Player" && !running)
 		{
-			mg = FindObjectOfType<MiniGame>().gameObject;
+			mg = FindObjectOfType<MiniGame>();
 			running = true;
 			GameObject.FindObjectOfType<CameraFollow>().setState(1);
 			wormRB = GameObject.FindObjectOfType<WormMove>().GetComponent<Rigidbody>();
@@ -29,10 +32,19 @@ public class FinishBox : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		Debug.Log(finished);
 		if (running)
 		{
+			finished = true;
 			timer += Time.deltaTime;
 
+			if (!playedSound && timer > playSound)
+			{
+				playedSound = true;
+				SoundManager sm = FindObjectOfType<SoundManager>();
+				sm.playWin();
+				
+			}
 			switch (state)
 			{
 				case 0: //delay
@@ -40,11 +52,13 @@ public class FinishBox : MonoBehaviour
 					{
 						state = 1;
 						FindObjectOfType<WormMove>().setDead(true);
-						finished = true;
+						
 						FindObjectOfType<LoadNextScene>().gameObject.GetComponent<Animator>().SetBool("Closing", true);
+						FindObjectOfType<WormMove>().playWinExplosion();
+
 					}
 					break;
-				case 1: //up force and spin
+				case 1: 
 					if (timer > state2Transition)
 					{
 						state = 2;
@@ -54,7 +68,15 @@ public class FinishBox : MonoBehaviour
 					finished = false;
 					if (mg != null)
 					{
-						Destroy(mg);
+						if (mg.GetComponent<SoundManager>() == null)
+						{
+							Destroy(mg.gameObject);
+						}
+						else
+						{
+							Destroy(mg.GetComponent<PersistantProtection>());
+							Destroy(mg);
+						}
 					}
 					
 					string sceneName = SceneManager.GetActiveScene().name;

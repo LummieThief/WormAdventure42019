@@ -15,11 +15,15 @@ public class OptionsMenu : MonoBehaviour
 	public Toggle framerateToggle;
 	public Dropdown textureQualityDropdown;
 	public Slider soundEffectsSlider;
+	public Slider musicSlider;
+	public Slider ambienceSlider;
 	[Header("Other variables")]
 	public GameObject optionsMenuUI;
 	public GameObject startMenuUI;
 	public GameObject pauseMenuUI;
 	public AudioMixer soundEffectsMixer;
+	public AudioMixer musicMixer;
+	public AudioMixer ambienceMixer;
 
 	public static bool signsEnabled;
 	private bool inFullscreen = true;
@@ -184,7 +188,19 @@ public class OptionsMenu : MonoBehaviour
 	{
 		soundEffectsMixer.SetFloat("Volume", Mathf.Log10(newVol) * 20);
 		PlayerPrefs.SetFloat("SoundEffectsVolume", newVol);
-		Debug.Log("New volume is " + newVol);
+		//Debug.Log("New volume is " + newVol);
+	}
+	public void musicVolume(float newVol)
+	{
+		musicMixer.SetFloat("Volume", Mathf.Log10(newVol) * 20);
+		PlayerPrefs.SetFloat("MusicVolume", newVol);
+		//Debug.Log("New volume is " + newVol);
+	}
+	public void ambienceVolume(float newVol)
+	{
+		ambienceMixer.SetFloat("Volume", Mathf.Log10(newVol) * 20);
+		PlayerPrefs.SetFloat("AmbienceVolume", newVol);
+		//Debug.Log("New volume is " + newVol);
 	}
 
 	private void load()
@@ -213,14 +229,11 @@ public class OptionsMenu : MonoBehaviour
 		if (PlayerPrefs.HasKey("Resolution"))
 			resolutionDropdown.value = PlayerPrefs.GetInt("Resolution");
 		if (PlayerPrefs.HasKey("SoundEffectsVolume"))
-		{
 			soundEffectsSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume");
-			Debug.Log("Has");
-		}
-		else
-		{
-			Debug.Log("doesnt have");
-		}
+		if (PlayerPrefs.HasKey("MusicVolume"))
+			musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+		if (PlayerPrefs.HasKey("AmbienceVolume"))
+			ambienceSlider.value = PlayerPrefs.GetFloat("AmbienceVolume");
 		//Debug.Log(PlayerPrefs.GetInt("Resolution"));
 	}
 

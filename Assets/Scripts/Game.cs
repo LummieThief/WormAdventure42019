@@ -124,14 +124,14 @@ public class Game : MonoBehaviour
 
 	public void newScene()
 	{
-		Debug.Log("new scene");
+		//Debug.Log("new scene");
 		timer = 0;
 		gravBoxEnabled = false;
 		currentScene = SceneManager.GetActiveScene().name;
 		RenderSettings.fog = true;
 		RenderSettings.fogColor = fogColor;
 		RenderSettings.fogDensity = fogDensity;
-		Debug.Log(fogDensity);
+		//Debug.Log(fogDensity);
 		
 	}
 

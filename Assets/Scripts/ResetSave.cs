@@ -41,7 +41,7 @@ public class ResetSave : MonoBehaviour
 		PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 499999) * 2 + 1);
 		PlayerPrefs.SetFloat("PlayTime", 0);
 
-		Debug.Log("Reset");
+		//Debug.Log("Reset");
 	}
 
 	public static void fullResetSave()

@@ -93,4 +93,10 @@ public class JumpTrigger : MonoBehaviour
 
 		return false;
 	}
+
+	public void setGrounded(bool value)
+	{
+		grounded = value;
+		solidGround = value;
+	}
 }

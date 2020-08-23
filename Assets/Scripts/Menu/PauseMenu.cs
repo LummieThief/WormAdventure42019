@@ -1,17 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
 	public static bool isPaused;
 	public GameObject pauseMenuUI;
 	public GameObject optionsMenuUI;
+	public GameObject controlsMenuUI;
+	//public GameObject startMenuUI;
 	public GameObject mask;
 	public Game game;
+	private SoundManager sm;
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	private void Start()
+	{
+		sm = FindObjectOfType<SoundManager>();
+	}
+	void Update()
     {
 		if (game == null)
 		{
@@ -73,6 +81,24 @@ public class PauseMenu : MonoBehaviour
 	public void options()
 	{
 		optionsMenuUI.SetActive(true);
+		pauseMenuUI.SetActive(false);
+	}
+
+	public void MainMenu()
+	{
+		resume();
+		GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
+		foreach (Persistant p in FindObjectsOfType<Persistant>())
+		{
+			GameObject g = p.gameObject;
+			Destroy(g);
+		}
+		SceneManager.LoadScene("Attempt 2");
+	}
+
+	public void controls()
+	{
+		controlsMenuUI.SetActive(true);
 		pauseMenuUI.SetActive(false);
 	}
 }

@@ -54,6 +54,14 @@ public class Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if (bg == null)
+		{
+			bg = GameObject.FindGameObjectWithTag("Text BG").GetComponent<Image>();
+			bubble = bg.GetComponentsInChildren<Text>()[0];
+			nametag = bg.GetComponentsInChildren<Text>()[1];
+			//bg = bubble.GetComponentInParent<Image>();
+			prompt = bg.GetComponentsInChildren<Image>()[1];
+		}
 		if (PauseMenu.isPaused)
 		{
 			bg.enabled = false;

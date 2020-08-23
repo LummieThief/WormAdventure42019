@@ -50,4 +50,49 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MBlevels/Easy/Level 10.unity
     guid: baf0a84787acf814b8578d1d42a5c67d
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 101.unity
+    guid: 65b4b2929c885a14c81aa10d1819ecf8
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 102.unity
+    guid: 828c59e3794dc744bbd5914310206876
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 103.unity
+    guid: ba45fce39efccb84298c3ad05238ae5c
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 104.unity
+    guid: eede38f8a2daaa74bba423eb292a797a
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 105.unity
+    guid: c589faa7a12e4614eb2d13ab8404b779
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 106.unity
+    guid: 293e17819122f8e4e90dd19ef65082f7
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 107.unity
+    guid: 462f0dff721ab4b44afe4cd4cfd0a317
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 108.unity
+    guid: 776179e0193761745959fcdfe41cc9d3
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 109.unity
+    guid: d6943f7ae1d733d4fb2cdc4246ff8eab
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 110.unity
+    guid: ee5129c25ebb6cc46828de2bb7a6e01b
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 111.unity
+    guid: 60d79db02c88d904d83ea47a7b49dbd1
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 112.unity
+    guid: a07df381de012604aa412a5ed4df229c
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 113.unity
+    guid: 4f95b0198ea21e64eaec5510677c47eb
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 114.unity
+    guid: 588ff092018ffcc44b5e8b6b8f40ae85
+  - enabled: 1
+    path: Assets/Scenes/MBlevels/Medium/Level 115.unity
+    guid: 60294e31b2134254eb1beb4536d8e118
   m_configObjects: {}

@@ -93,7 +93,7 @@ public class CameraFollow : MonoBehaviour
 			bool didHit = false;
 			for (int i = 0; i < hits.Length; i++)
 			{
-				if (hits[i].collider.gameObject.tag == "Solid")
+				if (hits[i].collider.gameObject.tag == "Solid" || hits[i].collider.gameObject.tag == "KillBlock")
 				{
 					transform.Translate(Vector3.up * (Vector3.Distance(transform.position, hits[i].point) - 0.1f));
 					didHit = true;
@@ -158,7 +158,7 @@ public class CameraFollow : MonoBehaviour
 		LayerMask mask = 1 << 8;
 		if (Physics.Linecast(origin, target, out hit, mask))
 		{
-			if (hit.collider.gameObject.tag == "Solid")
+			if (hit.collider.gameObject.tag == "Solid" || hit.collider.gameObject.tag == "KillBlock")
 			{
 				cam.position = hit.point;
 				

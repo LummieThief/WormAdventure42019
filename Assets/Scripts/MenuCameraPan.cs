@@ -15,8 +15,11 @@ public class MenuCameraPan : MonoBehaviour
 		if (game != null)
 		{
 			follow.freezeMouseControl(true);
+			transform.Rotate(Vector3.up, 80);
 		}
-    }
+		
+
+	}
 
     // Update is called once per frame
     void Update()

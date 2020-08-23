@@ -5,9 +5,9 @@ using UnityEngine;
 public class PersistantProtection : MonoBehaviour
 {
 	public int singleDigitId;
-	public static PersistantProtection instance0;
-	public static PersistantProtection instance1;
-	public static PersistantProtection instance2;
+	public static PersistantProtection instance0; //taken
+	public static PersistantProtection instance1; //taken
+	public static PersistantProtection instance2; //taken
 	public static PersistantProtection instance3;
 	public static PersistantProtection instance4;
 	public static PersistantProtection instance5;
@@ -121,6 +121,7 @@ public class PersistantProtection : MonoBehaviour
 					break;
 				}
 		}
+		Debug.Log("Persistantly protected");
 		Destroy(gameObject);
     }
 

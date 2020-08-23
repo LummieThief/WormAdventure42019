@@ -63,9 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AllSkyFree\AllSkyFree_Menu.cs" />
     <Compile Include="Assets\Scripts\BodyFriction.cs" />
     <Compile Include="Assets\Scripts\BounceStopper.cs" />
+    <Compile Include="Assets\Scripts\BreakableBlock.cs" />
     <Compile Include="Assets\Scripts\ButtPosition.cs" />
     <Compile Include="Assets\Scripts\CameraCollision.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Dialogue\Dialogue.cs" />
     <Compile Include="Assets\Scripts\Dialogue\DialogueTriggerEvent.cs" />
     <Compile Include="Assets\Scripts\DrawLineToTransform.cs" />
+    <Compile Include="Assets\Scripts\DynamicMusic.cs" />
     <Compile Include="Assets\Scripts\EggBreak.cs" />
     <Compile Include="Assets\Scripts\EnableFog.cs" />
     <Compile Include="Assets\Scripts\FPSDisplay.cs" />
@@ -119,9 +120,13 @@
     <Compile Include="Assets\Scripts\LightSource.cs" />
     <Compile Include="Assets\Scripts\Line.cs" />
     <Compile Include="Assets\Scripts\LoadNextScene.cs" />
+    <Compile Include="Assets\Scripts\Menu\ButtonSounds.cs" />
+    <Compile Include="Assets\Scripts\Menu\ControlsMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\CreditsMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\GooseChooserMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\OptionsMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\PlayMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\StartMenu.cs" />
     <Compile Include="Assets\Scripts\MenuCameraPan.cs" />
     <Compile Include="Assets\Scripts\MeshCombiner.cs" />
@@ -133,6 +138,7 @@
     <Compile Include="Assets\Scripts\QuantumBox.cs" />
     <Compile Include="Assets\Scripts\QuantumParent.cs" />
     <Compile Include="Assets\Scripts\RandomAnimationStart.cs" />
+    <Compile Include="Assets\Scripts\RandomHonk.cs" />
     <Compile Include="Assets\Scripts\RandomRotation.cs" />
     <Compile Include="Assets\Scripts\Recenter.cs" />
     <Compile Include="Assets\Scripts\ResetSave.cs" />
@@ -146,11 +152,11 @@
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TwoDWormMove.cs" />
     <Compile Include="Assets\Scripts\WarpZone.cs" />
+    <Compile Include="Assets\Scripts\WindAbove.cs" />
     <Compile Include="Assets\Scripts\WormMove.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\saves.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\AllSkyFree\AllSkyFree_Readme.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
@@ -161,6 +167,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\saves.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\SkySerie Freebie\Hdri setup.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
@@ -352,13 +359,13 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.3f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.3f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
@@ -706,61 +713,61 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.3f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/jtcoo/Desktop/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/jtcoo/Desktop/Game Dev/Unity/Unity Games/Worm Adveture 4 2019/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

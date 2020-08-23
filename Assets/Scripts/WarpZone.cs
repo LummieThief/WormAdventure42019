@@ -12,7 +12,7 @@ public class WarpZone : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			Debug.Log("going to scene");
+			//Debug.Log("going to scene");
 			goToScene(scene);
 		}
 	}
@@ -33,7 +33,7 @@ public class WarpZone : MonoBehaviour
 		{
 			scene = "Ranch";
 		}
-		Debug.Log("left scene");
+		//Debug.Log("left scene");
 		//backupCam.enabled = true;
 		SceneManager.LoadScene(scene);
 	}

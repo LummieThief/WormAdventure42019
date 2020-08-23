@@ -25,31 +25,20 @@ public class KillBlock : MonoBehaviour
 		{
 			if (other.gameObject.tag == "Player" || other.gameObject.tag == "Friction Point")
 			{
-				SoundManager sm = FindObjectOfType<SoundManager>();
-				sm.playDeath();
-				FindObjectOfType<CameraFollow>().setState(2);
+				
 				WormMove worm = other.gameObject.GetComponentInParent<WormMove>();
-				worm.playExplosion();
+				
 				if (!worm.getDead())
 				{
+					SoundManager sm = FindObjectOfType<SoundManager>();
+					sm.playDeath();
+					FindObjectOfType<CameraFollow>().setState(2);
+					worm.playExplosion();
 					animator.SetBool("Closing", true);
 					worm.setDead(true);
 					active = false;
 				}
-	            /*
-			string sceneName = SceneManager.GetActiveScene().name;
-			int levelNumber = int.Parse(sceneName.Substring(6));
-			Debug.Log(levelNumber);
-			if (Application.CanStreamedLevelBeLoaded("Level " + (levelNumber - value)))
-			{
-				SceneManager.LoadScene("Level " + (levelNumber - value));
 			}
-			else
-			{
-				SceneManager.LoadScene("Level 1");
-			}
-			*/
-		}
 		}
 	}
 }

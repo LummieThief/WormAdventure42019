@@ -1034,8 +1034,7 @@ GameObject:
   - component: {fileID: 2015119157333098361}
   - component: {fileID: 2015119157333098362}
   - component: {fileID: 2015119157333098363}
-  - component: {fileID: 2015119157333098360}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cloud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1116,21 +1115,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2015119157333098358}
   m_Mesh: {fileID: 0}
---- !u!114 &2015119157333098360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015119157333098358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cea7b944f58947f41b8f86af87872aec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  run: 0
-  runAdvanced: 0
-  restore: 0
 --- !u!1 &2015119157391626249
 GameObject:
   m_ObjectHideFlags: 0

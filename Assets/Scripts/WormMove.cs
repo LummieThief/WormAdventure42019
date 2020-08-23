@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WormMove : MonoBehaviour
 {
@@ -83,6 +84,7 @@ public class WormMove : MonoBehaviour
 	public ParticleSystem speedLines;
 	public ParticleSystem jump;
 	public ParticleSystem explosion;
+	public ParticleSystem winExplosion;
 	private BodyFriction friction;
 
 	public float heldItemDistance;
@@ -98,6 +100,7 @@ public class WormMove : MonoBehaviour
 	public List<Material> stoneMaterials;
 	public List<Material> woodMaterials;
 
+	private float artificialWindSpeed;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -126,6 +129,17 @@ public class WormMove : MonoBehaviour
 				canGrapple = true;
 			}
 		}
+		else
+		{
+			if (SceneManager.GetActiveScene().name == "Attempt 2")
+			{
+				lastVolume = 1f;
+			}
+			else
+			{
+				lastVolume = 0.12f;
+			}
+		}
 		snd = FindObjectOfType<SoundManager>();
 		rsc = ropeStart.GetComponent<RopeSegmentController>();
     }
@@ -133,7 +147,6 @@ public class WormMove : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Debug.Log(grounded);
 		if (rsc == null)
 		{
 			rsc = ropeStart.GetComponent<RopeSegmentController>();
@@ -143,11 +156,14 @@ public class WormMove : MonoBehaviour
 			snd = FindObjectOfType<SoundManager>();
 		}
 
-
+		float useThisSpeed = Mathf.Max(rb.velocity.magnitude, artificialWindSpeed);
+		if (artificialWindSpeed < 0)
+		{
+			useThisSpeed = 0;
+		}
 		
-		float vol = Mathf.Clamp(((rb.velocity.magnitude - smokeSpeed * 0.9f) / smokeSpeed), 0f, 1f);
+		float vol = Mathf.Clamp(((useThisSpeed - smokeSpeed * 0.9f) / smokeSpeed), 0f, 1f);
 		vol = Mathf.Lerp(lastVolume, vol, 1.5f * Time.deltaTime) * Time.timeScale;
-
 		//Debug.Log(vol);
 		if (snd != null)
 		{
@@ -271,7 +287,7 @@ public class WormMove : MonoBehaviour
 			}
 		}
 
-		if (startingGrapple)
+		if (startingGrapple && !startingGrapple)
 		{
 			tail.sharedMaterial.Lerp(tailOn, tailOn, 1);
 		}
@@ -327,7 +343,7 @@ public class WormMove : MonoBehaviour
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;
 
-			rsc.activate(Vector3.MoveTowards(grappleHit.transform.position, buttPosition, 0.1f)) ;
+			rsc.activate(Vector3.MoveTowards(grappleHit.transform.position, buttPosition, 0.1f));
 			rsc.setTime(grappleTimer);
 			ropeLength = Vector3.Distance(buttPosition, grappleHit.transform.position);
 
@@ -338,7 +354,11 @@ public class WormMove : MonoBehaviour
 			float maxPitch = 2;
 			float minPitch = 0.4f;
 			float distanceScaled = maxPitch - (maxPitch - minPitch) * Vector3.Distance(buttPosition, grappleHit.transform.position) / range;
-			snd.playGrapple(distanceScaled);
+
+			if (!startingGrapple)
+			{
+				snd.playGrapple(distanceScaled);
+			}
 		}
 
 
@@ -346,12 +366,15 @@ public class WormMove : MonoBehaviour
 
 		if (grappling) //The code for the grapple that gets run every frame to update the rope position.
 		{
-			grappleTimer = rsc.getTime();
+			if (!startingGrapple)
+			{
+				grappleTimer = rsc.getTime();
+			}
 			if (currentRopeLength != rsc.getLength())
 			{
 				currentRopeLength = rsc.getLength();
 
-				if (rsc.getCurrentPoint().GetComponent<Rigidbody>() != null)
+				if (rsc.getCurrentPoint() != null && rsc.getCurrentPoint().GetComponent<Rigidbody>() != null)
 				{
 					spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
 					spring.maxDistance = ropeLength - currentRopeLength;
@@ -516,15 +539,15 @@ public class WormMove : MonoBehaviour
 
 				transform.Translate(Vector3.up * 0.5f, Space.Self);
 				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-				Debug.Log("Jump!");
+				//Debug.Log("Jump!");
 
 
 				//gets the material under the worm;
 				RaycastHit hit;
 				LayerMask mask = 101 << 8;
-				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 2, mask) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 2, mask) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 2, mask))
+				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 3, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 3, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 3, mask))
 				{
 					if (hit.collider.GetComponent<MeshRenderer>() != null)
 					{
@@ -537,9 +560,44 @@ public class WormMove : MonoBehaviour
 						{
 							snd.playJump(Random.Range(0, 5));
 						}
-						else if (grassMaterials.Contains(mat))
+						/*else if (grassMaterials.Contains(mat))
 						{
 							snd.playGrass();
+						}*/
+						else if (woodMaterials.Contains(mat))
+						{
+							snd.playWood();
+						}
+						else
+						{
+							snd.playGrass();
+						}
+
+						if (hit.collider.gameObject.GetComponent<BreakableBlock>() != null)
+						{
+							GameObject other = hit.collider.gameObject;
+							other.GetComponent<MeshRenderer>().enabled = false;
+							other.transform.position += Vector3.up * 200;
+							if (grappling)
+							{
+								Physics.SyncTransforms();
+								LayerMask lm = 1 << 8;
+								if (!Physics.CheckSphere(grappleHit.transform.position, grappleHit.transform.localScale.x / 2, lm))
+								{
+									itsGrappleTime = false;
+									howMuchLongerIsItGrappleTime = 0;
+									grappling = false;
+									grappleTimer = rsc.getTime();
+									if (grappleTimer > maxGrappleTime)
+									{
+										canGrapple = false;
+									}
+									rsc.deactivate();
+									spring.maxDistance = Mathf.Infinity;
+									currentRopeLength = -1;
+								}
+							}
+							
 						}
 					}
 				}
@@ -625,6 +683,11 @@ public class WormMove : MonoBehaviour
 	public void playExplosion()
 	{
 		explosion.Play();
+	}
+
+	public void playWinExplosion()
+	{
+		winExplosion.Play();
 	}
 
 	private void playSpeedLines()
@@ -714,5 +777,9 @@ public class WormMove : MonoBehaviour
 		return dead;
 	}
 
+	public void setArtificialWindSpeed(float spd)
+	{
+		artificialWindSpeed = spd;
+	}
 
 }

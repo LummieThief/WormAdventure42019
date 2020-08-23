@@ -9,19 +9,16 @@ public class StartMenu : MonoBehaviour
 {
 	private FadeController fade;
 	public GameObject startMenuUI;
+	public GameObject playMenuUI;
+	public GameObject controlsMenuUI;
 	public static bool isOpen = true;
 	public GameObject playButton;
 	public GameObject newGameButton;
-	private CanvasGroup cg;
 	public float offsetDownWhenStarting;
 
 	public GameObject optionsMenuUI;
+	public GameObject creditsMenuUI;
 	//private GameObject continueButton;
-	private Text playText;
-
-	private bool fadingToScene;
-	private float fadeTimer;
-	private float timeToFade = 1;
 
 	private float timeBeforeFirstFade = 1;
 	private float timeBeforeFirstFadeTimer = 0;
@@ -30,23 +27,6 @@ public class StartMenu : MonoBehaviour
 	{
 		isOpen = true;
 		fade = FindObjectOfType<FadeController>();
-		cg = GetComponent<CanvasGroup>();
-		playText = playButton.GetComponentInChildren<Text>();
-		
-		if (System.IO.File.Exists(SaveLoad.path))
-		{
-			playText.text = "CONTINUE";
-			newGameButton.SetActive(true);
-		}
-		else
-		{
-			playText.text = "START";
-			playButton.GetComponent<RectTransform>().localPosition += Vector3.down * offsetDownWhenStarting;
-			newGameButton.SetActive(false);
-		}
-
-		
-
 	}
 
 	private void Update()
@@ -70,40 +50,17 @@ public class StartMenu : MonoBehaviour
 		{
 			timeBeforeFirstFadeTimer += Time.deltaTime;
 		}
-
-		if (fadingToScene)
-		{
-			fadeTimer += Time.deltaTime;
-
-			if (fadeTimer > timeToFade + 1)
-			{
-				ResetSave.resetSave();
-				GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
-				foreach (Persistant p in FindObjectsOfType<Persistant>())
-				{
-					GameObject g = p.gameObject;
-					Destroy(g);
-				}
-				SceneManager.LoadScene("Attempt 2");
-			}
-		}
 	}
 
 	public void Continue()
 	{
-		StartCoroutine(fadeOutMenu(3f));
-		//fadeOutMenu();
+		playMenuUI.SetActive(true);
+		startMenuUI.SetActive(false);
 	}
 
 	public void Quit()
 	{
 		Application.Quit();
-	}
-
-	public void NewGame()
-	{
-		fadingToScene = true;
-		fade.startFadeOut(timeToFade, true);
 	}
 
 	public void OpenOptions()
@@ -112,15 +69,15 @@ public class StartMenu : MonoBehaviour
 		startMenuUI.SetActive(false);
 	}
 
-	IEnumerator fadeOutMenu(float fadePerSecond)
+	public void OpenCredits()
 	{
-		isOpen = false;
-		while (cg.alpha > 0)
-		{
-			cg.alpha -= fadePerSecond * Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-		cg.alpha = 1;
+		creditsMenuUI.SetActive(true);
+		startMenuUI.SetActive(false);
+	}
+
+	public void OpenControls()
+	{
+		controlsMenuUI.SetActive(true);
 		startMenuUI.SetActive(false);
 	}
 }

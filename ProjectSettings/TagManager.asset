@@ -18,6 +18,7 @@ TagManager:
   - Sign
   - Text BG
   - Friction Point
+  - KillBlock
   layers:
   - Default
   - TransparentFX

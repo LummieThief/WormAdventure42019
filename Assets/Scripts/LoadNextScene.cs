@@ -7,6 +7,7 @@ public class LoadNextScene : MonoBehaviour
 {
 	public void loadNextScene(int value)
 	{
+		Debug.Log("reset"); 
 		if (!FinishBox.finished)
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
