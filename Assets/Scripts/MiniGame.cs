@@ -9,7 +9,10 @@ public class MiniGame : MonoBehaviour
 	private Animator announcementAnim;
 	public Material easySkybox;
 	public Material mediumSkybox;
+	public Material hardSkybox;
+	public Material masterSkybox;
 	private SoundManager sm;
+
 	//public GameObject musicFairy;
 	// Start is called before the first frame update
 
@@ -24,7 +27,7 @@ public class MiniGame : MonoBehaviour
 	void Awake()
     {
 		showedLevel = false;
-		announcementAnim = FindObjectOfType<StartingCountdown>().GetComponent<Animator>();
+		//announcementAnim = FindObjectOfType<StartingCountdown>().GetComponent<Animator>();
 		bool activate = false;
 		foreach (SoundManager sound in FindObjectsOfType<SoundManager>())
 		{
@@ -37,6 +40,8 @@ public class MiniGame : MonoBehaviour
 		{
 			Destroy(GetComponent<SoundManager>());
 			Destroy(GetComponent<AudioListener>());
+			Destroy(GetComponent<ArcadeTimer>());
+			Destroy(GetComponent<DeathCounter>());
 			foreach (AudioSource audio in GetComponentsInChildren<AudioSource>())
 			{
 				Destroy(audio.gameObject);
@@ -47,12 +52,19 @@ public class MiniGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (Input.GetKeyDown(KeyCode.R) && !PauseMenu.isPaused && !FinishBox.finished)
+		if (Input.GetKeyDown(KeyCode.R) && !PauseMenu.isPaused && !FinishBox.finished && StartingCountdown.goed)
 		{
+			StartingCamera sc = FindObjectOfType<StartingCamera>();
+			if (sc == null || !sc.enabled)
+			{
+				FindObjectOfType<DeathCounter>().addDeath();
+			}
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+			
 		}
 		//ready = true;
-    }
+	}
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
@@ -66,6 +78,14 @@ public class MiniGame : MonoBehaviour
 		{
 			RenderSettings.skybox = mediumSkybox;
 		}
+		else if (path.Contains("Hard"))
+		{
+			RenderSettings.skybox = hardSkybox;
+		}
+		else if (path.Contains("Master"))
+		{
+			RenderSettings.skybox = masterSkybox;
+		}
 		if (!showedLevel)
 		{
 			showedLevel = true;
@@ -73,7 +93,7 @@ public class MiniGame : MonoBehaviour
 		else
 		{
 			FindObjectOfType<StartingCamera>().setState(1);
-			Debug.Log("Skip the cutscene");
+			//Debug.Log("Skip the cutscene");
 		}
 	}
 

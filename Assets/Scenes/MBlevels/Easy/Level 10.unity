@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4482156, g: 0.5276579, b: 0.67590106, a: 1}
+  m_IndirectSpecularColor: {r: 0.4481537, g: 0.5275859, b: 0.6758955, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4409,10 +4409,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1298045820}
     m_Modifications:
+    - target: {fileID: 7539679866862692264, guid: 0b4e4f69e2ed80240bae764b26108058,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7967666177972852048, guid: 0b4e4f69e2ed80240bae764b26108058,
         type: 3}
       propertyPath: m_Name
       value: NPCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967666177972852048, guid: 0b4e4f69e2ed80240bae764b26108058,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7967666177972852051, guid: 0b4e4f69e2ed80240bae764b26108058,
         type: 3}
@@ -4532,6 +4542,11 @@ PrefabInstance:
     - target: {fileID: 7967666177972852051, guid: 0b4e4f69e2ed80240bae764b26108058,
         type: 3}
       propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967666178663902975, guid: 0b4e4f69e2ed80240bae764b26108058,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7967666178894563131, guid: 0b4e4f69e2ed80240bae764b26108058,

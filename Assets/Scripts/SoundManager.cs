@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
-	private float pauseVolumeScale = 0.1f;
+	private float pauseVolumeScale = 0f;
 	private bool wasPaused;
 
 	public AudioSource scrunch;
@@ -21,6 +21,7 @@ public class SoundManager : MonoBehaviour
 	public AudioSource ready;
 	public AudioSource go;
 	public AudioSource woodCrash;
+	public AudioSource msgup;
 
 	public AudioSource[] honks;
 
@@ -55,6 +56,13 @@ public class SoundManager : MonoBehaviour
 
 	public AudioSource arcadeOneMusic;
 	private float arcadeOneMax;
+	public AudioSource arcadeTwoMusic;
+	private float arcadeTwoMax;
+	public AudioSource arcadeThreeMusic;
+	private float arcadeThreeMax;
+	public AudioSource arcadeFourMusic;
+	private float arcadeFourMax;
+
 
 	private float speedWindMaxVolume;
 
@@ -88,7 +96,26 @@ public class SoundManager : MonoBehaviour
 		}
 		else
 		{
-			arcadeOneMax = arcadeOneMusic.volume;
+			if (SceneManager.GetActiveScene().path.Contains("Easy"))
+			{
+				arcadeOneMax = arcadeOneMusic.volume;
+				arcadeOneMusic.Play();
+			}
+			else if (SceneManager.GetActiveScene().path.Contains("Medium"))
+			{
+				arcadeTwoMax = arcadeTwoMusic.volume;
+				arcadeTwoMusic.Play();
+			}
+			else if (SceneManager.GetActiveScene().path.Contains("Hard"))
+			{
+				arcadeThreeMax = arcadeThreeMusic.volume;
+				arcadeThreeMusic.Play();
+			}
+			else if (SceneManager.GetActiveScene().path.Contains("Master"))
+			{
+				arcadeFourMax = arcadeFourMusic.volume;
+				arcadeFourMusic.Play();
+			}
 		}
 	}
 
@@ -163,6 +190,19 @@ public class SoundManager : MonoBehaviour
 				{
 					arcadeOneMusic.volume = arcadeOneMax * pauseVolumeScale;
 				}
+				else if (arcadeTwoMusic.isPlaying)
+				{
+					arcadeTwoMusic.volume = arcadeTwoMax * pauseVolumeScale;
+				}
+				else if (arcadeThreeMusic.isPlaying)
+				{
+					arcadeThreeMusic.volume = arcadeThreeMax * pauseVolumeScale;
+				}
+				else if (arcadeFourMusic.isPlaying)
+				{
+					arcadeFourMusic.volume = arcadeFourMax * pauseVolumeScale;
+				}
+
 
 			}
 			
@@ -183,6 +223,9 @@ public class SoundManager : MonoBehaviour
 			else
 			{
 				arcadeOneMusic.volume = arcadeOneMax;
+				arcadeTwoMusic.volume = arcadeTwoMax;
+				arcadeThreeMusic.volume = arcadeThreeMax;
+				arcadeFourMusic.volume = arcadeFourMax;
 			}
 		}
 	}
@@ -289,6 +332,11 @@ public class SoundManager : MonoBehaviour
 	{
 		woodCrash.pitch = Random.Range(0.8f, 1.2f);
 		woodCrash.Play();
+	}
+
+	public void playMsgup()
+	{
+		msgup.Play();
 	}
 
 	public void menuMusicFade(float volPerSec)

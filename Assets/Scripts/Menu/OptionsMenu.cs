@@ -21,9 +21,11 @@ public class OptionsMenu : MonoBehaviour
 	public GameObject optionsMenuUI;
 	public GameObject startMenuUI;
 	public GameObject pauseMenuUI;
+	public GameObject resetConfirmMenuUI;
 	public AudioMixer soundEffectsMixer;
 	public AudioMixer musicMixer;
 	public AudioMixer ambienceMixer;
+
 
 	public static bool signsEnabled;
 	private bool inFullscreen = true;
@@ -92,6 +94,11 @@ public class OptionsMenu : MonoBehaviour
 		{
 			pauseMenuUI.SetActive(true);
 		}
+	}
+
+	public void ResetSave()
+	{
+		resetConfirmMenuUI.SetActive(true);
 	}
 
 	public void Fullscreen()

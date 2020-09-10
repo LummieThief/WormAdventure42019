@@ -17,6 +17,7 @@ public class WormMove : MonoBehaviour
 	public float maxSpeed = 100f;
 	public float jumpForce = 50f;
 	public float terminalVelocity = 45f;
+	
 	//public bool underwater = false;
 	//private float underwaterScale = 0.7f;
 	//private float underwaterDrag = 2f;
@@ -33,6 +34,8 @@ public class WormMove : MonoBehaviour
 	private bool jumpUp;
 	private bool jumpDown;
 	private bool jumpHeld;
+	public float coyoteTime = 1f;
+	private float coyoteTimer = 999f;
 
 
 	public float range = 50f;
@@ -96,7 +99,7 @@ public class WormMove : MonoBehaviour
 	private SoundManager snd;
 	private float lastVolume;
 
-	public List<Material> grassMaterials;
+	//public List<Material> grassMaterials;
 	public List<Material> stoneMaterials;
 	public List<Material> woodMaterials;
 
@@ -276,10 +279,20 @@ public class WormMove : MonoBehaviour
 		if (!grappling && !dead) //shows the grapple indicator
 		{
 			LayerMask mask = 1001 << 8;
-			if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range, mask) && canGrapple && !holdingObject)
+			float distanceBetweenCenterAndButt = Vector3.Distance(buttPosition, transform.position);
+			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, range + distanceBetweenCenterAndButt, mask)
+				&& canGrapple && !holdingObject)
 			{
-				grappleHit.SetActive(true);
-				grappleHit.transform.position = new Vector3(0, hit.point.y, hit.point.z);
+				if (hit.collider.gameObject.GetComponent<IceBlock>() != null)
+				{
+					grappleHit.SetActive(false);
+					
+				}
+				else
+				{
+					grappleHit.SetActive(true);
+					grappleHit.transform.position = new Vector3(0, hit.point.y, hit.point.z);
+				}
 			}
 			else
 			{
@@ -528,27 +541,75 @@ public class WormMove : MonoBehaviour
 			
 			Debug.DrawRay(transform.position,Vector3.up * 1 + transform.TransformDirection(Vector3.up) * 10, Color.white, Time.deltaTime);
 		}*/
+		//Debug.Log(transform.eulerAngles);
+
 
 		if (crouching && !jumpHeld) //jump
 		{
 			snd.playDescrunch();
 			snd.stopScrunch();
 			transform.localScale = initialScale;
-			if (grounded)
+			crouching = false;
+
+			coyoteTimer = 0;
+		}
+		else if (coyoteTimer < coyoteTime)
+		{
+			coyoteTimer += Time.deltaTime;
+		}
+		if (grounded && coyoteTimer < coyoteTime) //the actual code that runs to jump
+		{
+			coyoteTimer = coyoteTime + 1f;
+			transform.Translate(Vector3.up * 0.5f, Space.Self);
+
+			
+			if (solidGround)
 			{
-
-				transform.Translate(Vector3.up * 0.5f, Space.Self);
-				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-				//Debug.Log("Jump!");
-
-
-				//gets the material under the worm;
-				RaycastHit hit;
-				LayerMask mask = 101 << 8;
-				if (Physics.Raycast(new Ray(buttPosition, transform.TransformDirection(Vector3.down)), out hit, 3, mask) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, 3, mask) ||
-					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, 3, mask))
+				rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, 0, 999), rb.velocity.z);
+				if (rb.velocity.y == 0)
 				{
+					Debug.Log("cancelled velocity vertically");
+				}
+			}
+			else if(Mathf.Sign(transform.TransformDirection(Vector3.up).z) != Mathf.Sign(rb.velocity.z)) //if the player is facing the opposite direction than they are moving
+			{
+				rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
+				Debug.Log("cancelled velocity horizontally");
+			}
+
+
+			//if(!(!solidGround && transform.eulerAngles.x)) 
+			var wallClipRot = transform.eulerAngles.x; //To stop jumping straight up a wall now that CT is a thing
+			if (wallClipRot < 180)
+			{
+				wallClipRot += 360;
+			}
+			//Debug.Log(Mathf.Abs(360 - wallClipRot));
+			if (!solidGround && Mathf.Abs(360 - wallClipRot) < 3)
+			{
+				//Debug.LogError("cheating");
+			}
+			else
+			{
+				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse); //THIS IS THE JUMP FORCE
+			}
+			//Debug.Log("Jump!");
+
+
+			//gets the material under the worm;
+			RaycastHit hit;
+			LayerMask mask = 101 << 8;
+
+			Debug.DrawRay(buttPosition, transform.TransformDirection(Vector3.down * 4));
+			float distanceBetweenCenterAndButt = Vector3.Distance(buttPosition, transform.position);
+			var rayDistance = 1;
+			while (rayDistance < 5)
+			{
+				if (Physics.SphereCast(transform.position, jumpTrigger.transform.lossyScale.x / 2, transform.TransformDirection(Vector3.down), out hit, rayDistance + distanceBetweenCenterAndButt, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.forward)), out hit, rayDistance, mask) ||
+					Physics.Raycast(new Ray(transform.position, transform.TransformDirection(Vector3.back)), out hit, rayDistance, mask))
+				{
+					rayDistance = 999;
 					if (hit.collider.GetComponent<MeshRenderer>() != null)
 					{
 						Material mat = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
@@ -573,6 +634,7 @@ public class WormMove : MonoBehaviour
 							snd.playGrass();
 						}
 
+						
 						if (hit.collider.gameObject.GetComponent<BreakableBlock>() != null)
 						{
 							GameObject other = hit.collider.gameObject;
@@ -597,15 +659,19 @@ public class WormMove : MonoBehaviour
 									currentRopeLength = -1;
 								}
 							}
-							
+
 						}
+						
 					}
 				}
-
-
-				playJump();
+				else
+				{
+					rayDistance++;
+				}
 			}
-			crouching = false;
+
+
+			playJump();
 		}
 
 

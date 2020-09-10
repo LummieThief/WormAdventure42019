@@ -37,15 +37,20 @@ public class ResetSave : MonoBehaviour
 
 	public static void resetSave()
 	{
-		System.IO.File.Delete(SaveLoad.path);
+		if (System.IO.File.Exists(SaveLoad.path))
+		{
+			System.IO.File.Delete(SaveLoad.path);
+		}
 		PlayerPrefs.SetInt("unity.player_session_log", Random.Range(0, 499999) * 2 + 1);
 		PlayerPrefs.SetFloat("PlayTime", 0);
+		//PlayerPrefs.SetFloat("Arcade", 0);
 
 		//Debug.Log("Reset");
 	}
 
 	public static void fullResetSave()
 	{
+		System.IO.File.Delete(SaveLoad.path);
 		Debug.Log("Hard Reset");
 		PlayerPrefs.DeleteAll();
 	}

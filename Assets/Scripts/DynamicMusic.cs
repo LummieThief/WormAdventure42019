@@ -73,7 +73,7 @@ public class DynamicMusic : MonoBehaviour
 
 			averageVelocity /= velCapacity;
 
-			Debug.Log(averageVelocity.y + averageVelocity.z / 6);
+			//Debug.Log(averageVelocity.y + averageVelocity.z / 6);
 
 			if (windAbove != null && worm.position.y > windAbove.position.y)
 			{

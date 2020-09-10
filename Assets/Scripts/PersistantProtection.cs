@@ -121,7 +121,7 @@ public class PersistantProtection : MonoBehaviour
 					break;
 				}
 		}
-		Debug.Log("Persistantly protected");
+		//Debug.Log("Persistantly protected");
 		Destroy(gameObject);
     }
 

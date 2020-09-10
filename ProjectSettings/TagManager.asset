@@ -19,6 +19,7 @@ TagManager:
   - Text BG
   - Friction Point
   - KillBlock
+  - Canvas
   layers:
   - Default
   - TransparentFX

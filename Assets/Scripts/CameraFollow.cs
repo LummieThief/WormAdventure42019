@@ -5,6 +5,9 @@ using UnityEngine;
 //Camera controls with the mouse
 public class CameraFollow : MonoBehaviour
 {
+	public GameObject freecam;
+	private bool freecamExists;
+
 	public float mouseSensitivity = 100f;
 	public float camDistance = 10f;
 	public float zoomSpeed = 0.5f;
@@ -59,6 +62,12 @@ public class CameraFollow : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate()
     {
+		if (Input.GetKeyDown(KeyCode.F1) && !freecamExists)
+		{
+			GameObject fc = Instantiate(freecam, GameObject.FindGameObjectWithTag("OuterWildsWorld").transform);
+			fc.GetComponent<FreecamController>().origin = cam;
+			freecamExists = true;
+		}
 		//Debug.Log(mouseFrozen);
 		/*
 		if (PauseMenu.isPaused)
@@ -182,6 +191,11 @@ public class CameraFollow : MonoBehaviour
 	public void setY(float val)
 	{
 		mouseY = val;
+	}
+
+	public float getY()
+	{
+		return mouseY;
 	}
 
 	public void freezeMouseControl(bool value)

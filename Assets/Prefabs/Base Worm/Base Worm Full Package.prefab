@@ -30366,6 +30366,12 @@ PrefabInstance:
       propertyPath: zoomSpeed
       value: 17
       objectReference: {fileID: 0}
+    - target: {fileID: 204522504255411957, guid: f89821db27c499d4aad7ef01dc3c483e,
+        type: 3}
+      propertyPath: freecam
+      value: 
+      objectReference: {fileID: 5864353157805418916, guid: 80dc3005ed57f0c44a4820a44998742b,
+        type: 3}
     - target: {fileID: 204522504255411959, guid: f89821db27c499d4aad7ef01dc3c483e,
         type: 3}
       propertyPath: m_Name
@@ -30587,17 +30593,17 @@ PrefabInstance:
     - target: {fileID: 5711554876166263745, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
       propertyPath: m_Height
-      value: 2.0723104
+      value: 1.8795085
       objectReference: {fileID: 0}
     - target: {fileID: 5711554876166263745, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
       propertyPath: m_Center.y
-      value: -0.036155198
+      value: -0.09282562
       objectReference: {fileID: 0}
     - target: {fileID: 5711554876166263745, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
       propertyPath: m_Center.z
-      value: -2.6865196e-16
+      value: 5.826426e-16
       objectReference: {fileID: 0}
     - target: {fileID: 5711554876166263747, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
@@ -30749,7 +30755,7 @@ PrefabInstance:
     - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
       propertyPath: woodMaterials.Array.size
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
@@ -31002,6 +31008,46 @@ PrefabInstance:
       propertyPath: winExplosion
       value: 
       objectReference: {fileID: 3298222672957653213}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: coyoteTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: rotFlipOffset
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: woodMaterials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0e2af2a8b1075874792e904b200cf84e, type: 2}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: woodMaterials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 27ca6a236ade0fd4d95363e7f5dcd965, type: 2}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: woodMaterials.Array.data[5]
+      value: 
+      objectReference: {fileID: 2100000, guid: d2ef57b39eb9b17418cece36c3bb8f38, type: 2}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: woodMaterials.Array.data[6]
+      value: 
+      objectReference: {fileID: 2100000, guid: d1c81ac8a83f0dc4493e9ed44d91a077, type: 2}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: woodMaterials.Array.data[7]
+      value: 
+      objectReference: {fileID: 2100000, guid: af753a37294813545be9d977a9c807b4, type: 2}
+    - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: twod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5711554877523700264, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}
       propertyPath: m_LocalRotation.y

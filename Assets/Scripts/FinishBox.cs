@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class FinishBox : MonoBehaviour
 {
@@ -30,12 +31,22 @@ public class FinishBox : MonoBehaviour
 		}
 	}
 
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.F12) && !running)
+		{
+			mg = FindObjectOfType<MiniGame>();
+			running = true;
+			GameObject.FindObjectOfType<CameraFollow>().setState(1);
+			wormRB = GameObject.FindObjectOfType<WormMove>().GetComponent<Rigidbody>();
+		}
+	}
+
 	private void FixedUpdate()
 	{
-		Debug.Log(finished);
+		//Debug.Log(finished);
 		if (running)
 		{
-			finished = true;
 			timer += Time.deltaTime;
 
 			if (!playedSound && timer > playSound)
@@ -48,12 +59,25 @@ public class FinishBox : MonoBehaviour
 			switch (state)
 			{
 				case 0: //delay
+					finished = true;
 					if (timer > state1Transition)
 					{
 						state = 1;
 						FindObjectOfType<WormMove>().setDead(true);
-						
-						FindObjectOfType<LoadNextScene>().gameObject.GetComponent<Animator>().SetBool("Closing", true);
+
+						LoadNextScene lns = FindObjectOfType<LoadNextScene>();
+						lns.gameObject.GetComponent<Animator>().SetBool("Closing", true);
+
+						var name = SceneManager.GetActiveScene().name;
+						int num = int.Parse(name.Substring(6));
+						if (!Application.CanStreamedLevelBeLoaded("Level " + (num + 1)))
+						{
+							foreach (Image i in lns.GetComponentsInChildren<Image>())
+							{
+								i.color = Color.black;
+							}
+						}
+					
 						FindObjectOfType<WormMove>().playWinExplosion();
 
 					}
@@ -81,7 +105,7 @@ public class FinishBox : MonoBehaviour
 					
 					string sceneName = SceneManager.GetActiveScene().name;
 					int levelNumber = int.Parse(sceneName.Substring(6));
-					Debug.Log(levelNumber);
+					//Debug.Log(levelNumber);
 				
 					
 					if (Application.CanStreamedLevelBeLoaded("Level " + (levelNumber + 1)))
@@ -90,8 +114,12 @@ public class FinishBox : MonoBehaviour
 					}
 					else
 					{
-						SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+						FindObjectOfType<FinishMenu>().activate();
+						state++;
 					}
+					break;
+				case 3:
+
 					break;
 			}
 		}

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class Timer : MonoBehaviour
+public class Timer: MonoBehaviour
 {
 	private string finalScene = "Winners";
 	private float playTime;
@@ -28,7 +28,7 @@ public class Timer : MonoBehaviour
 		}
 		if (running)
 		{
-			playTime += Time.deltaTime;
+			playTime += Time.unscaledDeltaTime;
 		}
 		
 		//Debug.Log(playTime);
@@ -68,7 +68,7 @@ public class Timer : MonoBehaviour
 		string finalTime = "";
 		if (hours > 0)
 		{
-			finalTime += +hours + ":";
+			finalTime += hours + ":";
 		}
 		if (minutes > 0)
 		{
@@ -82,7 +82,19 @@ public class Timer : MonoBehaviour
 				finalTime += "0";
 			finalTime += seconds + ".";
 		}
+		if (milli < 100)
+		{
+			if (milli < 10)
+			{
+				finalTime += "00";
+			}
+			else
+			{
+				finalTime += "0";
+			}
+		}
 		finalTime += milli;
+
 
 		return finalTime;
 	}

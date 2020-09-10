@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
+		Application.targetFrameRate = 60;
 		//Debug.LogError("Started running");
 		if (worm == null)
 		{
@@ -48,6 +49,10 @@ public class Game : MonoBehaviour
 
 	private void Update()
 	{
+		if (Application.targetFrameRate != 60)
+		{
+			Application.targetFrameRate = 60;
+		}
 		//Debug.Log(timer);
 		//Debug.Log(gravBoxEnabled);
 		timer += Time.deltaTime;

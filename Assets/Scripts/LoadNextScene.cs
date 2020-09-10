@@ -10,6 +10,7 @@ public class LoadNextScene : MonoBehaviour
 		Debug.Log("reset"); 
 		if (!FinishBox.finished)
 		{
+			FindObjectOfType<DeathCounter>().addDeath();
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 		/*

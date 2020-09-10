@@ -37,10 +37,16 @@ public class PauseMenu : MonoBehaviour
 				optionsMenuUI.SetActive(false);
 				pauseMenuUI.SetActive(true);
 			}
+			else if (controlsMenuUI.activeSelf)
+			{
+				controlsMenuUI.SetActive(false);
+				pauseMenuUI.SetActive(true);
+			}
 			else
 			{
 				if (isPaused)
 				{
+					
 					resume();
 				}
 				else

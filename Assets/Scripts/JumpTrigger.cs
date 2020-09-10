@@ -68,8 +68,13 @@ public class JumpTrigger : MonoBehaviour
 		}
 		float distanceFrom360 = Mathf.Abs(rot - 360);
 		float scaleAmount = minScale + (maxScale - minScale) * (distanceFrom360 / 90);
+		if (scaleAmount < 1)
+		{
+			scaleAmount = 0.25f;
+		}
 
 		transform.localScale = new Vector3(scaleAmount, baseYScale, scaleAmount);
+
 
 		
 		//Debug.Log(scaleAmount);

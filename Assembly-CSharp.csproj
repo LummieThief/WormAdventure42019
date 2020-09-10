@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ArcadeTimer.cs" />
     <Compile Include="Assets\Scripts\BodyFriction.cs" />
     <Compile Include="Assets\Scripts\BounceStopper.cs" />
     <Compile Include="Assets\Scripts\BreakableBlock.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CheckInside.cs" />
     <Compile Include="Assets\Scripts\DIsableMouse.cs" />
+    <Compile Include="Assets\Scripts\DeathCounter.cs" />
     <Compile Include="Assets\Scripts\Deathbox.cs" />
     <Compile Include="Assets\Scripts\DebugTP.cs" />
     <Compile Include="Assets\Scripts\Depricated\BaseplateDeactivator.cs" />
@@ -108,11 +110,13 @@
     <Compile Include="Assets\Scripts\FalloutBox.cs" />
     <Compile Include="Assets\Scripts\FinishBox.cs" />
     <Compile Include="Assets\Scripts\FogBox.cs" />
+    <Compile Include="Assets\Scripts\FreecamController.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\GooseController.cs" />
     <Compile Include="Assets\Scripts\GrappleFadeIn.cs" />
     <Compile Include="Assets\Scripts\GrapplePoint.cs" />
     <Compile Include="Assets\Scripts\GravityBox.cs" />
+    <Compile Include="Assets\Scripts\IceBlock.cs" />
     <Compile Include="Assets\Scripts\JumpTrigger.cs" />
     <Compile Include="Assets\Scripts\KillBlock.cs" />
     <Compile Include="Assets\Scripts\LightMatterManager.cs" />
@@ -123,10 +127,12 @@
     <Compile Include="Assets\Scripts\Menu\ButtonSounds.cs" />
     <Compile Include="Assets\Scripts\Menu\ControlsMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\CreditsMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\FinishMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\GooseChooserMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\OptionsMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\PlayMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\ResetConfirmMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\StartMenu.cs" />
     <Compile Include="Assets\Scripts\MenuCameraPan.cs" />
     <Compile Include="Assets\Scripts\MeshCombiner.cs" />
@@ -167,7 +173,6 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-    <None Include="Assets\saves.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\SkySerie Freebie\Hdri setup.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />

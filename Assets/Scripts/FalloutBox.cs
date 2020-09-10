@@ -12,7 +12,7 @@ public class FalloutBox : MonoBehaviour
 	private float state1Transition = 1.5f;
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("starting");
+		//Debug.Log("starting");
 		if (other.gameObject.tag == "Player" && !running)
 		{
 			
@@ -37,6 +37,7 @@ public class FalloutBox : MonoBehaviour
 					}
 					break;
 				case 1:
+					FindObjectOfType<DeathCounter>().addDeath();
 					SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 					break;
 			}

@@ -139,7 +139,7 @@ public class PlayMenu : MonoBehaviour
 		playMenuUI.SetActive(false);
 	}
 
-	IEnumerator fadeObject(GameObject obj, float fadePerSecond, float delay)
+	IEnumerator fadeObject(GameObject obj, float fadePerSecond, float delay1, float delay2)
 	{
 		fadeObjectRunning = true;
 		CanvasGroup cg = obj.GetComponent<CanvasGroup>();
@@ -148,19 +148,19 @@ public class PlayMenu : MonoBehaviour
 		{
 			obj.SetActive(true);
 			cg.alpha = 0;
-			yield return new WaitForSeconds(delay);
+			yield return new WaitForSeconds(delay1);
 
 			while (cg.alpha < 1)
 			{
 				cg.alpha += fadePerSecond * Time.deltaTime;
 				yield return new WaitForEndOfFrame();
 			}
-			StartCoroutine(fadeObject(obj, -fadePerSecond, delay));
+			StartCoroutine(fadeObject(obj, -fadePerSecond, delay1, delay2));
 		}
 		else
 		{
 			cg.alpha = 1;
-			yield return new WaitForSeconds(delay);
+			yield return new WaitForSeconds(delay2);
 
 			while (cg.alpha > 0)
 			{
@@ -181,18 +181,29 @@ public class PlayMenu : MonoBehaviour
 		sm.menuMusicFade(-0.5f);
 		//arcadeIntroUI.SetActive(true);
 		goingToScene = true;
-		StartCoroutine(fadeObject(arcadeIntroUI, 1, 1));
+		
 		arcadeIntroText[level].SetActive(true);
 		switch (level)
 		{
 			case 0:
 				scene = "Level 1";
+				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
 				break;
 			case 1:
 				scene = "Level 101";
+				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
+				break;
+			case 2:
+				scene = "Level 201";
+				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
+				break;
+			case 3:
+				scene = "Level 301";
+				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 8));
 				break;
 			default:
 				scene = "Level 1";
+				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
 				break;
 		}
 		

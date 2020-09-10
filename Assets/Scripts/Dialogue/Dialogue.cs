@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(ParticleSystem))]
 public class Dialogue : MonoBehaviour
@@ -24,6 +25,7 @@ public class Dialogue : MonoBehaviour
 	public Material freshSprite;
 	public Color readColor;
 	public Material readSprite;
+	private SoundManager sm;
 
 	private bool goOn;
 	private bool hasFreshText;
@@ -31,6 +33,7 @@ public class Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+		
 		if (bg == null)
 		{
 			bg = GameObject.FindGameObjectWithTag("Text BG").GetComponent<Image>();
@@ -77,6 +80,12 @@ public class Dialogue : MonoBehaviour
 			if (annoying && page == -1)
 			{
 				nextPage();
+				if (SceneManager.GetActiveScene().name.Contains("Level"))
+				{
+					sm = FindObjectOfType<SoundManager>();
+					sm.playMsgup();
+					prompt.color = new Color(0, 0, 0, 0);
+				}
 			}
 
 			if (page >= 0)
@@ -99,7 +108,7 @@ public class Dialogue : MonoBehaviour
 				ps.Clear();
 			}
 
-			if (Input.GetKeyDown(KeyCode.E))
+			if (Input.GetKeyDown(KeyCode.E) && !SceneManager.GetActiveScene().name.Contains("Level"))
 			{
 				nextPage();
 				if (page != -1)
@@ -115,7 +124,7 @@ public class Dialogue : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (StartMenu.isOpen)
+		if (StartMenu.isOpen && !SceneManager.GetActiveScene().name.Contains("Level"))
 		{
 			Debug.Log("start menu is open still");
 			goOn = true;
