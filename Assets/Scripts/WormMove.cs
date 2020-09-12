@@ -763,6 +763,10 @@ public class WormMove : MonoBehaviour
 
 	private void setJumpInput(bool iid)
 	{
+		if (startingGrapple)
+		{
+			return;
+		}
 		#region 2d code
 		/*if (iid) //jump control stuff
 		{

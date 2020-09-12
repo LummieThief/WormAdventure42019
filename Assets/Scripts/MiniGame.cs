@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MiniGame : MonoBehaviour
 {
 	private bool showedLevel = false;
-	private Animator announcementAnim;
+	//private Animator announcementAnim;
 	public Material easySkybox;
 	public Material mediumSkybox;
 	public Material hardSkybox;

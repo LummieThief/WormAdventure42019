@@ -85,7 +85,7 @@ public class SaveLoad : MonoBehaviour
 		}
 
 		timer += Time.deltaTime;
-		if (timer > timeBetweenSaves)
+		if (timer > timeBetweenSaves && !StartMenu.isOpen)
 		{
 			save();
 			timer = 0;

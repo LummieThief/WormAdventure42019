@@ -15,7 +15,8 @@ public class ResetConfirmMenu : MonoBehaviour
 
 		GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
 		ResetSave.resetSave();
-		PlayerPrefs.SetFloat("Arcade", 0);
+		PlayerPrefs.SetInt("Arcade", 0);
+		PlayerPrefs.SetInt("ArcadeLevel", 1);
 		PlayerPrefs.SetFloat("ArcadeBest0", 99999);
 		PlayerPrefs.SetFloat("ArcadeBest1", 99999);
 		PlayerPrefs.SetFloat("ArcadeBest2", 99999);

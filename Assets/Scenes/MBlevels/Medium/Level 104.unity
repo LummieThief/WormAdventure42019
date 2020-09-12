@@ -3244,7 +3244,7 @@ PrefabInstance:
     - target: {fileID: 1807475396325789544, guid: 6e2aac7784496624990ae1cbc387a6e6,
         type: 3}
       propertyPath: m_Text
-      value: 'Level 4: Polyswing'
+      value: 'Level 4: Multiswing'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e2aac7784496624990ae1cbc387a6e6, type: 3}

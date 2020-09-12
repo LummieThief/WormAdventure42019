@@ -10,11 +10,11 @@ public class PlayMenu : MonoBehaviour
 	private FadeController fade;
 	public GameObject startMenuUI;
 	public GameObject playMenuUI;
-	public GameObject arcadeIntroUI;
-	public GameObject[] arcadeIntroText;
+	public GameObject arcadeMenuUI;
 	//public static bool isOpen = true;
 	public GameObject playButton;
 	public GameObject newGameButton;
+
 	private CanvasGroup cg;
 	public float offsetDownWhenStarting;
 
@@ -56,6 +56,7 @@ public class PlayMenu : MonoBehaviour
 			newGameButton.SetActive(false);
 		}
 		startingScale = playButton.transform.localScale;
+	
 
 		sm = FindObjectOfType<SoundManager>();
 
@@ -126,6 +127,14 @@ public class PlayMenu : MonoBehaviour
 		sm.menuMusicFade(-1f);
 	}
 
+	public void PlayArcade()
+	{
+		if (fadingToScene)
+			return;
+		arcadeMenuUI.SetActive(true);
+		playMenuUI.SetActive(false);
+	}
+
 	IEnumerator fadeOutMenu(float fadePerSecond)
 	{
 		StartMenu.isOpen = false;
@@ -139,6 +148,7 @@ public class PlayMenu : MonoBehaviour
 		playMenuUI.SetActive(false);
 	}
 
+	/*
 	IEnumerator fadeObject(GameObject obj, float fadePerSecond, float delay1, float delay2)
 	{
 		fadeObjectRunning = true;
@@ -173,40 +183,6 @@ public class PlayMenu : MonoBehaviour
 		}
 		
 	}
+	*/
 
-	public void GoToArcade(int level)
-	{
-		if (goingToScene || fadeObjectRunning)
-			return;
-		sm.menuMusicFade(-0.5f);
-		//arcadeIntroUI.SetActive(true);
-		goingToScene = true;
-		
-		arcadeIntroText[level].SetActive(true);
-		switch (level)
-		{
-			case 0:
-				scene = "Level 1";
-				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
-				break;
-			case 1:
-				scene = "Level 101";
-				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
-				break;
-			case 2:
-				scene = "Level 201";
-				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
-				break;
-			case 3:
-				scene = "Level 301";
-				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 8));
-				break;
-			default:
-				scene = "Level 1";
-				StartCoroutine(fadeObject(arcadeIntroUI, 1, 1, 1));
-				break;
-		}
-		
-		fade.startFadeOut(timeToFade, true, new Color(0.04764745f, 0, 0.1981132f, 1));
-	}
 }

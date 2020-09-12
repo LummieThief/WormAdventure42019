@@ -10,9 +10,7 @@ public class StartMenu : MonoBehaviour
 	private FadeController fade;
 	public GameObject startMenuUI;
 	public GameObject playMenuUI;
-	public GameObject mediumButton;
-	public GameObject hardButton;
-	public GameObject masterButton;
+	
 	public GameObject controlsMenuUI;
 	public static bool isOpen = true;
 	public GameObject playButton;
@@ -32,15 +30,6 @@ public class StartMenu : MonoBehaviour
 	{
 		isOpen = true;
 		fade = FindObjectOfType<FadeController>();
-		if (PlayerPrefs.HasKey("Arcade"))
-		{
-			int progress = PlayerPrefs.GetInt("Arcade");
-
-			mediumButton.SetActive(progress >= 1);
-			hardButton.SetActive(progress >= 2);
-			masterButton.SetActive(progress >= 3);
-			
-		}
 	}
 
 	private void Update()

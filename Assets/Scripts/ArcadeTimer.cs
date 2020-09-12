@@ -1,15 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ArcadeTimer : MonoBehaviour
 {
 	private float playTime;
 	private bool running;
+	private bool skipped = false;
     // Start is called before the first frame update
     void Start()
     {
+
+		skipped = checkSkipped();
+		if (skipped)
+		{
+			Debug.Log("Skipped");
+		}
+		else
+		{
+			Debug.Log("Played from the start");
+		}
 		StartTimer();
+
     }
 
     // Update is called once per frame
@@ -85,5 +98,18 @@ public class ArcadeTimer : MonoBehaviour
 	public void StartTimer()
 	{
 		running = true;
+	}
+
+	private bool checkSkipped()
+	{
+		string sceneName = SceneManager.GetActiveScene().name;
+		int levelNumber = int.Parse(sceneName.Substring(6));
+
+		return levelNumber % 100 != 1;
+	}
+
+	public bool getSkipped()
+	{
+		return skipped;
 	}
 }

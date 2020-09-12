@@ -14,17 +14,16 @@ public class FinishMenu : MonoBehaviour
 	public static bool isOpen = false;
 	private float rawTime;
 	private ArcadeTimer at;
+
+	private string nullString = "N/A";
+	private bool skipped;
 	// Start is called before the first frame update
 	void Start()
 	{
-		ArcadeTimer at = FindObjectOfType<ArcadeTimer>();
+		
+		
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		//Debug.Log(at.getRawPlayTime());
-	}
 
 	public void Menu()
 	{
@@ -40,13 +39,24 @@ public class FinishMenu : MonoBehaviour
 	{
 		isOpen = true;
 		finishMenuUI.SetActive(true);
+		ArcadeTimer at = FindObjectOfType<ArcadeTimer>();
+		skipped = at.getSkipped();
+		Debug.Log("finish menu skipped " + skipped);
 
 		if (at == null)
 		{
 			at = FindObjectOfType<ArcadeTimer>();
 		}
 		at.StopTimer();
-		finalTime.text = finalTime.text + at.getPlayTime();
+
+		if (skipped)
+		{
+			finalTime.text = finalTime.text + nullString;
+		}
+		else
+		{
+			finalTime.text = finalTime.text + at.getPlayTime();
+		}
 		rawTime = at.getRawPlayTime();
 
 		deaths.text += FindObjectOfType<DeathCounter>().getDeaths();
@@ -83,8 +93,6 @@ public class FinishMenu : MonoBehaviour
 					PlayerPrefs.SetInt("Arcade", 1);
 					unlock = "Experienced mode unlocked";
 				}
-
-				PlayerPrefs.SetInt("Arcade", 1);
 				break;
 
 			case 1:
@@ -92,10 +100,10 @@ public class FinishMenu : MonoBehaviour
 
 				if (PlayerPrefs.GetInt("Arcade") < 2)
 				{
+					PlayerPrefs.SetInt("Arcade", 2);
 					unlock = "Veteran mode unlocked";
 				}
 
-				PlayerPrefs.SetInt("Arcade", 2);
 				break;
 
 			case 2:
@@ -103,16 +111,17 @@ public class FinishMenu : MonoBehaviour
 
 				if (PlayerPrefs.GetInt("Arcade") < 3)
 				{
+					PlayerPrefs.SetInt("Arcade", 3);
 					unlock = "Master mode unlocked";
 				}
 
-				PlayerPrefs.SetInt("Arcade", 3);
+				
 				break;
 
 			case 3:
 				difficulty = "Master";
 				unlock = "You are a true master of Worm Adventure";
-				PlayerPrefs.SetInt("Arcade", 4);
+				//PlayerPrefs.SetInt("Arcade", 4);
 				break;
 		}
 
@@ -126,6 +135,7 @@ public class FinishMenu : MonoBehaviour
 	private void setNewBest()
 	{
 		float difficulty = getDifficulty();
+
 
 		string key = "undefined";
 		switch (difficulty)
@@ -148,28 +158,48 @@ public class FinishMenu : MonoBehaviour
 		{
 			at = FindObjectOfType<ArcadeTimer>();
 		}
-		if (PlayerPrefs.HasKey(key))
+
+		if (skipped)
 		{
-			Debug.Log("key");
-			if (PlayerPrefs.GetFloat(key) < rawTime) //if the existing record is better
+			if (PlayerPrefs.HasKey(key))
 			{
-				Debug.Log("1");
-				bestTime.text += at.convertTime(PlayerPrefs.GetFloat(key));
-				
+				var time = PlayerPrefs.GetFloat(key);
+				if (time == 99999) //their record got reset
+				{
+					bestTime.text += nullString;
+				}
+				else
+				{
+					bestTime.text += at.convertTime(time);
+				}
 			}
-			else //if the new time is better
+			else //if theyve never gotten a record before
 			{
-				Debug.Log("2");
-				PlayerPrefs.SetFloat(key, rawTime);
-				bestTime.text += at.convertTime(rawTime);
-				Debug.Log("in the loop " + rawTime);
+				bestTime.text += nullString;
 			}
 		}
-		else //if theyve never gotten a record before
+		else
 		{
-			PlayerPrefs.SetFloat(key, rawTime);
-			bestTime.text += at.convertTime(rawTime);
-			Debug.Log("no key");
+
+
+			if (PlayerPrefs.HasKey(key))
+			{
+				if (PlayerPrefs.GetFloat(key) < rawTime) //if the existing record is better
+				{
+					bestTime.text += at.convertTime(PlayerPrefs.GetFloat(key));
+
+				}
+				else //if the new time is better
+				{
+					PlayerPrefs.SetFloat(key, rawTime);
+					bestTime.text += at.convertTime(rawTime);
+				}
+			}
+			else //if theyve never gotten a record before
+			{
+				PlayerPrefs.SetFloat(key, rawTime);
+				bestTime.text += at.convertTime(rawTime);
+			}
 		}
 	}
 

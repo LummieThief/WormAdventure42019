@@ -124,6 +124,7 @@
     <Compile Include="Assets\Scripts\LightSource.cs" />
     <Compile Include="Assets\Scripts\Line.cs" />
     <Compile Include="Assets\Scripts\LoadNextScene.cs" />
+    <Compile Include="Assets\Scripts\Menu\ArcadeMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\ButtonSounds.cs" />
     <Compile Include="Assets\Scripts\Menu\ControlsMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\CreditsMenu.cs" />

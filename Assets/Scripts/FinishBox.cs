@@ -20,6 +20,10 @@ public class FinishBox : MonoBehaviour
 	private MiniGame mg;
 	private bool playedSound = false;
 
+	private void Start()
+	{
+		finished = false;
+	}
 	private void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.tag == "Player" && !running)
@@ -106,10 +110,11 @@ public class FinishBox : MonoBehaviour
 					string sceneName = SceneManager.GetActiveScene().name;
 					int levelNumber = int.Parse(sceneName.Substring(6));
 					//Debug.Log(levelNumber);
-				
+
 					
 					if (Application.CanStreamedLevelBeLoaded("Level " + (levelNumber + 1)))
 					{
+						PlayerPrefs.SetInt("ArcadeLevel", levelNumber + 1);
 						SceneManager.LoadScene("Level " + (levelNumber + 1));
 					}
 					else
