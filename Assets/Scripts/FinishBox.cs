@@ -93,7 +93,7 @@ public class FinishBox : MonoBehaviour
 					}
 					break;
 				case 2:
-					finished = false;
+					//finished = false;
 					if (mg != null)
 					{
 						if (mg.GetComponent<SoundManager>() == null)
@@ -114,7 +114,17 @@ public class FinishBox : MonoBehaviour
 					
 					if (Application.CanStreamedLevelBeLoaded("Level " + (levelNumber + 1)))
 					{
-						PlayerPrefs.SetInt("ArcadeLevel", levelNumber + 1);
+						if (PlayerPrefs.HasKey("ArcadeLevel"))
+						{
+							if (PlayerPrefs.GetInt("ArcadeLevel") < levelNumber + 1)
+							{
+								PlayerPrefs.SetInt("ArcadeLevel", levelNumber + 1);
+							}	
+						}
+						else
+						{
+							PlayerPrefs.SetInt("ArcadeLevel", levelNumber + 1);
+						}
 						SceneManager.LoadScene("Level " + (levelNumber + 1));
 					}
 					else

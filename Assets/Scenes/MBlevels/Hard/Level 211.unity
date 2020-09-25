@@ -4779,7 +4779,7 @@ PrefabInstance:
     - target: {fileID: 1807475396325789544, guid: 6e2aac7784496624990ae1cbc387a6e6,
         type: 3}
       propertyPath: m_Text
-      value: 'Level 1: Lighthouse Climb'
+      value: 'Level 11: Lighthouse Climb'
       objectReference: {fileID: 0}
     - target: {fileID: 1807475396427545950, guid: 6e2aac7784496624990ae1cbc387a6e6,
         type: 3}

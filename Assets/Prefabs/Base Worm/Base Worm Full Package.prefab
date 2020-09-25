@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7544543345122491395}
+  - component: {fileID: 8684928605367208640}
   m_Layer: 0
   m_Name: Base Worm Full Package
   m_TagString: Package
@@ -32,6 +33,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8684928605367208640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553593132534531371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030120b38e3780f4886b1532f12516e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1260710953980538095
 GameObject:
   m_ObjectHideFlags: 0
@@ -30741,6 +30754,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AngularDrag
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711554877523700246, guid: a84226ac03a713e44a6a70445c7ed274,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5711554877523700247, guid: a84226ac03a713e44a6a70445c7ed274,
         type: 3}

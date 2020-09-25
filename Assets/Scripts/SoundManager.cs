@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
 	public AudioSource ready;
 	public AudioSource go;
 	public AudioSource woodCrash;
-	public AudioSource msgup;
+	public AudioSource idle;
 
 	public AudioSource[] honks;
 
@@ -334,9 +334,11 @@ public class SoundManager : MonoBehaviour
 		woodCrash.Play();
 	}
 
-	public void playMsgup()
+
+	public void playIdle()
 	{
-		msgup.Play();
+		idle.Play();
+		caveAmbience.Stop();
 	}
 
 	public void menuMusicFade(float volPerSec)

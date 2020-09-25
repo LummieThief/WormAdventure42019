@@ -31,6 +31,7 @@ public class OptionsMenu : MonoBehaviour
 	private bool inFullscreen = true;
 	private Vector2[] resolutions;
 	private FPSDisplay fps;
+	private bool achieved = false;
 
 	void Start()
 	{
@@ -80,6 +81,14 @@ public class OptionsMenu : MonoBehaviour
 		load();
 	}
 
+	private void Update()
+	{
+		if (sensitivitySlider.value == sensitivitySlider.maxValue && !PauseMenu.isPaused && !StartMenu.isOpen && !achieved)
+		{
+			achieved = true;
+			AchievementManager.Achieve("ACH_SENSITIVITY");
+		}
+	}
 
 
 
@@ -187,6 +196,14 @@ public class OptionsMenu : MonoBehaviour
 
 	public void sensitivityChange(float newSens)
 	{
+		float halfOfMax = sensitivitySlider.maxValue / 2;
+		if (newSens > halfOfMax)
+		{
+
+			newSens *= 2 - (sensitivitySlider.maxValue - newSens) / halfOfMax;
+		}
+
+		Debug.Log(newSens);
 		FindObjectOfType<CameraFollow>().setSensitivity(newSens / 2.0f);
 		PlayerPrefs.SetInt("Sensitivity", (int)newSens);
 	}

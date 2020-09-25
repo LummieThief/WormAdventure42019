@@ -1,0 +1,26 @@
+Saves
+PositionX,0
+PositionY,322.0218
+PositionZ,-891.885
+RotationX,0.5423473
+RotationY,0
+RotationZ,0
+RotationW,-0.8401544
+VelocityX,-0.0002707521
+VelocityY,-0.0004351139
+VelocityZ,-0.0004415539
+WorldPositionX,152.9619
+WorldPositionY,0
+WorldPositionZ,-1014.438
+WorldRotationX,0
+WorldRotationY,0.8914054
+WorldRotationZ,0
+WorldRotationW,0.453207
+FogR,0.6470581
+FogG,0.7176464
+FogB,0.6784307
+FogA,0
+FogD,0.004000006
+Egg,False
+Scene,Attempt 2
+Time,60107

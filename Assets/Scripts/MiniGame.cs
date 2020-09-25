@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MiniGame : MonoBehaviour
 {
+	public static bool spaceHeld;
+
 	private bool showedLevel = false;
 	//private Animator announcementAnim;
 	public Material easySkybox;
@@ -26,6 +28,7 @@ public class MiniGame : MonoBehaviour
 	}
 	void Awake()
     {
+		StartMenu.isOpen = false;
 		showedLevel = false;
 		//announcementAnim = FindObjectOfType<StartingCountdown>().GetComponent<Animator>();
 		bool activate = false;
@@ -52,6 +55,7 @@ public class MiniGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		//Debug.Log(spaceHeld);
 		if (Input.GetKeyDown(KeyCode.R) && !PauseMenu.isPaused && !FinishBox.finished && StartingCountdown.goed)
 		{
 			StartingCamera sc = FindObjectOfType<StartingCamera>();
@@ -63,7 +67,30 @@ public class MiniGame : MonoBehaviour
 
 			
 		}
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			spaceHeld = true;
+		}
+		if (Input.GetKeyUp(KeyCode.Space))
+		{
+			spaceHeld = false;
+		}
+
 		//ready = true;
+	}
+
+	private void OnGUI()
+	{
+		Event e = Event.current;
+		if (e.isKey)
+		{
+
+			if (e.keyCode == KeyCode.Space && e.type == EventType.KeyUp)
+			{
+				spaceHeld = false;
+			}
+		}
 	}
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)

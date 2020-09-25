@@ -8,6 +8,8 @@ public class Timer: MonoBehaviour
 {
 	private string finalScene = "Winners";
 	private float playTime;
+	private float speedrunAchievementTime = 480f;
+	private bool achieved = false;
 	public TextMeshPro timeText;
 
 
@@ -20,6 +22,12 @@ public class Timer: MonoBehaviour
 		if (SceneManager.GetActiveScene().name == finalScene)
 		{
 			running = false;
+			if (playTime < speedrunAchievementTime && !achieved)
+			{
+				achieved = true;
+				AchievementManager.Achieve("ACH_SPEEDRUN");
+			}
+
 			if (timeText == null && playTime != 0)
 			{
 				timeText = GameObject.FindGameObjectWithTag("Time Text").GetComponent<TextMeshPro>();

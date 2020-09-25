@@ -9,6 +9,7 @@ public class FinishMenu : MonoBehaviour
 	public GameObject finishMenuUI;
 	public Text congratulations;
 	public Text deaths;
+	private int rawDeaths = -1;
 	public Text finalTime;
 	public Text bestTime;
 	public static bool isOpen = false;
@@ -59,7 +60,8 @@ public class FinishMenu : MonoBehaviour
 		}
 		rawTime = at.getRawPlayTime();
 
-		deaths.text += FindObjectOfType<DeathCounter>().getDeaths();
+		rawDeaths = FindObjectOfType<DeathCounter>().getDeaths();
+		deaths.text += rawDeaths;
 		congratulations.text = getCongratulationsText();
 		setNewBest();
 		
@@ -88,6 +90,13 @@ public class FinishMenu : MonoBehaviour
 			case 0:
 				difficulty = "Beginner";
 
+				AchievementManager.Achieve("ACH_EASY");
+				if (rawDeaths == 0 && !skipped)
+				{
+					AchievementManager.Achieve("ACH_EASY_MASTERY");
+				}
+
+
 				if (!PlayerPrefs.HasKey("Arcade") || PlayerPrefs.GetInt("Arcade") < 1)
 				{
 					PlayerPrefs.SetInt("Arcade", 1);
@@ -97,6 +106,12 @@ public class FinishMenu : MonoBehaviour
 
 			case 1:
 				difficulty = "Experienced";
+
+				AchievementManager.Achieve("ACH_MEDIUM");
+				if (rawDeaths == 0 && !skipped)
+				{
+					AchievementManager.Achieve("ACH_MEDIUM_MASTERY");
+				}
 
 				if (PlayerPrefs.GetInt("Arcade") < 2)
 				{
@@ -109,6 +124,12 @@ public class FinishMenu : MonoBehaviour
 			case 2:
 				difficulty = "Veteran";
 
+				AchievementManager.Achieve("ACH_HARD");
+				if (rawDeaths == 0 && !skipped)
+				{
+					AchievementManager.Achieve("ACH_HARD_MASTERY");
+				}
+
 				if (PlayerPrefs.GetInt("Arcade") < 3)
 				{
 					PlayerPrefs.SetInt("Arcade", 3);
@@ -120,6 +141,13 @@ public class FinishMenu : MonoBehaviour
 
 			case 3:
 				difficulty = "Master";
+
+				AchievementManager.Achieve("ACH_MASTER");
+				if (rawDeaths == 0 && !skipped)
+				{
+					AchievementManager.Achieve("ACH_MASTER_MASTERY");
+				}
+
 				unlock = "You are a true master of Worm Adventure";
 				//PlayerPrefs.SetInt("Arcade", 4);
 				break;

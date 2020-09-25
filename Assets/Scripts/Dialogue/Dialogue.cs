@@ -80,12 +80,6 @@ public class Dialogue : MonoBehaviour
 			if (annoying && page == -1)
 			{
 				nextPage();
-				if (SceneManager.GetActiveScene().name.Contains("Level"))
-				{
-					sm = FindObjectOfType<SoundManager>();
-					sm.playMsgup();
-					prompt.color = new Color(0, 0, 0, 0);
-				}
 			}
 
 			if (page >= 0)

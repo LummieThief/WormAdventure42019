@@ -75,6 +75,9 @@ public class FreecamController : MonoBehaviour
 				doCameraMovement();
 			}
 			doTrolly();
+
+
+			doSlowMo();
 		}
 	}
 
@@ -133,6 +136,40 @@ public class FreecamController : MonoBehaviour
 		transform.eulerAngles = new Vector3(mouseY, transform.eulerAngles.y, transform.eulerAngles.z);
 	}
 
+	private void doSlowMo()
+	{
+		float speed = Time.timeScale;
+
+		if (Input.GetKeyDown(KeyCode.Alpha0)) 
+			speed = 0;
+		else if (Input.GetKeyDown(KeyCode.Alpha1)) 
+			speed = 0.1f;
+		else if (Input.GetKeyDown(KeyCode.Alpha2)) 
+			speed = 0.2f;
+		else if (Input.GetKeyDown(KeyCode.Alpha3)) 
+			speed = 0.3f;
+		else if (Input.GetKeyDown(KeyCode.Alpha4)) 
+			speed = 0.4f;
+		else if (Input.GetKeyDown(KeyCode.Alpha5)) 
+			speed = 0.5f;
+		else if (Input.GetKeyDown(KeyCode.Alpha6)) 
+			speed = 0.6f;
+		else if (Input.GetKeyDown(KeyCode.Alpha7)) 
+			speed = 0.7f;
+		else if (Input.GetKeyDown(KeyCode.Alpha8)) 
+			speed = 0.8f;
+		else if (Input.GetKeyDown(KeyCode.Alpha9)) 
+			speed = 0.9f;
+		else if (Input.GetKeyDown(KeyCode.Backspace)) 
+			speed = 1f;
+
+		if (Time.timeScale != speed)
+		{
+			Debug.Log(speed);
+		}
+		Time.timeScale = speed;
+
+	}
 
 	private void doTrolly()
 	{

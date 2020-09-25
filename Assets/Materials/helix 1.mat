@@ -39,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: a8e9a87a8bd955441ba75cb832f82b23, type: 3}
+        m_Texture: {fileID: 2800000, guid: 894c4e7045c1444408f99934e16df207, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -51,7 +51,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a8e9a87a8bd955441ba75cb832f82b23, type: 3}
+        m_Texture: {fileID: 2800000, guid: 894c4e7045c1444408f99934e16df207, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -99,7 +99,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.15686275}
+    - _BaseColor: {r: 0.3254717, g: 0.98705494, b: 1, a: 0.38431373}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}

@@ -34,6 +34,7 @@ public class WormMove : MonoBehaviour
 	private bool jumpUp;
 	private bool jumpDown;
 	private bool jumpHeld;
+	private bool jumpHasBeenSet;
 	public float coyoteTime = 1f;
 	private float coyoteTimer = 999f;
 
@@ -104,6 +105,9 @@ public class WormMove : MonoBehaviour
 	public List<Material> woodMaterials;
 
 	private float artificialWindSpeed;
+
+	private float floorIsLavaTimer = 0f;
+	private float floorIsLavaTime = 45;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -441,7 +445,7 @@ public class WormMove : MonoBehaviour
 			}
 			
 		}
-		else if (grappling && !holdingObject && (!Input.GetMouseButton(0) || rsc.getTime() > 5f)) //If left click is released
+		else if (grappling && !holdingObject && !DetectWin.hasWon && (!Input.GetMouseButton(0) || rsc.getTime() > 5f)) //If left click is released
 		{
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;
@@ -456,6 +460,22 @@ public class WormMove : MonoBehaviour
 			currentRopeLength = -1;
 		
 		}
+
+
+		if (!solidGround && !startingGrapple)
+		{
+			floorIsLavaTimer += Time.deltaTime;
+			if (floorIsLavaTimer > floorIsLavaTime)
+			{
+				floorIsLavaTimer = 0;
+				AchievementManager.Achieve("ACH_FLOOR_IS_LAVA");
+			}
+		}
+		else
+		{
+			floorIsLavaTimer = 0;
+		}
+		//Debug.Log(floorIsLavaTimer);
 
 		setJumpInput(twod);
 		frame++;
@@ -474,10 +494,16 @@ public class WormMove : MonoBehaviour
 			return;
 		}
 
-		if (PauseMenu.isPaused || DetectWin.hasWon)
+		if (PauseMenu.isPaused)
 		{
 			return;
 		}
+		if (DetectWin.hasWon)
+		{
+			rsc.setTime(0);
+			return;
+		}
+
 
 		if (cameraFollow.getState() == 1 || dead || cameraFollow.getMouseFrozen())
 		{
@@ -485,6 +511,7 @@ public class WormMove : MonoBehaviour
 			grappleHit.SetActive(false);
 			return;
 		}
+	
 
 		/*float hitThreshold = 20f;
 		if (Mathf.Abs(rb.velocity.magnitude - prevVelocity.magnitude) > hitThreshold)
@@ -543,9 +570,10 @@ public class WormMove : MonoBehaviour
 		}*/
 		//Debug.Log(transform.eulerAngles);
 
-
+		//Debug.Log(crouching);
 		if (crouching && !jumpHeld) //jump
 		{
+			//Debug.Log(Time.time);
 			snd.playDescrunch();
 			snd.stopScrunch();
 			transform.localScale = initialScale;
@@ -568,13 +596,13 @@ public class WormMove : MonoBehaviour
 				rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, 0, 999), rb.velocity.z);
 				if (rb.velocity.y == 0)
 				{
-					Debug.Log("cancelled velocity vertically");
+					//Debug.Log("cancelled velocity vertically");
 				}
 			}
 			else if(Mathf.Sign(transform.TransformDirection(Vector3.up).z) != Mathf.Sign(rb.velocity.z)) //if the player is facing the opposite direction than they are moving
 			{
 				rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
-				Debug.Log("cancelled velocity horizontally");
+				//Debug.Log("cancelled velocity horizontally");
 			}
 
 
@@ -592,6 +620,7 @@ public class WormMove : MonoBehaviour
 			else
 			{
 				rb.AddRelativeForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse); //THIS IS THE JUMP FORCE
+				//Debug.Log("added force");
 			}
 			//Debug.Log("Jump!");
 
@@ -799,14 +828,53 @@ public class WormMove : MonoBehaviour
 		{
 		*/
 		#endregion
-		jumpUp = Input.GetKeyUp(KeyCode.Space);
-		jumpDown = Input.GetKeyDown(KeyCode.Space);
-		jumpHeld = Input.GetKey(KeyCode.Space);
-	}
 
+		if (jumpHasBeenSet)
+		{
+			jumpDown = false;
+			//Debug.Log("running on new stuff");
+			if (Input.GetKey(KeyCode.Space))
+			{
+				jumpHasBeenSet = false;
+				jumpUp = Input.GetKeyUp(KeyCode.Space);
+				jumpDown = Input.GetKeyDown(KeyCode.Space);
+				jumpHeld = Input.GetKey(KeyCode.Space);
+
+			}
+
+			if (MiniGame.spaceHeld)
+			{
+				jumpHeld = true;
+			}
+			else
+			{
+				jumpHasBeenSet = false;
+				jumpUp = true;
+				jumpHeld = false;
+				Debug.Log("jump");
+			}
+		}
+		else
+		{
+			jumpUp = Input.GetKeyUp(KeyCode.Space);
+			jumpDown = Input.GetKeyDown(KeyCode.Space);
+			jumpHeld = Input.GetKey(KeyCode.Space);
+		}
+		
+	}
 	public void setJumpDown()
 	{
-		if (Input.GetKey(KeyCode.Space))
+		if (FindObjectOfType<MiniGame>() != null)
+		{
+			
+			if (MiniGame.spaceHeld)
+			{
+				jumpHasBeenSet = true;
+				jumpDown = true;
+				jumpHeld = true;
+			}
+		}
+		else if (Input.GetKey(KeyCode.Space))
 		{
 			jumpDown = true;
 		}
@@ -852,4 +920,8 @@ public class WormMove : MonoBehaviour
 		artificialWindSpeed = spd;
 	}
 
+	public bool getGrappling()
+	{
+		return grappling;
+	}
 }

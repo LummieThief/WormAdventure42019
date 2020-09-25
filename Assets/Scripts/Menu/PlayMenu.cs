@@ -42,7 +42,7 @@ public class PlayMenu : MonoBehaviour
 		cg = GetComponent<CanvasGroup>();
 		playText = playButton.GetComponentInChildren<Text>();
 
-		if (System.IO.File.Exists(SaveLoad.path))
+		if (System.IO.File.Exists(SaveLoad.path) || (PlayerPrefs.HasKey("Continue") && PlayerPrefs.GetInt("Continue") == 1))
 		{
 			playText.text = " CONTINUE";
 			playText.alignment = TextAnchor.MiddleLeft;
@@ -64,6 +64,11 @@ public class PlayMenu : MonoBehaviour
 
 	private void Update()
 	{
+		if (playMenuUI.activeSelf && Input.GetKeyDown(KeyCode.P))
+		{
+			Continue();
+		}
+
 		timer += scaleSpeed * Time.deltaTime;
 		playButton.transform.localScale = startingScale + Vector3.one * maxScale * (1f + Mathf.Sin(timer) / 2f);
 
@@ -84,6 +89,7 @@ public class PlayMenu : MonoBehaviour
 					GameObject g = p.gameObject;
 					Destroy(g);
 				}
+				PlayerPrefs.SetInt("Continue", 0);
 				SceneManager.LoadScene(scene);
 			}
 		}

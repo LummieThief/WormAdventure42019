@@ -30,7 +30,8 @@ public class PauseMenu : MonoBehaviour
 		{
 			return;
 		}
-		if (Input.GetKeyDown(KeyCode.Escape) && !(game != null && game.getStartingGrapple()) && !GooseChooserMenu.isActive)
+		if (Input.GetKeyDown(KeyCode.Escape) && !(game != null && game.getStartingGrapple()) 
+			&& !GooseChooserMenu.isActive && !DetectWin.hasWon && !FinishBox.finished)
 		{
 			if (optionsMenuUI.activeSelf)
 			{
@@ -106,5 +107,11 @@ public class PauseMenu : MonoBehaviour
 	{
 		controlsMenuUI.SetActive(true);
 		pauseMenuUI.SetActive(false);
+	}
+
+	public void feedback()
+	{
+		Application.OpenURL("https://forms.gle/y7TVsU1x9XRG1z276");
+		AchievementManager.Achieve("ACH_FEEDBACK");
 	}
 }

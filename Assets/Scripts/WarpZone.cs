@@ -20,6 +20,23 @@ public class WarpZone : MonoBehaviour
 
 	private void goToScene(string scene)
 	{
+		switch (scene)
+		{
+			case "Winners":
+				AchievementManager.Achieve("ACH_WIN");
+				break;
+			case "Attempt 2":
+				AchievementManager.Achieve("ACH_FALL");
+				break;
+			case "Attempt 3":
+				AchievementManager.Achieve("ACH_WORMHOLE");
+				break;
+			default:
+				break;
+
+		}
+
+
 		if (deletePersistants)
 		{
 			foreach (Persistant p in FindObjectsOfType<Persistant>())
@@ -32,6 +49,7 @@ public class WarpZone : MonoBehaviour
 		if (scene == "Winners" && FindObjectOfType<WormMove>().getHolding())
 		{
 			scene = "Ranch";
+			AchievementManager.Achieve("ACH_GOOSE");
 		}
 		//Debug.Log("left scene");
 		//backupCam.enabled = true;

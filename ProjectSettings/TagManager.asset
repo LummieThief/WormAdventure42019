@@ -20,6 +20,8 @@ TagManager:
   - Friction Point
   - KillBlock
   - Canvas
+  - GrappleHit
+  - WetFur
   layers:
   - Default
   - TransparentFX

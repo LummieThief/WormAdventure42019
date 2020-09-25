@@ -62,12 +62,21 @@ public class GooseChooserMenu : MonoBehaviour
 		//Debug.Log(info);
 
 
-		AnalyticsResult ar = Analytics.CustomEvent("Request 5", new Dictionary<string, object>
+		AnalyticsResult ar = Analytics.CustomEvent("New Request 1", new Dictionary<string, object>
 		{
-			{ "Name", log + ": " + gooseName },
-			{ "Phrase", log + ": " + goosePhrase },
-			{ "Path", log + ": " + path}
+			{ "Info", log + ": Name:" + gooseName + ": Phrase:" + goosePhrase + ": Path:" + path},
+			{ "ID", log}
 		});
+
+		/*
+		AnalyticsResult ar = Analytics.CustomEvent("Goose", new Dictionary<string, object>
+		{
+			//000000: name:: phrase:: path:
+			{ "Goose", log + ": Name:" + gooseName + ": Phrase:" + goosePhrase + ": Path:" + path}
+		});
+		*/
+
+
 
 		Debug.Log(ar);
 		if (ar == AnalyticsResult.Ok)

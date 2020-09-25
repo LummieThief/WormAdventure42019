@@ -36,7 +36,7 @@ public class DLReginald : MonoBehaviour
 				script = new string[4];
 				script[0] = "Your goose request has been successfully sent!";
 				script[1] = "If your goose doesn't show up immediately, dont be alarmed. Gooses take time to hatch you know!";
-				script[2] = "If you really feel like there's something wrong, please email me at ReginaldRanch@gmail.com.";
+				script[2] = "If you really feel like there's something wrong, please email wa4.help@gmail.com.";
 				script[3] = "I'll get back to you as soon as I can.";
 				dl.setText(script, true, false);
 				break;
