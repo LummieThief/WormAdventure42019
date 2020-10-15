@@ -17,6 +17,7 @@ public class RopeSegmentController : MonoBehaviour
 	private float length;
 
 	private bool active;
+	public bool manualActivate;
 
 	private int iterations = 4;
 
@@ -33,6 +34,12 @@ public class RopeSegmentController : MonoBehaviour
 	}
 	private void Update()
 	{
+		if (manualActivate)
+		{
+			manualActivate = false;
+			activate(end.position);
+		}
+
 		if (active) //the below code will only run if the object is active
 		{
 			
@@ -48,7 +55,7 @@ public class RopeSegmentController : MonoBehaviour
 
 			//first we have to check that the end of the worm is not clipped into the wall.
 			var proceed = true;
-			if (Physics.Linecast(currentPoint.position, end.position, out hit, blockMask))
+			if (Physics.Linecast(currentPoint.position, end.position, out hit, blockMask)) //tests if the worms butt is clipped in the wall
 			{
 				if (CollidesWith(end.position, hit.collider))
 				{
@@ -57,9 +64,9 @@ public class RopeSegmentController : MonoBehaviour
 				}
 			}
 
-			if (pointIndex < maxPoints && proceed)
+			if (pointIndex < maxPoints && proceed) //if its safe to make more points
 			{
-				if (Physics.Linecast(end.position, currentPoint.position, out hit, blockMask))
+				if (Physics.Linecast(end.position, currentPoint.position, out hit, blockMask)) //fires a ray from the last point of the rope to the worm
 				{
 					block = hit.collider;
 					Vector3 finalPoint = hit.point;

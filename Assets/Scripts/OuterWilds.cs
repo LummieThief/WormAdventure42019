@@ -31,6 +31,8 @@ public class OuterWilds : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+		if (worm == null)
+			return;
 		if (worm.GetComponent<WormMove>().twod || (game != null && game.getStartingGrapple()) || PauseMenu.isPaused
 			|| cameraFollow.getState() != 0 || cameraFollow.getMouseFrozen())
 		{

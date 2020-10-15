@@ -43,6 +43,7 @@ public class WormMove : MonoBehaviour
 
 	public GameObject grappleHitPrefab;
 	private GameObject grappleHit;
+	public GameObject wormGrapplePointPrefab;
 
 	public GameObject ropeStart;
 	private RopeSegmentController rsc;
@@ -55,6 +56,9 @@ public class WormMove : MonoBehaviour
 	private float howMuchLongerIsItGrappleTime;
 	private float grappleTimer = 0;
 	private float maxGrappleTime = 5f;
+	private bool grapplingToWorm = false;
+	//private float grapplingToWormTimer = 0;
+	private GameObject wormGrapplePoint;
 
 	private bool startingGrapple;
 	private bool lockGrapple;
@@ -108,6 +112,8 @@ public class WormMove : MonoBehaviour
 
 	private float floorIsLavaTimer = 0f;
 	private float floorIsLavaTime = 45;
+
+	private Transform velocityPoint;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
@@ -123,6 +129,7 @@ public class WormMove : MonoBehaviour
 		grappleHit = Instantiate(grappleHitPrefab, Vector3.zero, Quaternion.identity);
 		spring = GetComponent<SpringJoint>();
 		game = FindObjectOfType<Game>();
+		velocityPoint = GetComponentInChildren<VelocityPoint>().transform;
 		if (game == null)
 		{
 			startingGrapple = false;
@@ -198,6 +205,7 @@ public class WormMove : MonoBehaviour
 		if (solidGround && !grappling && !startingGrapple) //resets your grapple when you touch the ground
 		{
 			grappleTimer = 0;
+			//grapplingToWormTimer = 0;
 			canGrapple = true;
 		}
 
@@ -282,11 +290,12 @@ public class WormMove : MonoBehaviour
 
 		if (!grappling && !dead) //shows the grapple indicator
 		{
-			LayerMask mask = 1001 << 8;
+			LayerMask mask = 11001 << 8; //blocks and egg and wormshadow
 			float distanceBetweenCenterAndButt = Vector3.Distance(buttPosition, transform.position);
 			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, range + distanceBetweenCenterAndButt, mask)
-				&& canGrapple && !holdingObject)
+				&& canGrapple && !holdingObject && !grapplingToWorm)
 			{
+
 				if (hit.collider.gameObject.GetComponent<IceBlock>() != null)
 				{
 					grappleHit.SetActive(false);
@@ -304,11 +313,8 @@ public class WormMove : MonoBehaviour
 			}
 		}
 
-		if (startingGrapple && !startingGrapple)
-		{
-			tail.sharedMaterial.Lerp(tailOn, tailOn, 1);
-		}
-		else if (grappleHit.activeSelf || holdingObject) //changes the color of the worms tail based on if it can grapple
+
+		if (grappleHit.activeSelf || holdingObject) //changes the color of the worms tail based on if it can grapple
 		{
 			tail.sharedMaterial.Lerp(tailOn, tailOnExerted, (grappleTimer / maxGrappleTime) * 1.1f);
 		}
@@ -330,20 +336,23 @@ public class WormMove : MonoBehaviour
 			else
 			{
 				itsGrappleTime = true;
-				LayerMask mask = 1001 << 8;
+				LayerMask mask = 11001 << 8; //blocks and egg and wormshadow
 				if (Physics.Raycast(buttPosition, transform.TransformDirection(Vector3.down), out hit, range, mask)) //grabbing object
 				{
 					if (hit.collider.gameObject.tag == "Egg")
 					{
 						grabObject(hit.collider.gameObject);
-
+					}
+					else if (hit.collider.gameObject.tag == "WormShadow")
+					{
+						Debug.Log("grappling to worm");
+						grappleToWorm(hit.collider.transform, grappleHit.transform.position);
 					}
 				}
 			}
 			
 		}
 		//*/
-
 
 		if (itsGrappleTime) //adds some buffer to the grapple
 		{
@@ -383,11 +392,15 @@ public class WormMove : MonoBehaviour
 
 		if (grappling) //The code for the grapple that gets run every frame to update the rope position.
 		{
-			if (!startingGrapple)
+			if (!startingGrapple && !grapplingToWorm)
 			{
 				grappleTimer = rsc.getTime();
 			}
-			if (currentRopeLength != rsc.getLength())
+			else if (grapplingToWorm)
+			{
+				grappleTimer += Time.deltaTime;
+			}
+			else if (currentRopeLength != rsc.getLength())
 			{
 				currentRopeLength = rsc.getLength();
 
@@ -445,22 +458,29 @@ public class WormMove : MonoBehaviour
 			}
 			
 		}
-		else if (grappling && !holdingObject && !DetectWin.hasWon && (!Input.GetMouseButton(0) || rsc.getTime() > 5f)) //If left click is released
+		else if (grappling && !holdingObject && !DetectWin.hasWon && (!Input.GetMouseButton(0) || rsc.getTime() > maxGrappleTime || grappleTimer > maxGrappleTime)) //If left click is released
 		{
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;
 			grappling = false;
-			grappleTimer = rsc.getTime();
+			
 			if (grappleTimer > maxGrappleTime)
 			{
 				canGrapple = false;
 			}
+			if (grapplingToWorm)
+			{
+				grapplingToWorm = false;
+				Destroy(wormGrapplePoint);
+			}
+			else
+			{
+				grappleTimer = rsc.getTime();
+			}
 			rsc.deactivate();
 			spring.maxDistance = Mathf.Infinity;
 			currentRopeLength = -1;
-		
 		}
-
 
 		if (!solidGround && !startingGrapple)
 		{
@@ -485,9 +505,7 @@ public class WormMove : MonoBehaviour
 
 
 	private void FixedUpdate()
-	{
-
-		
+	{		
 
 		if (startingGrapple)
 		{
@@ -731,7 +749,9 @@ public class WormMove : MonoBehaviour
 
 		prevAngVel = rb.angularVelocity;
 		prevVelocity = rb.velocity;
-		
+		velocityPoint.position = transform.position + rb.velocity;
+
+		//Debug.Log(rb.velocity + " " + (velocityPoint.position - transform.position));
 
 	}
 
@@ -904,6 +924,11 @@ public class WormMove : MonoBehaviour
 		}
 	}
 
+	public bool getCrouching()
+	{
+		return crouching;
+	}
+
 	public void setDead(bool value)
 	{
 		dead = value;
@@ -923,5 +948,39 @@ public class WormMove : MonoBehaviour
 	public bool getGrappling()
 	{
 		return grappling;
+	}
+
+	public float getTailColor()
+	{
+		float val = 1f;
+		if (!grappleHit.activeSelf)
+		{
+			val *= -1;
+		}
+		val *= (0.01f + (grappleTimer / maxGrappleTime) * 1.1f);
+		//Debug.Log(val);
+		return val;
+	}
+
+	private void grappleToWorm(Transform other, Vector3 position)
+	{
+		wormGrapplePoint = Instantiate(wormGrapplePointPrefab, position, Quaternion.identity, other);
+
+		itsGrappleTime = false;
+		Rigidbody wgpRB = wormGrapplePoint.GetComponent<Rigidbody>();
+		spring.connectedBody = wgpRB;
+		wgpRB.isKinematic = true;
+		spring.maxDistance = Vector3.Distance(position, buttPosition);
+		grappling = true;
+		grapplingToWorm = true;
+
+		float maxPitch = 2;
+		float minPitch = 0.4f;
+		float distanceScaled = maxPitch - (maxPitch - minPitch) * Vector3.Distance(buttPosition, grappleHit.transform.position) / range;
+
+		if (!startingGrapple)
+		{
+			snd.playGrapple(distanceScaled);
+		}
 	}
 }

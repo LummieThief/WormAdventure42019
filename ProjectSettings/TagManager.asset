@@ -22,6 +22,8 @@ TagManager:
   - Canvas
   - GrappleHit
   - WetFur
+  - MyPlayer
+  - WormShadow
   layers:
   - Default
   - TransparentFX
@@ -35,7 +37,7 @@ TagManager:
   - Rope
   - Material
   - Egg
-  - 
+  - WormShadow
   - 
   - 
   - 

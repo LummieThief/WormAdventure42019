@@ -2765,8 +2765,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   easySkybox: {fileID: 2100000, guid: efd1c33efd2d58340b88804268e6833f, type: 2}
   mediumSkybox: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
-  hardSkybox: {fileID: 2100000, guid: 13f6e5eed33d84c76979f1ec06b5e48c, type: 2}
-  masterSkybox: {fileID: 2100000, guid: 51b74d7bad397457d883c5940f7664d8, type: 2}
+  hardSkybox: {fileID: 2100000, guid: 656058fe318eb48558d21d66d1a79a2b, type: 2}
+  masterSkybox: {fileID: 2100000, guid: c494c335823f54b52b2e87e1b7a63a23, type: 2}
 --- !u!114 &6577968067093760192
 MonoBehaviour:
   m_ObjectHideFlags: 0

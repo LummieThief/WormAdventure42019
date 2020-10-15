@@ -42,6 +42,8 @@ public class GooseChooserMenu : MonoBehaviour
 	{
 		goosePhrase = input;
 		Debug.Log(goosePhrase);
+		Debug.Log(goosePhrase.Substring(0, Mathf.Min(100, goosePhrase.Length)));
+		Debug.Log(goosePhrase.Substring(Mathf.Min(100, goosePhrase.Length)));
 	}
 
 	public void Submit()
@@ -62,20 +64,21 @@ public class GooseChooserMenu : MonoBehaviour
 		//Debug.Log(info);
 
 
-		AnalyticsResult ar = Analytics.CustomEvent("New Request 1", new Dictionary<string, object>
-		{
-			{ "Info", log + ": Name:" + gooseName + ": Phrase:" + goosePhrase + ": Path:" + path},
-			{ "ID", log}
-		});
-
 		/*
-		AnalyticsResult ar = Analytics.CustomEvent("Goose", new Dictionary<string, object>
+		AnalyticsResult ar = Analytics.CustomEvent("Goose Data", new Dictionary<string, object>
 		{
-			//000000: name:: phrase:: path:
-			{ "Goose", log + ": Name:" + gooseName + ": Phrase:" + goosePhrase + ": Path:" + path}
+			{ "Name / ID", gooseName + "::" + log},
+			{ "ID / Phrase", log + "::" + goosePhrase},
+			{ "ID / Path", log + "::" + path}
 		});
 		*/
-
+		AnalyticsResult ar = Analytics.CustomEvent("Testing", new Dictionary<string, object>
+		{
+			{ "Name / ID", gooseName + "::" + log},
+			{ "ID / Phrase1", goosePhrase.Substring(0, Mathf.Min(100, goosePhrase.Length)) + "::" + goosePhrase},
+			{ "ID / Phrase2", goosePhrase.Substring(Mathf.Min(100, goosePhrase.Length))+ "::" + goosePhrase},
+			{ "ID / Path", log + "::" + path}
+		});
 
 
 		Debug.Log(ar);
