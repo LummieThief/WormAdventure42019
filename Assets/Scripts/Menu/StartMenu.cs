@@ -10,6 +10,7 @@ public class StartMenu : MonoBehaviour
 	private FadeController fade;
 	public GameObject startMenuUI;
 	public GameObject playMenuUI;
+	public GameObject skinMenuUI;
 	
 	public GameObject controlsMenuUI;
 	public static bool isOpen = true;
@@ -81,6 +82,12 @@ public class StartMenu : MonoBehaviour
 	public void OpenControls()
 	{
 		controlsMenuUI.SetActive(true);
+		startMenuUI.SetActive(false);
+	}
+
+	public void OpenSkinMenu()
+	{
+		skinMenuUI.SetActive(true);
 		startMenuUI.SetActive(false);
 	}
 }

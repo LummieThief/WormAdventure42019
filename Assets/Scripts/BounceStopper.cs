@@ -73,7 +73,7 @@ public class BounceStopper : MonoBehaviour
 					//wormRB.angularVelocity /= 3;
 					zeroIn = false;
 					oneIn = false;
-					Debug.Log("stopping bounce");
+					//Debug.Log("stopping bounce");
 				}
 			}
 			else
@@ -86,7 +86,7 @@ public class BounceStopper : MonoBehaviour
 					//wormRB.angularVelocity /= 3;
 					zeroIn = false;
 					oneIn = false;
-					Debug.Log("stopping bounce");
+					//Debug.Log("stopping bounce");
 				}
 			}
 		}

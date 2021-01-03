@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using Photon.Realtime;
 
 public class PhotonPlayerController : MonoBehaviour, IPunObservable
 {
@@ -30,8 +31,8 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 	private bool crouching = false;
 	private WormMove wormMove;
 
-	public const int sendRate = 20;
-	public const int serializationRate = 20;
+	private int sendRate = 10;
+	private int serializationRate = 10;
 
 	private MainBodyController mbc;
 
@@ -39,11 +40,19 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 	private Stack<Vector3> grapplePoints;
 
 	public LineRenderer line;
+	public PhotonOwner po;
+	public GameObject wormGrappleLinePrefab;
+
+	private int skin = 0;
+	private SkinSelector ss;
+	private bool modelFlipped;
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
 	{
 		pv = GetComponent<PhotonView>();
+		Debug.Log("my view is " + pv.ViewID);
+		po.id = pv.ViewID;
 		mbc = GetComponentInChildren<MainBodyController>();
 		if (pv.IsMine)
 		{
@@ -69,9 +78,19 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 	// Update is called once per frame
 	void Update()
 	{
+		/*
+		foreach (PhotonView _pv in PhotonNetwork.PhotonViewCollection)
+		{
+			Debug.Log(_pv.ViewID);
+		}
+		*/
+
 		resetReferences();
 		checkSceneUpdate();
 		checkCrouchUpdate();
+		checkPaused();
+		checkSkinChange();
+		checkModelFlip();
 		//line.transform.position = origin;
 		//line.transform.rotation = Quaternion.identity;
 
@@ -129,6 +148,14 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 		updateRopePositions();
 	}
 
+	private void OnDestroy()
+	{
+		if (line != null)
+		{
+			Destroy(line.gameObject);
+		}
+	}
+
 
 
 	void resetReferences()
@@ -149,6 +176,10 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 		{
 			wormMove = FindObjectOfType<WormMove>();
 		}
+		if (ss == null)
+		{
+			ss = FindObjectOfType<SkinSelector>();
+		}
 	}
 
 
@@ -158,9 +189,10 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 		{
 			mr.enabled = enabled;
 		}
+		line.enabled = enabled;
 		mbc.setColliderActive(enabled);
 		rendering = enabled;
-		Debug.Log("Rendering is now set to " + enabled);
+		//Debug.Log("Rendering is now set to " + enabled);
 	}
 
 	void checkSceneUpdate()
@@ -180,6 +212,30 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 	void RPC_sceneUpdate(int s)
 	{
 		scene = s;
+	}
+
+	void checkModelFlip()
+	{
+		if (pv.IsMine)
+		{
+			if (modelFlipped && !wormMove.getFlippedModel())
+			{
+				modelFlipped = false;
+				pv.RPC("RPC_modelFlip", RpcTarget.AllBuffered, modelFlipped);
+			}
+			else if (!modelFlipped && wormMove.getFlippedModel())
+			{
+				modelFlipped = true;
+				pv.RPC("RPC_modelFlip", RpcTarget.AllBuffered, modelFlipped);
+			}
+		}
+
+	}
+
+	[PunRPC]
+	void RPC_modelFlip(bool flipped)
+	{
+		mbc.setFlippedModel(flipped);
 	}
 
 
@@ -225,7 +281,7 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 
 		// CONGRATS! In only 3 calculations, we have sent the transform to its PU position!
 	}
-	
+
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -234,7 +290,7 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 
 			Vector3 shortPosition = Truncate(transform.position, deci);
 			Quaternion shortRotation = Truncate(transform.rotation, deci);
-			Vector3 shortVelocityPoint = Truncate(velocityPoint.position, deci);
+			Vector3 shortVelocityPoint = Truncate(velocityPoint.position * Time.timeScale, deci);
 			float shortColor = Truncate(wormMove.getTailColor(), deci);
 
 			stream.SendNext(shortPosition);
@@ -251,10 +307,17 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 			Vector3 newVelocityPoint = (Vector3)stream.ReceiveNext();
 			float newColor = (float)stream.ReceiveNext();
 
-			velocity = newVelocityPoint - newOfficialPosition;
-			if (velocity.magnitude < minVelocity)
+			if (newVelocityPoint == Vector3.zero)
 			{
 				velocity = Vector3.zero;
+			}
+			else
+			{
+				velocity = newVelocityPoint - newOfficialPosition;
+				if (velocity.magnitude < minVelocity)
+				{
+					velocity = Vector3.zero;
+				}
 			}
 
 
@@ -317,13 +380,14 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 
 		line.positionCount++;
 		line.SetPosition(line.positionCount - 2, point - origin);
-		line.SetPosition(line.positionCount - 1, transform.position - origin);
+		Vector3 buttPosition = transform.position + transform.TransformDirection(Vector3.down) * mbc.getModelScale().y * 0.9f;
+		line.SetPosition(line.positionCount - 1,  buttPosition - origin);
 
 	}
 
 	public void removeGrapplePoint()
 	{
-		Debug.Log("removed grapple point");
+		//Debug.Log("removed grapple point");
 
 		pv.RPC("RPC_removeGrapplePoint", RpcTarget.AllBuffered);
 	}
@@ -347,7 +411,8 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 	{
 		if (line.positionCount > 0)
 		{
-			line.SetPosition(line.positionCount - 1, transform.position - origin); //sets the end of the rope to this objects position
+			Vector3 buttPosition = transform.position + transform.TransformDirection(Vector3.down) * mbc.getModelScale().y * 0.9f;
+			line.SetPosition(line.positionCount - 1, buttPosition - origin); //sets the end of the rope to this objects position
 		}
 
 		if (world != null)
@@ -364,11 +429,91 @@ public class PhotonPlayerController : MonoBehaviour, IPunObservable
 			mbc.setTailColor(col);
 		}
 	}
-	
+
+	public void grappleToWorm(int connectedId, Vector3 localPos)
+	{
+		if (scene == SceneManager.GetActiveScene().buildIndex)
+		{
+			pv.RPC("RPC_grappleToWorm", RpcTarget.AllBuffered, pv.ViewID, connectedId, Truncate(localPos, deci));
+		}
+	}
+	[PunRPC]
+	private void RPC_grappleToWorm(int id1, int id2, Vector3 localPos)
+	{
+		if (pv.IsMine)
+		{
+			return;
+		}
+
+		//id1 is the worm that shot the grapple
+		//id2 is the worm that got hit by the grapple
+		GameObject wormLine = Instantiate(wormGrappleLinePrefab);
+		wormLine.GetComponent<WormGrappleLine>().setUp(PhotonNetwork.GetPhotonView(id1).transform, PhotonNetwork.GetPhotonView(id2).transform, id1, localPos);
+		//Debug.Log(id1 + " " + id2);
+	}
+	public void destroyLine()
+	{
+		pv.RPC("RPC_destroyLine", RpcTarget.AllBuffered, pv.ViewID);
+	}
+	[PunRPC]
+	private void RPC_destroyLine(int id)
+	{
+		foreach (WormGrappleLine wgl in FindObjectsOfType<WormGrappleLine>())
+		{
+			if (wgl.getMainId() == id)
+			{
+				Destroy(wgl.gameObject);
+			}
+		}
+	}
+
+	private void checkPaused()
+	{
+		if (pv.IsMine)
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				//pv.RPC("RPC_checkPaused", RpcTarget.AllBuffered);
+			}
+		}
+	}
+	[PunRPC]
+	private void RPC_checkPaused()
+	{
+		velocity = Vector3.zero;
+		Debug.Log("paused");
+	}
 
 
+	public void setSkin(int skinIndex)
+	{
 
+		pv.RPC("RPC_setSkin", RpcTarget.AllBuffered, skinIndex);
+	}
+	[PunRPC]
+	private void RPC_setSkin(int index)
+	{
+		SkinSelector ss = FindObjectOfType<SkinSelector>();
+		skin = ss.selectedSkin;
+		mbc.updateModel(ss.skinPrefabs[index]);
 
+		if (pv.IsMine || scene != SceneManager.GetActiveScene().buildIndex)
+		{
+			setRenderers(false);
+		}
+	}
+
+	private void checkSkinChange()
+	{
+		if (!pv.IsMine)
+			return;
+
+		if (skin != ss.selectedSkin)
+		{
+			setSkin(ss.selectedSkin);
+
+		}
+	}
 
 
 

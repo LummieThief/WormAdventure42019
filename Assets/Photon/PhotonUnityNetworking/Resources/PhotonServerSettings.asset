@@ -46,6 +46,12 @@ MonoBehaviour:
   - RPC_crouchUpdate
   - RPC_addGrapplePoint
   - RPC_removeGrapplePoint
+  - RPC_grappleToWorm
+  - RPC_destroyLine
+  - RPC_checkPaused
+  - setSkin
+  - RPC_setSkin
+  - RPC_modelFlip
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

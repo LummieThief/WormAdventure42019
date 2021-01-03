@@ -8,8 +8,9 @@ public class ResetSave : MonoBehaviour
 	public bool reset;
 	public bool resetSubmit;
 	public bool hardResetBeCareful;
-    // Start is called before the first frame update
-    void Start()
+	public bool resetSkins;
+	// Start is called before the first frame update
+	void Start()
     {
     }
 
@@ -32,6 +33,12 @@ public class ResetSave : MonoBehaviour
 		{
 			fullResetSave();
 			hardResetBeCareful = false;
+		}
+
+		if (resetSkins)
+		{
+			PlayerPrefs.SetInt("skin", 0);
+			resetSkins = false;
 		}
     }
 

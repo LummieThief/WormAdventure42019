@@ -13,33 +13,44 @@ public class MainBodyController : MonoBehaviour
 	private Animator animator;
 
 	public LineRenderer line;
-	public Transform model;
+	private Transform model;
 	private Vector3 modelButtPosition;
 
-	public Material tailOn;
-	public Material tailOnExerted;
-	public Material tailOff;
-	public Material tailOffExerted;
+	private Material tailOn;
+	private Material tailOnExerted;
+	private Material tailOff;
+	private Material tailOffExerted;
 	public MeshRenderer tail;
-	public GameObject mainBodyColliderPrefab;
-	private GameObject mainBodyCollider;
-	private bool canCollide = true;
 
-	private void Start()
+	private Material currentTailMaterial;
+	//public GameObject mainBodyColliderPrefab;
+	public GameObject mainBodyCollider;
+	private bool canCollide = true;
+	private bool flippedModel;
+
+	private Transform modelGoesHere;
+
+	private void Awake()
 	{
-		mainBodyCollider = Instantiate(mainBodyColliderPrefab);
+		//mainBodyCollider = Instantiate(mainBodyColliderPrefab);
+		//mainBodyCollider.GetComponent<PhotonOwner>().id = 
+		modelGoesHere = transform.Find("Model Goes Here");
+		model = modelGoesHere.GetChild(0);
 		mainBodyCollider.GetComponent<CapsuleCollider>().enabled = canCollide;
+		mainBodyCollider.transform.parent = null;
 		DontDestroyOnLoad(mainBodyCollider);
 		animator = GetComponentInChildren<Animator>();
 		animator.SetBool("Multiplayer", true);
 		//line = GetComponentInChildren<LineRenderer>();
 
-		/*WormMove wormMove = FindObjectOfType<WormMove>();
-		tailOn = wormMove.tailOn;
-		tailOnExerted = wormMove.tailOnExerted;
-		tailOff = wormMove.tailOff;
-		tailOffExerted = wormMove.tailOffExerted;*/
-		tail.sharedMaterial = new Material(tail.sharedMaterial);
+		TailLightBank tlb = model.GetComponentInChildren<TailLightBank>();
+		tailOn = tlb.getFreshOn();
+		tailOnExerted = tlb.getExertedOn();
+		tailOff = tlb.getFreshOff();
+		tailOffExerted = tlb.getExertedOff();
+		tail = tlb.GetComponent<MeshRenderer>();
+		currentTailMaterial = new Material(tail.sharedMaterial);
+		tail.sharedMaterial = currentTailMaterial;
 	}
 	private void LateUpdate()
 	{
@@ -70,11 +81,11 @@ public class MainBodyController : MonoBehaviour
 		mainBodyCollider.transform.position = model.position;
 		mainBodyCollider.transform.rotation = model.rotation;
 		mainBodyCollider.transform.localScale = model.localScale;
-
 	}
 
 	private void OnDestroy()
 	{
+		Destroy(currentTailMaterial);
 		Destroy(mainBodyCollider);
 	}
 
@@ -105,42 +116,6 @@ public class MainBodyController : MonoBehaviour
 	{
 		crouching = c;
 	}
-	/*
-	public void addGrapplePoint(Vector3 point)
-	{
-		GameObject emptyGO = new GameObject();
-		emptyGO.transform.position = point;
-		//bringFromPU(emptyGO.transform);
-
-		if (line.positionCount == 0)
-		{
-			line.positionCount++;
-		}
-
-		line.positionCount++;
-		line.SetPosition(line.positionCount - 2, emptyGO.transform.position);
-		line.SetPosition(line.positionCount - 1, modelButtPosition); //sets the end of the rope to this objects position
-
-		Destroy(emptyGO);
-	}
-
-	public void removeGrapplePoint()
-	{
-		line.positionCount--;
-		if (line.positionCount == 1)
-		{
-			line.positionCount = 0;
-		}
-	}
-
-	private void updateRopePositions()
-	{
-		if (line.positionCount > 0)
-		{
-			line.SetPosition(line.positionCount - 1, modelButtPosition); //sets the end of the rope to this objects position
-		}
-	}
-	*/
 
 	public void setTailColor(float col)
 	{
@@ -163,6 +138,7 @@ public class MainBodyController : MonoBehaviour
 		if (mainBodyCollider != null)
 		{
 			mainBodyCollider.GetComponent<CapsuleCollider>().enabled = active;
+			Debug.Log("main body collider is now set to " + active);
 		}
 		else
 		{
@@ -171,7 +147,48 @@ public class MainBodyController : MonoBehaviour
 		//Debug.Log("turned off colliders");
 	}
 
-	
+	public Vector3 getModelScale()
+	{
+		return model.transform.lossyScale;
+	}
+
+	public void updateModel(GameObject newModel)
+	{
+		GameObject oldModel = model.gameObject;
+		oldModel.transform.parent = null;
+		Destroy(currentTailMaterial);
+		model = Instantiate(newModel, modelGoesHere).transform;
+		model.localRotation = Quaternion.identity;
+
+		animator = GetComponentInChildren<Animator>();
+		animator.SetBool("Multiplayer", true);
+
+		TailLightBank tlb = model.GetComponentInChildren<TailLightBank>();
+		tailOn = tlb.getFreshOn();
+		tailOnExerted = tlb.getExertedOn();
+		tailOff = tlb.getFreshOff();
+		tailOffExerted = tlb.getExertedOff();
+		tail = tlb.GetComponent<MeshRenderer>();
+		currentTailMaterial = new Material(tail.sharedMaterial);
+		tail.sharedMaterial = currentTailMaterial;
+
+		Destroy(oldModel);
+	}
+
+	public void setFlippedModel(bool flipped)
+	{
+		flippedModel = flipped;
+		if (flipped)
+		{
+			modelGoesHere.localRotation = Quaternion.Euler(0, 180, 0);
+		}
+		else
+		{
+			modelGoesHere.localRotation = Quaternion.Euler(0, 0, 0);
+		}
+	}
+
+
 
 }
 

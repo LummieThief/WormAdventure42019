@@ -62,7 +62,7 @@ public class CameraFollow : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate()
     {
-		if (Input.GetKeyDown(KeyCode.F1) && !freecamExists)
+		if (SteamManager.debugMode && Input.GetKeyDown(KeyCode.F1) && !freecamExists)
 		{
 			GameObject fc = Instantiate(freecam, GameObject.FindGameObjectWithTag("OuterWildsWorld").transform);
 			fc.GetComponent<FreecamController>().origin = cam;

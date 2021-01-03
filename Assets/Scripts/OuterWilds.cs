@@ -78,6 +78,7 @@ public class OuterWilds : MonoBehaviour
 		transform.RotateAround(worm.position, Vector3.up, degrees);
 		if (gameObject.tag == "OuterWildsWorld")
 		{
+			//Debug.Log("hi");
 			RenderSettings.skybox.SetFloat("_Rotation", -transform.eulerAngles.y);
 		}
 	}

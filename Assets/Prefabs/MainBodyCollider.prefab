@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2777600076834651600}
   - component: {fileID: 3369570657415207836}
   - component: {fileID: 3595410015164967014}
+  - component: {fileID: 803858378435878814}
   m_Layer: 12
   m_Name: MainBodyCollider
   m_TagString: WormShadow
@@ -67,3 +68,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70b15a399ce1594587836db0510281b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &803858378435878814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3543493576593092603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a0fc897b3099042b725f97d838d088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0

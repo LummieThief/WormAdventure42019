@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class FinishMenu : MonoBehaviour
 {
 	public GameObject finishMenuUI;
+	public GameObject skippedNotification;
 	public Text congratulations;
 	public Text deaths;
 	private int rawDeaths = -1;
@@ -53,6 +54,7 @@ public class FinishMenu : MonoBehaviour
 		if (skipped)
 		{
 			finalTime.text = finalTime.text + nullString;
+			skippedNotification.SetActive(true);
 		}
 		else
 		{

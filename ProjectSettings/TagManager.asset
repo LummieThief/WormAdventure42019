@@ -24,6 +24,7 @@ TagManager:
   - WetFur
   - MyPlayer
   - WormShadow
+  - Tail
   layers:
   - Default
   - TransparentFX

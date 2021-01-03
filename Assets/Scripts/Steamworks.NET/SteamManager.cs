@@ -24,6 +24,7 @@ public class SteamManager : MonoBehaviour {
 
 
 	public bool steamEnabled = false;
+	public static bool debugMode = true;
 
 #if !DISABLESTEAMWORKS
 	protected static bool s_EverInitialized = false;
@@ -61,6 +62,7 @@ public class SteamManager : MonoBehaviour {
 				Destroy(gameObject);
 				return;
 			}
+			debugMode = false;
 			s_instance = this;
 
 			if (s_EverInitialized)

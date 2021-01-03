@@ -10,17 +10,21 @@ public class ResetConfirmMenu : MonoBehaviour
 
 	public void confirm()
 	{
+		/*
 		PauseMenu.isPaused = false;
 		Time.timeScale = 1;
 
 		GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
 		ResetSave.resetSave();
+		*/
 		PlayerPrefs.SetInt("Arcade", 0);
 		PlayerPrefs.SetInt("ArcadeLevel", 1);
 		PlayerPrefs.SetFloat("ArcadeBest0", 99999);
 		PlayerPrefs.SetFloat("ArcadeBest1", 99999);
 		PlayerPrefs.SetFloat("ArcadeBest2", 99999);
 		PlayerPrefs.SetFloat("ArcadeBest3", 99999);
+
+		/*
 		//GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
 		foreach (Persistant p in FindObjectsOfType<Persistant>())
 		{
@@ -28,6 +32,8 @@ public class ResetConfirmMenu : MonoBehaviour
 			Destroy(g);
 		}
 		SceneManager.LoadScene("Attempt 2");
+		*/
+		back();
 	}
 	public void back()
 	{

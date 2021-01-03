@@ -37,6 +37,8 @@ public class FinishBox : MonoBehaviour
 
 	private void Update()
 	{
+		if (!SteamManager.debugMode)
+			return;
 		if (Input.GetKeyDown(KeyCode.F12) && !running)
 		{
 			mg = FindObjectOfType<MiniGame>();

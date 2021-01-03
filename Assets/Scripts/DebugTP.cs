@@ -13,6 +13,7 @@ public class DebugTP : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
 		foreach (Transform t in teleporters)
 		{
 			t.gameObject.GetComponent<MeshRenderer>().enabled = false;
@@ -27,6 +28,9 @@ public class DebugTP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if (!SteamManager.debugMode)
+			return;
+
 		if (Input.GetKeyDown(KeyCode.F12))
 		{
 			if (Input.GetKey(KeyCode.LeftShift))

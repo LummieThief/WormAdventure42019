@@ -32,10 +32,13 @@ public class Game : MonoBehaviour
 
 	private bool loaded = false;
 
+	private int skin;
+
 	// Start is called before the first frame update
 	void Start()
     {
-		Application.targetFrameRate = 60;
+		//Debug.Log("setting frame rate here");
+		//Application.targetFrameRate = 60;
 		//Debug.LogError("Started running");
 		if (worm == null)
 		{
@@ -49,10 +52,13 @@ public class Game : MonoBehaviour
 
 	private void Update()
 	{
+		/*
 		if (Application.targetFrameRate != 60)
 		{
+			Debug.Log("Also setting frame rate here");
 			Application.targetFrameRate = 60;
 		}
+		*/
 		//Debug.Log(timer);
 		//Debug.Log(gravBoxEnabled);
 		timer += Time.deltaTime;
@@ -184,5 +190,14 @@ public class Game : MonoBehaviour
 		wormRot = Quaternion.identity;
 		wormAngVel = Vector3.zero;
 		rigAngle = Vector3.zero;
+	}
+
+	public void setSkin(int i)
+	{
+		skin = i;
+	}
+	public int getSkin()
+	{
+		return skin;
 	}
 }

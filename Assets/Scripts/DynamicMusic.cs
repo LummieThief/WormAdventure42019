@@ -20,8 +20,8 @@ public class DynamicMusic : MonoBehaviour
 
 	private float threshold = 13f;
 
-	private float speedToTurnOn = 6f;
-	private float speedToTurnOff = 8f;
+	private float speedToTurnOn = 4f;
+	private float speedToTurnOff = 7.5f;
 
 	private void Start()
 	{

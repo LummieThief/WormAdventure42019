@@ -679,6 +679,6 @@ PlayerSettings:
   projectName: Worm Adventure 4 2019
   organizationId: rodgermccallister
   cloudEnabled: 0
-  enableNativePlatformBackendsForNewInputSystem: 0
-  disableOldInputManagerSupport: 0
+  enableNativePlatformBackendsForNewInputSystem: 1
+  disableOldInputManagerSupport: 1
   legacyClampBlendShapeWeights: 0

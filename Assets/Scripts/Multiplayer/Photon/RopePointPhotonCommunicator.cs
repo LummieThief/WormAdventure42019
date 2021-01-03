@@ -14,7 +14,7 @@ public class RopePointPhotonCommunicator : MonoBehaviour
 			GameObject emptyGO = new GameObject();
 			emptyGO.transform.position = transform.position;
 			controller.GetComponent<PhotonPlayerController>().addGrapplePoint(emptyGO.transform);
-			Debug.Log(controller);
+			//Debug.Log(controller);
 		}
 		else
 		{

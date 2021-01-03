@@ -14,9 +14,11 @@ public class OptionsMenu : MonoBehaviour
 	public Toggle playInBackgroundToggle;
 	public Toggle framerateToggle;
 	public Dropdown textureQualityDropdown;
+	public Dropdown targetFrameRateDropdown;
 	public Slider soundEffectsSlider;
 	public Slider musicSlider;
 	public Slider ambienceSlider;
+	public Dropdown regionDropdown;
 	[Header("Other variables")]
 	public GameObject optionsMenuUI;
 	public GameObject startMenuUI;
@@ -30,11 +32,16 @@ public class OptionsMenu : MonoBehaviour
 	public static bool signsEnabled;
 	private bool inFullscreen = true;
 	private Vector2[] resolutions;
+	private int[] frameRates = {30, 60, 120, 144, 240, -1};
 	private FPSDisplay fps;
 	private bool achieved = false;
+	//private MultiplayerMenu mm;
 
 	void Start()
 	{
+		//mm = FindObjectOfType<MultiplayerMenu>();
+		//Debug.Log(mm);
+
 		//Gets rid of refresh rate
 		List<Vector2> condensedResolutions = new List<Vector2>();
 		foreach (Resolution r in Screen.resolutions)
@@ -76,8 +83,8 @@ public class OptionsMenu : MonoBehaviour
 			resolutionDropdown.value = currentResolutionIndex;
 			PlayerPrefs.SetInt("Resolution", currentResolutionIndex);
 		}
-		
-
+		Application.targetFrameRate = 60;
+		Debug.Log("setting target frame rate here");
 		load();
 	}
 
@@ -148,6 +155,13 @@ public class OptionsMenu : MonoBehaviour
 		Application.runInBackground = value;
 		PlayerPrefs.SetString("PlayInBackground", "" + value);
 	}
+
+	public void TargetFrameRate(int value)
+	{
+		Application.targetFrameRate = frameRates[value];
+		PlayerPrefs.SetInt("TargetFrameRate", value);
+	}
+
 	/*
 	public void Particles(bool value)
 	{
@@ -173,6 +187,7 @@ public class OptionsMenu : MonoBehaviour
 
 	public void ShowFrameRate(bool value)
 	{
+		//Debug.Log("show frame rate");
 		if (fps == null)
 		{
 			fps = FindObjectOfType<FPSDisplay>();
@@ -227,6 +242,62 @@ public class OptionsMenu : MonoBehaviour
 		//Debug.Log("New volume is " + newVol);
 	}
 
+	public void regionSelector(int value)
+	{
+		
+		PlayerPrefs.SetInt("Region", value);
+		string token = "";
+		switch (value)
+		{
+			case 1:
+				token = "asia";
+				break;
+			case 2:
+				token = "au";
+				break;
+			case 3:
+				token = "cae";
+				break;
+			case 4:
+				token = "eu";
+				break;
+			case 5:
+				token = "in";
+				break;
+			case 6:
+				token = "jp";
+				break;
+			case 7:
+				token = "ru";
+				break;
+			case 8:
+				token = "rue";
+				break;
+			case 9:
+				token = "za";
+				break;
+			case 10:
+				token = "sa";
+				break;
+			case 11:
+				token = "kr";
+				break;
+			case 12:
+				token = "us";
+				break;
+			case 13:
+				token = "usw";
+				break;
+			default:
+				token = "";
+				break;
+
+		}
+
+		PlayerPrefs.SetString("Region Token", token);
+		
+	}
+
 	private void load()
 	{
 		/*
@@ -248,8 +319,10 @@ public class OptionsMenu : MonoBehaviour
 			playInBackgroundToggle.isOn = toBool(PlayerPrefs.GetString("PlayInBackground"));
 		if (PlayerPrefs.HasKey("ShowFrameRate"))
 			framerateToggle.isOn = toBool(PlayerPrefs.GetString("ShowFrameRate"));
-		if (PlayerPrefs.HasKey("TextureQuality"))
-			textureQualityDropdown.value = PlayerPrefs.GetInt("TextureQuality");
+		//if (PlayerPrefs.HasKey("TextureQuality"))
+			//textureQualityDropdown.value = PlayerPrefs.GetInt("TextureQuality");
+		if (PlayerPrefs.HasKey("TargetFrameRate"))
+			targetFrameRateDropdown.value = PlayerPrefs.GetInt("TargetFrameRate");
 		if (PlayerPrefs.HasKey("Resolution"))
 			resolutionDropdown.value = PlayerPrefs.GetInt("Resolution");
 		if (PlayerPrefs.HasKey("SoundEffectsVolume"))
@@ -258,6 +331,8 @@ public class OptionsMenu : MonoBehaviour
 			musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
 		if (PlayerPrefs.HasKey("AmbienceVolume"))
 			ambienceSlider.value = PlayerPrefs.GetFloat("AmbienceVolume");
+		if (PlayerPrefs.HasKey("Region"))
+			regionDropdown.value = PlayerPrefs.GetInt("Region");
 		//Debug.Log(PlayerPrefs.GetInt("Resolution"));
 	}
 
@@ -265,5 +340,6 @@ public class OptionsMenu : MonoBehaviour
 	{
 		return s == "True";
 	}
+
 
 }

@@ -45,6 +45,7 @@ public class MiniGame : MonoBehaviour
 			Destroy(GetComponent<AudioListener>());
 			Destroy(GetComponent<ArcadeTimer>());
 			Destroy(GetComponent<DeathCounter>());
+			Destroy(GetComponent<FPSDisplay>());
 			foreach (AudioSource audio in GetComponentsInChildren<AudioSource>())
 			{
 				Destroy(audio.gameObject);

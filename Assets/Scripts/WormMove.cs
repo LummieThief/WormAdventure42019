@@ -26,8 +26,10 @@ public class WormMove : MonoBehaviour
 	private Vector3 initialScale;
 	private Rigidbody rb;
 	private JumpTrigger jumpTrigger;
+	private GroundedEnough groundedEnoughTrigger;
 	private bool grounded;
 	private bool solidGround;
+	private bool groundedEnough;
 	private bool crouching;
 	public float groundedDrag = 1.5f;
 
@@ -68,20 +70,20 @@ public class WormMove : MonoBehaviour
 	private SpringJoint spring;
 	private float ropeLength;
 
-	public GameObject cameraRig;
+	private GameObject cameraRig;
 	private CameraFollow cameraFollow;
 	public float rotFlipOffset = 30;
 	private bool walkForward = true;
 
-	public Material tailOn;
-	public Material tailOnExerted;
-	public Material tailOff;
-	public Material tailOffExerted;
-	private Material tailMat;
+	private Material tailOn;
+	private Material tailOnExerted;
+	private Material tailOff;
+	private Material tailOffExerted;
+	//private Material tailMat;
 
-	public MeshRenderer tail;
+	private MeshRenderer tail;
 
-	public Animator animator;
+	private Animator animator;
 	private bool dead = false;
 
 	public ParticleSystem dust;
@@ -89,7 +91,7 @@ public class WormMove : MonoBehaviour
 	private Vector3 prevVelocity;
 	private Vector3 prevAngVel;
 	public float smokeSpeed;
-	public ParticleSystem speedLines;
+	private ParticleSystem speedLines;
 	public ParticleSystem jump;
 	public ParticleSystem explosion;
 	public ParticleSystem winExplosion;
@@ -114,15 +116,23 @@ public class WormMove : MonoBehaviour
 	private float floorIsLavaTime = 45;
 
 	private Transform velocityPoint;
+
+	private GameObject model;
+	private bool flippedModel;
+	private Vector3 prevRot;
 	//private HingeJoint hinge;
 
 	// Start is called before the first frame update
 	void Start()
     {
+		prevRot = transform.eulerAngles;
+		cameraRig = GameObject.FindGameObjectWithTag("MainCamera");
+		speedLines = cameraRig.transform.Find("Main Camera").Find("Speed Lines").GetComponent<ParticleSystem>();
 		cameraFollow = cameraRig.GetComponent<CameraFollow>();
-		tailMat = tailOn;
+		
 		transform.eulerAngles = new Vector3(transform.eulerAngles.x + initRot.x, transform.eulerAngles.y + initRot.y, transform.eulerAngles.z + initRot.z);
 		jumpTrigger = GetComponentInChildren<JumpTrigger>();
+		groundedEnoughTrigger = GetComponentInChildren<GroundedEnough>();
 		friction = GetComponentInChildren<BodyFriction>();
 		rb = GetComponent<Rigidbody>();
 		initialScale = transform.localScale;
@@ -130,6 +140,25 @@ public class WormMove : MonoBehaviour
 		spring = GetComponent<SpringJoint>();
 		game = FindObjectOfType<Game>();
 		velocityPoint = GetComponentInChildren<VelocityPoint>().transform;
+
+		//reset these when the model changes
+		animator = transform.parent.GetComponentInChildren<Animator>();
+		tail = animator.transform.Find("Tail").GetComponent<MeshRenderer>();
+		TailLightBank tlb = tail.GetComponent<TailLightBank>();
+		tailOn = tlb.getFreshOn();
+		tailOff = tlb.getFreshOff();
+		tailOnExerted = tlb.getExertedOn();
+		tailOffExerted = tlb.getExertedOff();
+		//tailMat = tailOn;
+		//
+
+		Transform outerWildsWorld = GameObject.FindGameObjectWithTag("OuterWildsWorld").transform;
+		ParticleSystem.MainModule module = dust.main;
+		module.simulationSpace = ParticleSystemSimulationSpace.Custom;
+		module.customSimulationSpace = outerWildsWorld;
+		module = jump.main;
+		module.simulationSpace = ParticleSystemSimulationSpace.Custom;
+		module.customSimulationSpace = outerWildsWorld;
 		if (game == null)
 		{
 			startingGrapple = false;
@@ -153,9 +182,23 @@ public class WormMove : MonoBehaviour
 			{
 				lastVolume = 0.12f;
 			}
+
+			
+		}
+
+		/*
+		if (game != null && game.getSkin() != 0)
+		{
+			changeSkin(game.getSkin());
+		}
+		*/
+		if (PlayerPrefs.HasKey("Skin") && PlayerPrefs.GetInt("Skin") != 0)
+		{
+			changeSkin(PlayerPrefs.GetInt("Skin"));
 		}
 		snd = FindObjectOfType<SoundManager>();
 		rsc = ropeStart.GetComponent<RopeSegmentController>();
+
     }
 
 	// Update is called once per frame
@@ -184,8 +227,71 @@ public class WormMove : MonoBehaviour
 			snd.playSpeedWind(vol);
 		}
 		lastVolume = vol;
-		
-		
+
+		//model.transform.localRotation = Quaternion.identity;
+		//model.transform.localRotation = Quaternion.Euler(270, 0, -180);
+
+
+		if (StartMenu.isOpen && model != null)
+		{
+			if (transform.eulerAngles.x > 180)
+			{
+				model.transform.localRotation = Quaternion.Euler(270, 0, -180);
+				flippedModel = true;
+			}
+			else
+			{
+				model.transform.localRotation = Quaternion.Euler(90, 0, 0);
+				flippedModel = false;
+			}
+		}
+		else if ((grounded || groundedEnough) && model != null)
+		{
+			if (transform.eulerAngles.y > 179)
+			{
+				//*
+				if (transform.eulerAngles.x > 0 && transform.eulerAngles.x < 180)
+				{
+					model.transform.localRotation = Quaternion.Euler(90, 0, 0);
+					flippedModel = false;
+				}
+				else
+				{
+					model.transform.localRotation = Quaternion.Euler(270, 0, -180);
+					flippedModel = true;
+				}
+				//*/
+			}
+			else
+			{
+				//as soon as it crossed 0 it flipped, and then as soon as it crossed 340 it flipped again.
+				//Debug.Log(transform.eulerAngles.x);
+
+				if (prevRot.x >= 180 && transform.eulerAngles.x < 340 && transform.eulerAngles.x > 300)
+				{
+					model.transform.localRotation = Quaternion.Euler(270, 0, -180); //flipped
+					flippedModel = true;
+				}
+				else if (prevRot.x <= 180 && transform.eulerAngles.x > 20 && transform.eulerAngles.x < 60)
+				{
+					model.transform.localRotation = Quaternion.Euler(90, 0, 0); //correct
+					flippedModel = false;
+
+				}
+			}
+
+
+
+			
+			//*/
+			
+		}
+		prevRot = transform.rotation.eulerAngles;
+
+
+
+
+
 
 		if (PauseMenu.isPaused || SaveLoad.initializing)
 		{
@@ -198,8 +304,22 @@ public class WormMove : MonoBehaviour
 		}
 
 
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			changeSkin(1);
+			return;
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha0))
+		{
+			changeSkin(0);
+			return;
+		}
+
+
 		grounded = jumpTrigger.getGrounded();
+		
 		solidGround = jumpTrigger.getSolidGround();
+		groundedEnough = groundedEnoughTrigger.getGroundedEnough();
 		buttPosition = transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y * 0.9f;
 
 		if (solidGround && !grappling && !startingGrapple) //resets your grapple when you touch the ground
@@ -282,6 +402,7 @@ public class WormMove : MonoBehaviour
 			snd.playScrunch();
 		}
 		animator.SetBool("Crouching", crouching);
+	
 		
 
 		//*
@@ -343,10 +464,12 @@ public class WormMove : MonoBehaviour
 					{
 						grabObject(hit.collider.gameObject);
 					}
-					else if (hit.collider.gameObject.tag == "WormShadow")
+					else if (hit.collider.gameObject.tag == "WormShadow" && !startingGrapple)
 					{
-						Debug.Log("grappling to worm");
+						//Debug.Log("grappling to worm");
+						//grappleTimer = 0;
 						grappleToWorm(hit.collider.transform, grappleHit.transform.position);
+						
 					}
 				}
 			}
@@ -376,6 +499,7 @@ public class WormMove : MonoBehaviour
 			spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
 			spring.maxDistance = ropeLength;
 			spring.connectedAnchor = Vector3.zero;
+			//Debug.Log("Grapple spot 1");
 
 			float maxPitch = 2;
 			float minPitch = 0.4f;
@@ -388,28 +512,31 @@ public class WormMove : MonoBehaviour
 		}
 
 
-		
 
+		
 		if (grappling) //The code for the grapple that gets run every frame to update the rope position.
 		{
+
+			//IF THERES ANYTHING WRONG WITH GRAPPLE TO WORM LOOK HERE FIRST
 			if (!startingGrapple && !grapplingToWorm)
 			{
 				grappleTimer = rsc.getTime();
+
+				if (currentRopeLength != rsc.getLength())
+				{
+					currentRopeLength = rsc.getLength();
+
+					if (rsc.getCurrentPoint() != null && rsc.getCurrentPoint().GetComponent<Rigidbody>() != null)
+					{
+						spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
+						spring.maxDistance = ropeLength - currentRopeLength;
+						spring.connectedAnchor = Vector3.zero;
+					}
+				}
 			}
-			else if (grapplingToWorm)
+			else if(!startingGrapple)
 			{
 				grappleTimer += Time.deltaTime;
-			}
-			else if (currentRopeLength != rsc.getLength())
-			{
-				currentRopeLength = rsc.getLength();
-
-				if (rsc.getCurrentPoint() != null && rsc.getCurrentPoint().GetComponent<Rigidbody>() != null)
-				{
-					spring.connectedBody = rsc.getCurrentPoint().GetComponent<Rigidbody>();
-					spring.maxDistance = ropeLength - currentRopeLength;
-					spring.connectedAnchor = Vector3.zero;
-				}
 			}
 		}
 		
@@ -418,6 +545,7 @@ public class WormMove : MonoBehaviour
 		if (holdingObject) //draws a line to the object
 		{
 			LineRenderer line = heldObject.GetComponent<LineRenderer>();
+			line.sharedMaterial = tail.sharedMaterial;
 			line.enabled = true;
 			line.SetPosition(0, heldObject.transform.position);
 			line.SetPosition(1, transform.position + transform.TransformDirection(Vector3.down) * transform.lossyScale.y); //absolute butt position
@@ -458,12 +586,15 @@ public class WormMove : MonoBehaviour
 			}
 			
 		}
-		else if (grappling && !holdingObject && !DetectWin.hasWon && (!Input.GetMouseButton(0) || rsc.getTime() > maxGrappleTime || grappleTimer > maxGrappleTime)) //If left click is released
+		else if (grappling && !holdingObject && !DetectWin.hasWon && (!Input.GetMouseButton(0) 
+			|| (!grapplingToWorm && rsc.getTime() > maxGrappleTime) || grappleTimer > maxGrappleTime)
+			|| grapplingToWorm && Input.GetKeyDown(KeyCode.Escape)) //If left click is released
 		{
 			itsGrappleTime = false;
 			howMuchLongerIsItGrappleTime = 0;
 			grappling = false;
-			
+			//Debug.LogError("released");
+
 			if (grappleTimer > maxGrappleTime)
 			{
 				canGrapple = false;
@@ -471,6 +602,7 @@ public class WormMove : MonoBehaviour
 			if (grapplingToWorm)
 			{
 				grapplingToWorm = false;
+				wormGrapplePoint.GetComponent<WormGrapplePoint>().destroyLine();
 				Destroy(wormGrapplePoint);
 			}
 			else
@@ -554,7 +686,7 @@ public class WormMove : MonoBehaviour
 		}
 
 		//Camera direction change
-		if (!twod && Mathf.Abs(Input.GetAxis("Vertical")) < 1f)
+		if (!twod) //  && Mathf.Abs(Input.GetAxis("Vertical")) < 1f 
 		{
 			float cameraRot = cameraRig.transform.eulerAngles.y;
 			if (cameraRot > 180)
@@ -579,16 +711,6 @@ public class WormMove : MonoBehaviour
 			rb.AddRelativeTorque(new Vector3(-moveY, 0, 0), ForceMode.Impulse);
 		}
 
-		/*if (Input.GetKey(KeyCode.G))
-		{
-			//rb.MovePosition(transform.position + transform.TransformDirection(Vector3.up) * 10 * Time.deltaTime);
-			//transform.Translate(transform.TransformDirection(Vector3.up) * 10 * Time.deltaTime);
-			
-			Debug.DrawRay(transform.position,Vector3.up * 1 + transform.TransformDirection(Vector3.up) * 10, Color.white, Time.deltaTime);
-		}*/
-		//Debug.Log(transform.eulerAngles);
-
-		//Debug.Log(crouching);
 		if (crouching && !jumpHeld) //jump
 		{
 			//Debug.Log(Time.time);
@@ -721,9 +843,6 @@ public class WormMove : MonoBehaviour
 			playJump();
 		}
 
-
-		
-
 		if (rb.velocity.magnitude > smokeSpeed)
 		{
 			
@@ -738,7 +857,6 @@ public class WormMove : MonoBehaviour
 				trail.enabled = true;
 			}
 			
-			//Debug.Log(rb.velocity.magnitude / 10);
 			
 		}
 		else
@@ -950,6 +1068,11 @@ public class WormMove : MonoBehaviour
 		return grappling;
 	}
 
+	public bool getFlippedModel()
+	{
+		return flippedModel;
+	}
+
 	public float getTailColor()
 	{
 		float val = 1f;
@@ -965,9 +1088,11 @@ public class WormMove : MonoBehaviour
 	private void grappleToWorm(Transform other, Vector3 position)
 	{
 		wormGrapplePoint = Instantiate(wormGrapplePointPrefab, position, Quaternion.identity, other);
-
+		wormGrapplePoint.GetComponent<WormGrapplePoint>().setUp(other, transform, tail.sharedMaterial);
 		itsGrappleTime = false;
+		howMuchLongerIsItGrappleTime = 0;
 		Rigidbody wgpRB = wormGrapplePoint.GetComponent<Rigidbody>();
+		grappleHit.transform.position = Vector3.one * 9999;
 		spring.connectedBody = wgpRB;
 		wgpRB.isKinematic = true;
 		spring.maxDistance = Vector3.Distance(position, buttPosition);
@@ -983,4 +1108,40 @@ public class WormMove : MonoBehaviour
 			snd.playGrapple(distanceScaled);
 		}
 	}
+
+	public void changeSkin(int skinNumber)
+	{
+		//transform.parent.GetComponentInChildren<SkinSelector>().changeSkin(skinNumber);
+		//Debug.Log(transform.parent.GetComponentInChildren<Animator>().gameObject);
+		SkinSelector ss = transform.parent.GetComponentInChildren<SkinSelector>();
+		model = Instantiate(ss.skinPrefabs[skinNumber], ss.transform);
+
+		animator = model.GetComponent<Animator>();
+		tail = model.transform.Find("Tail").GetComponent<MeshRenderer>();
+		TailLightBank tlb = tail.GetComponent<TailLightBank>();
+		tailOn = tlb.getFreshOn();
+		tailOff = tlb.getFreshOff();
+		tailOnExerted = tlb.getExertedOn();
+		tailOffExerted = tlb.getExertedOff();
+		//tailMat = tailOn;
+
+		ss.updateModel(model, skinNumber);
+
+		if (startingGrapple)
+		{
+			animator.SetBool("Asleep", true);
+		}
+
+		if (game != null)
+		{
+			game.setSkin(skinNumber);
+		}
+		PlayerPrefs.SetInt("Skin", skinNumber);
+
+	}
+
 }
+
+
+
+

@@ -25,6 +25,7 @@ public class SaveLoad : MonoBehaviour
 	private bool gamePaused;
 
 	public static string path;
+	public static string gifterBuffer;
 	// Start is called before the first frame update
 	void Awake()
     {
@@ -140,6 +141,7 @@ public class SaveLoad : MonoBehaviour
 		
 		Rigidbody rb = worm.GetComponent<Rigidbody>();
 
+		string skins = getValueOf(path, "Skins");
 		File.WriteAllText(path, "Saves");
 		
 
@@ -175,6 +177,8 @@ public class SaveLoad : MonoBehaviour
 		contents.Add("\n" + "FogA" + "," + RenderSettings.fogColor.a);
 		contents.Add("\n" + "FogD" + "," + RenderSettings.fogDensity);
 
+
+
 		if (game == null)
 		{
 			contents.Add("\n" + "Egg" + "," + "False");
@@ -184,7 +188,10 @@ public class SaveLoad : MonoBehaviour
 			contents.Add("\n" + "Egg" + "," + game.getHoldingObject());
 		}
 		contents.Add("\n" + "Scene" + "," + SceneManager.GetActiveScene().name);
+		contents.Add("\n" + "Skins" + "," + skins + gifterBuffer);
+		gifterBuffer = "";
 		contents.Add("\n" + "Time" + "," + toSeconds(System.DateTime.Now));
+
 
 		foreach (string s in contents)
 		{
@@ -194,7 +201,7 @@ public class SaveLoad : MonoBehaviour
 
 		PlayerPrefs.SetFloat("PlayTime", playTimer.getTime());
 
-		Debug.Log("Saved: save number " + numSaves);
+		//Debug.Log("Saved: save number " + numSaves);
 		
 	}
 	void load()
@@ -264,8 +271,15 @@ public class SaveLoad : MonoBehaviour
 		Debug.Log("Loaded");
 
 	}
+	public string getValueOf(string key)
+	{
+		return getValueOf(path, key);
+	}
 	string getValueOf(string path, string key)
 	{
+		if (!File.Exists(path))
+			return "";
+
 		string source = File.ReadAllText(path);
 
 		int startIndex = source.IndexOf(",", source.IndexOf(key));
@@ -303,4 +317,6 @@ public class SaveLoad : MonoBehaviour
 
 		return date.Hour * secInHour + date.Minute * secInMinute + date.Second;
 	}
+
+
 }

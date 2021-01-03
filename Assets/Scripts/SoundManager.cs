@@ -22,6 +22,7 @@ public class SoundManager : MonoBehaviour
 	public AudioSource go;
 	public AudioSource woodCrash;
 	public AudioSource idle;
+	public AudioSource gifter;
 
 	public AudioSource[] honks;
 
@@ -339,6 +340,12 @@ public class SoundManager : MonoBehaviour
 	{
 		idle.Play();
 		caveAmbience.Stop();
+	}
+
+	public void playGifter(float pitch)
+	{
+		gifter.pitch = pitch;
+		gifter.Play();
 	}
 
 	public void menuMusicFade(float volPerSec)

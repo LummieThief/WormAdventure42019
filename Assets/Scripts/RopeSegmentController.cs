@@ -9,7 +9,7 @@ public class RopeSegmentController : MonoBehaviour
 	private Transform[] ropePoints;
 	public GameObject ropePointPrefab;
 	private LineRenderer line;
-	public Transform parent;
+	//public Transform parent;
 	private int pointIndex;
 	private Vector3 lastEnd;
 	private int maxPoints = 100;
@@ -89,6 +89,7 @@ public class RopeSegmentController : MonoBehaviour
 					if (!CollidesWith(finalPoint, block) && Vector3.Distance(finalPoint, ropePoints[pointIndex].position) > 0.1f)
 					{
 						ropePoints[pointIndex + 1] = Instantiate(ropePointPrefab, finalPoint, Quaternion.identity).transform;
+						Debug.Log("new point");
 						pointIndex++;
 						length += Vector3.Distance(ropePoints[pointIndex].position, ropePoints[pointIndex - 1].position);
 						transform.position = finalPoint;
@@ -142,6 +143,7 @@ public class RopeSegmentController : MonoBehaviour
 			}
 			line.positionCount = vertices.Length;
 			line.SetPositions(vertices);
+			line.sharedMaterial = transform.parent.parent.GetComponentInChildren<TailLightBank>().GetComponent<MeshRenderer>().sharedMaterial;
 		}
 		else
 		{

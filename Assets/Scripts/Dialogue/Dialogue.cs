@@ -120,12 +120,12 @@ public class Dialogue : MonoBehaviour
 	{
 		if (StartMenu.isOpen && !SceneManager.GetActiveScene().name.Contains("Level"))
 		{
-			Debug.Log("start menu is open still");
+			//Debug.Log("start menu is open still");
 			goOn = true;
 		}
 		else if (other.gameObject.tag == "Head")
 		{
-			Debug.Log("worm in");
+			//Debug.Log("worm in");
 			switchOn(true);
 		}
 	}

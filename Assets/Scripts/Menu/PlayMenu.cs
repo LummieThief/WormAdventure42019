@@ -34,6 +34,8 @@ public class PlayMenu : MonoBehaviour
 	private float scaleSpeed = 7f;
 	private float maxScale = 0.1f;
 
+	public GameObject screenBlocker;
+
 	private SoundManager sm;
 	// Start is called before the first frame update
 	void Start()
@@ -75,6 +77,7 @@ public class PlayMenu : MonoBehaviour
 
 		if (fadingToScene)
 		{
+			screenBlocker.SetActive(true);
 			fadeTimer += Time.deltaTime;
 
 			if (fadeTimer > timeToFade + 1)
@@ -107,8 +110,6 @@ public class PlayMenu : MonoBehaviour
 
 	public void Continue()
 	{
-		if (fadingToScene)
-			return;
 		StartCoroutine(fadeOutMenu(3f));
 		sm.menuMusicFade(-0.5f);
 		//sm.caveMusicFade(0.1f);
@@ -117,16 +118,12 @@ public class PlayMenu : MonoBehaviour
 
 	public void Back()
 	{
-		if (fadingToScene)
-			return;
 		playMenuUI.SetActive(false);
 		startMenuUI.SetActive(true);
 	}
 
 	public void NewGame()
 	{
-		if (fadingToScene)
-			return;
 		fadingToScene = true;
 		scene = "Attempt 2";
 		fade.startFadeOut(timeToFade, true);
@@ -135,8 +132,6 @@ public class PlayMenu : MonoBehaviour
 
 	public void PlayArcade()
 	{
-		if (fadingToScene)
-			return;
 		arcadeMenuUI.SetActive(true);
 		playMenuUI.SetActive(false);
 	}

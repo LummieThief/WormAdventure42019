@@ -8,6 +8,7 @@ using System.IO;
 
 public class MultiplayerMenu : MonoBehaviourPunCallbacks
 {
+	public GameObject[] panels;
 	public Text roomCode;
 	public InputField joinInputField;
 	private int roomSize = 12;
@@ -15,7 +16,7 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 	public Text errorLog;
 	private float errorTimeout = 3;
 	private float errorTimeoutTimer = 0; //this is the one that changes
-	
+	private int region;
 
 	private void Update()
 	{
@@ -40,13 +41,33 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 	}
 	public void JoinButton()
 	{
-		string room = joinInputField.text;
+		string room = "";
+		if (joinInputField.IsActive())
+		{
+			if (joinInputField.text == "")
+			{
+				room = "0O0O";
+			}
+			else
+			{
+				room = joinInputField.text;
+			}
+		}
+		
 		Debug.Log("Trying to join room");
 
 
 		if (!PhotonNetwork.IsConnected) //If a connection to the server hasnt been set up, do that then come back.
 		{
 			Debug.Log("Network wasnt connected. Connecting and trying again");
+			
+			if (PlayerPrefs.HasKey("Region"))
+			{
+				region = PlayerPrefs.GetInt("Region");
+				Debug.Log("region token is " + PlayerPrefs.GetString("Region Token")) ;
+				PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = PlayerPrefs.GetString("Region Token");
+			}
+			
 			PhotonNetwork.ConnectUsingSettings();
 			returnToJoin = true;
 			return;
@@ -85,6 +106,11 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 		
 	}
 
+	public void ForceDisconnect()
+	{
+		PhotonNetwork.Disconnect();
+	}
+
 	public override void OnDisconnected(DisconnectCause cause)
 	{
 		Debug.Log("disconnected");
@@ -93,13 +119,22 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 	public override void OnJoinRoomFailed(short returnCode, string message)
 	{
 		Debug.Log("That room doesnt exist");
+
 		logError(message);
 	}
 
 	public override void OnJoinRandomFailed(short returnCode, string message)
 	{
 		Debug.Log("failed to join a room");
-		logError(message);
+		Debug.Log(returnCode);
+		if (returnCode == 32760)
+		{
+			logError(message + ". Creating new room");
+		}
+		else
+		{
+			logError(message);
+		}
 		CreateRoom(true);
 	}
 
@@ -133,7 +168,9 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{
 		Debug.Log("You are now in a room");
-		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonPlayer"), Vector3.zero, Quaternion.identity);
+		GameObject photonPlayer = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonPlayer"), Vector3.zero, Quaternion.identity);
+		SkinSelector ss = FindObjectOfType<SkinSelector>();
+		photonPlayer.GetComponent<PhotonPlayerController>().setSkin(ss.selectedSkin);
 	}
 	
 
@@ -152,6 +189,10 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 		if (PhotonNetwork.InRoom)
 		{
 			PhotonNetwork.LeaveRoom();
+		}
+		if (PhotonNetwork.IsConnected)
+		{
+			PhotonNetwork.Disconnect();
 		}
 	}
 
@@ -174,5 +215,20 @@ public class MultiplayerMenu : MonoBehaviourPunCallbacks
 	{
 		errorLog.text = error;
 		errorTimeoutTimer = 0;
+	}
+
+	public void openPanel(int index)
+	{
+		for (int i = 0; i < panels.Length; i++)
+		{
+			if (i == index)
+			{
+				panels[i].SetActive(true);
+			}
+			else
+			{
+				panels[i].SetActive(false);
+			}
+		}
 	}
 }

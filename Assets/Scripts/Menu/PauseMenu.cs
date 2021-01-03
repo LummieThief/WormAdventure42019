@@ -19,7 +19,7 @@ public class PauseMenu : MonoBehaviour
 	{
 		sm = FindObjectOfType<SoundManager>();
 	}
-	void Update()
+	void LateUpdate()
     {
 		if (game == null)
 		{
